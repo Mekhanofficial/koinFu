@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/lib/utils"; // Assuming this is some utility function to join class names
+import { cn } from "../../lib/utils"; // Assuming this is some utility function to join class names
 
 const Table = React.forwardRef(({ className, ...props }, ref) => (
   <div className="relative w-full overflow-auto">

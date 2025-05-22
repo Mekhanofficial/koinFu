@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../../firebase';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
 import {
   Table,
   TableHeader,
@@ -11,7 +11,7 @@ import {
   TableRow,
   TableCell,
   TableHead,
-} from '@/components/ui/table';
+} from '../../components/ui/table';
 
 export default function UserTable() {
   const [users, setUsers] = useState([]);

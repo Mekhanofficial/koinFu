@@ -158,11 +158,11 @@ const proRouter = createBrowserRouter([
       },
       {
         path: "/PasswordUpdate",
-        element: <PasswordUpdatePage />,
+        element: <PasswordUpdate />,
       },
       {
-        path: "/PhotoUpdate",
-        element: <PhotoUpdatePage />,
+        path: "/UpdatePhotoPage",
+        element: <UpdatePhotoPage />,
       },
       {
         path: "/Transactions",

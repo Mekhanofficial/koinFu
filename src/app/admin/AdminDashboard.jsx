@@ -5,7 +5,7 @@ import FinanceSection from './FinanceSection';
 import SecuritySection from './SecuritySection';
 import SystemTools from './SystemTools';
 import OptionalFeatures from './OptionalFeatures';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('users');
