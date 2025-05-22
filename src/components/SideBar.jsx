@@ -53,14 +53,14 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
             >
               {showFullSidebar ? (
                 <h1 className="text-xl font-bold text-amber-500 dark:text-amber-600 whitespace-nowrap ml-3">
-                  PRIME
+                  KOIN-
                   <span className="text-amber-400 dark:text-amber-500">
-                    HUB
+                    FU
                   </span>
                 </h1>
               ) : (
                 <span className="text-xl font-bold text-amber-500 dark:text-amber-600">
-                  PR
+                  KF
                 </span>
               )}
               {showFullSidebar && (
