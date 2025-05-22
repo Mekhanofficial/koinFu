@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+}
+
+@layer utilities {
+  #google_translate_element {
+    @apply mx-auto w-max;
+
+    .skiptranslate {
+      @apply grid justify-center justify-items-center;
+    }
+
+    .VIpgJd-ZVi9od-l4eHX-hSRGPd {
+      @apply grid grid-flow-col w-max gap-1 items-center;
+    }
+  }
+
+  .custom-container {
+    @apply container mx-auto px-5 lg:max-w-5xl;
+  }
+
+  section {
+    @apply mt-16 lg:mt-32;
+  }
+
+  .section-title {
+    @apply text-3xl font-semibold text-white text-center md:text-5xl;
+  }
+
+  .page-scroll::-webkit-scrollbar {
+    @apply w-1 bg-transparent;
+  }
+
+  .page-scroll::-webkit-scrollbar-thumb {
+    @apply bg-[rgba(255,255,255,.5)] rounded-full opacity-10;
+  }
+
+  .table-scroll::-webkit-scrollbar {
+    @apply w-1 h-1 bg-transparent;
+  }
+
+  .table-scroll::-webkit-scrollbar-thumb {
+    @apply bg-[rgba(255,255,255,.5)] rounded-full opacity-10;
+  }
+
+  /* Admin Table */
+  .admin-table th {
+    @apply text-[#97afd5] py-3 whitespace-nowrap px-5;
+  }
+
+  .admin-table td {
+    @apply text-neutral-300 whitespace-nowrap px-5 py-5 text-center;
+  }
+}
