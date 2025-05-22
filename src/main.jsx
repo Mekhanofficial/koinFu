@@ -43,13 +43,13 @@ import PlaceTradePage from "./pages/PlaceTrade.jsx";
 import AssetPage from "./pages/Assets.jsx";
 import { PrivateRoute } from "./PrivateRoute.jsx";
 import Layout from "./components/Layout.jsx";
-import ForgotPassword from "./app/(auth)/login/forgotpassword.jsx";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AdminDashboard from "./app/admin/AdminDashboard.jsx";
 import AdminSignup from "./app/admin/AdminSignup.jsx";
 import AdminLogin from "./app/admin/AdminLogin.jsx";
 import ProtectedAdminRoute from "../src/app/admin/ProtectedAdminRoute.jsx";
+import ForgotPassword from "./app/(auth)/login/ForgotPassword";
 
 
 
