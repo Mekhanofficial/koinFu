@@ -62,19 +62,19 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-orange-500">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl shadow-lg">
+    <div className="flex items-center justify-center min-h-screen bg-teal-950">
+      <div className="w-full max-w-md p-8 space-y-6 bg-gray-500 rounded-2xl shadow-lg">
         <div className="text-center">
-          <h2 className="text-sm font-bold text-gray-900">
-            SIGN IN{" "}
+          <h2 className=" font-bold text-gray-900">
+            Sign in{" "}
             <span className="text-gray-400">
-              <Link to="/SignUpPage" className="text-blue-500 hover:underline">
+              <Link to="/SignUpPage" className="text-blue-300 hover:underline">
                 Sign up
               </Link>
             </span>
           </h2>
-          <h1 className="text-3xl font-extrabold text-amber-600">
-            ELITE<span className="text-amber-400">BITX</span>
+          <h1 className="text-3xl font-extrabold text-teal-600">
+            KOIN<span className="text-teal-400">FU</span>
           </h1>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -145,7 +145,7 @@ const LoginPage = () => {
             type="submit"
             disabled={isLoading}
             className={`w-full p-3 text-white rounded-lg flex justify-center items-center ${
-              isLoading ? 'bg-orange-400' : 'bg-orange-500 hover:bg-orange-600'
+              isLoading ? 'bg-teal-400' : 'bg-teal-500 hover:bg-teal-600'
             }`}
           >
             {isLoading ? (

@@ -102,12 +102,12 @@ export default function FooterDash({ isSidebarOpen }) {
   const { theme } = useTheme();
 
   const leftNavItems = [
-    { icon: faHome, label: "Home", path: "/" },
+    { icon: faHome, label: "Home", path: "/dashboard" },
     { icon: faCoins, label: "Assets", path: "/assets" },
   ];
 
   const rightNavItems = [
-    { icon: faExchangeAlt, label: "Trade", path: "/trade" },
+    { icon: faExchangeAlt, label: "Trade", path: "/placetrade" },
     { icon: faReceipt, label: "Transactions", path: "/transactions" },
   ];
 

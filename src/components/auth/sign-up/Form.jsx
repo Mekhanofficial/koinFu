@@ -117,17 +117,17 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-orange-500">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl shadow-lg">
+    <div className="flex items-center justify-center min-h-screen bg-teal-950">
+      <div className="w-full max-w-md p-8 space-y-6 bg-gray-500 rounded-2xl shadow-lg">
         <div className="text-center">
           <h2 className="text-sm font-bold text-gray-900">
-            <Link to="/LoginPage" className="text-blue-500 hover:underline">
+            <Link to="/LoginPage" className="text-blue-300 hover:underline">
               Sign in
             </Link>
             <span className="text-gray-400"> / Sign up</span>
           </h2>
-          <h1 className="text-3xl font-extrabold text-amber-600">
-            ELITE<span className="text-amber-400">BITX</span>
+          <h1 className="text-3xl font-extrabold text-teal-600">
+            KOIN<span className="text-teal-400">FU</span>
           </h1>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -151,7 +151,7 @@ const SignUpPage = () => {
           </select>
           <Input name="password" type="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
           <Input name="confirmPassword" type="password" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange} required />
-          <Button type="fill" className="w-full p-3 text-white bg-orange-500 rounded-lg hover:bg-orange-600" disabled={isLoading} isLoading={isLoading}>
+          <Button type="fill" className="w-full p-3 text-white bg-teal-500 rounded-lg hover:bg-teal-600" disabled={isLoading} isLoading={isLoading}>
             SIGN UP
           </Button>
         </form>

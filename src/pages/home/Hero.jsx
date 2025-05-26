@@ -172,28 +172,28 @@ export default function HomeHeroPage() {
       image: px6,
       title: "Early Bonus Cash",
       description:
-        "Get a head start on growing your wealth with koinfu's early cash bonus offer - a limited-time opportunity to earn extra returns on your investment.",
+        "Get a head start on growing your wealth with KoinFu's early cash bonus offer - a limited-time opportunity to earn extra returns on your investment.",
       lineColor: "orange", // Gradient starts with teal
     },
     {
       image: px7,
       title: "Secure Transactions",
       description:
-        "Enjoy peace of mind with koinfu's state-of-the-art security measures, ensuring your transactions and investments are always protected.",
+        "Enjoy peace of mind with KoinFu's state-of-the-art security measures, ensuring your transactions and investments are always protected.",
       lineColor: "teal", // Gradient starts with blue
     },
     {
       image: px8,
       title: "Transparent Reporting",
       description:
-        "Stay informed with koinfu's transparent reporting system, providing real-time updates on your investment performance.",
+        "Stay informed with KoinFu's transparent reporting system, providing real-time updates on your investment performance.",
       lineColor: "#87CEEB", // Gradient starts with purple
     },
     {
       image: px9,
       title: "Low Fees",
       description:
-        "koinfu offers some of the lowest fees in the industry, ensuring you keep more of your profits.",
+        "KoinFu offers some of the lowest fees in the industry, ensuring you keep more of your profits.",
       lineColor: "purple", // Gradient starts with orange
     },
     {
@@ -207,7 +207,7 @@ export default function HomeHeroPage() {
       image: px11,
       title: "Global Access",
       description:
-        "Access your investments from anywhere in the world with koinfu's globally available platform.",
+        "Access your investments from anywhere in the world with KoinFu's globally available platform.",
       lineColor: "#FF7F7F", // Gradient starts with green
     },
   ];
@@ -341,7 +341,7 @@ export default function HomeHeroPage() {
       image: dp2,
       title: "Michel Murphy",
       description:
-        "koinfu is the best cryptocurrency investment company I've come across. Their team of professionals guided me through the investment process, answered all my questions, and helped me make informed decisions. I've seen remarkable returns on my investments, and I highly recommend them to anyone looking to enter the world of cryptocurrencies.",
+        "KoinFu is the best cryptocurrency investment company I've come across. Their team of professionals guided me through the investment process, answered all my questions, and helped me make informed decisions. I've seen remarkable returns on my investments, and I highly recommend them to anyone looking to enter the world of cryptocurrencies.",
       lineColor: "teal",
     },
     {
@@ -355,21 +355,21 @@ export default function HomeHeroPage() {
       image: dp4,
       title: "Daniel Morris",
       description:
-        "koinfu has revolutionized my approach to investing. With their expert advice and seamless platform, I've diversified my portfolio and gained exposure to a variety of cryptocurrencies. The team's transparency and dedication to delivering consistent results have earned my trust, and I'm excited to continue growing my investments with them.",
+        "KoinFu has revolutionized my approach to investing. With their expert advice and seamless platform, I've diversified my portfolio and gained exposure to a variety of cryptocurrencies. The team's transparency and dedication to delivering consistent results have earned my trust, and I'm excited to continue growing my investments with them.",
       lineColor: "purple",
     },
     {
       image: dp5,
       title: "Sophia Luther",
       description:
-        "Choosing koinfu  was the best decision I made for my cryptocurrency investments. Their team possesses in-depth knowledge of the market, and they tailor their strategies to individual investors' goals. I've experienced significant growth in my portfolio, and I'm grateful for their guidance and support. I wholeheartedly recommend CoinLog to anyone seeking reliable and profitable cryptocurrency investments.",
+        "Choosing KoinFu  was the best decision I made for my cryptocurrency investments. Their team possesses in-depth knowledge of the market, and they tailor their strategies to individual investors' goals. I've experienced significant growth in my portfolio, and I'm grateful for their guidance and support. I wholeheartedly recommend CoinLog to anyone seeking reliable and profitable cryptocurrency investments.",
       lineColor: "#87CEEB", // Gradient starts with pink
     },
     {
       image: dp6,
       title: "Jeff Botch",
       description:
-        "koinfu has provided me with an excellent investment experience. Their platform is intuitive, their investment options are diverse, and their team is professional and friendly. I've witnessed remarkable returns on my investments, and I appreciate the peace of mind that comes with knowing my assets are in capable hands. I couldn't be happier with their services!",
+        "KoinFu has provided me with an excellent investment experience. Their platform is intuitive, their investment options are diverse, and their team is professional and friendly. I've witnessed remarkable returns on my investments, and I appreciate the peace of mind that comes with knowing my assets are in capable hands. I couldn't be happier with their services!",
       lineColor: "#FF7F7F", // Gradient starts with green
     },
   ];
@@ -402,7 +402,7 @@ export default function HomeHeroPage() {
 
   const [selectedCategory, setSelectedCategory] = useState("General Question");
 
-  const koinfuItems = [
+  const KoinFuItems = [
     "General Question",
     "Token Sales",
     "Client Related",
@@ -619,7 +619,7 @@ export default function HomeHeroPage() {
               </button>
             </div>
             <h1 className="text-3xl md:text-5xl text-white font-bold mb-6">
-              Next Generation Invest in the future of cryptocurrency with koinfu
+              Next Generation Invest in the future of cryptocurrency with KoinFu
             </h1>
             <h4 className="text-base md:text-lg text-gray-400 mb-8">
               Our cutting-edge technology and expert team make it easy for
@@ -693,7 +693,7 @@ export default function HomeHeroPage() {
           <div className="flex justify-center md:justify-start w-full md:w-auto">
             <img
               src={px5}
-              alt="koinfu Platform"
+              alt="KoinFu Platform"
               className="max-w-full md:max-w-lg rounded-lg  rotate-slowly"
             />
           </div>
@@ -701,31 +701,31 @@ export default function HomeHeroPage() {
           {/* Text Content Section */}
           <div className="max-w-2xl text-center md:text-left">
             <h2 className="text-teal-600 font-semibold text-lg mb-3">
-              What is koinfu?
+              What is KoinFu?
             </h2>
             <h4 className="text-white text-2xl font-bold mb-6">
               Leading Cryptocurrency Investment Platform
             </h4>
             <p className="text-gray-400 mb-4">
-              koinfu is a leading cryptocurrency investment platform that allows
+              KoinFu is a leading cryptocurrency investment platform that allows
               anyone to participate in the exciting world of digital assets. Our
               platform is designed to simplify the process of investing in
               cryptocurrency and earning a return on your investment.
             </p>
             <p className="text-gray-400 mb-4">
-              With low fees and reliable mining operations, koinfu ensures your
+              With low fees and reliable mining operations, KoinFu ensures your
               investments are secure and profitable. We use state-of-the-art
               facilities and equipment to maximize efficiency, and our team of
               experienced professionals is dedicated to delivering the best
               returns.
             </p>
             <p className="text-gray-400 mb-6">
-              Transparency is at the core of what we do. With koinfu, you'll
+              Transparency is at the core of what we do. With KoinFu, you'll
               always know exactly how your investments are performing, thanks to
               our clear and detailed reporting.
             </p>
             <p className="text-gray-400 mb-6">
-              koinfu Ltd is a registered company in the British Virgin Islands
+              KoinFu Ltd is a registered company in the British Virgin Islands
               (BVI Company Number 2086929). Our registered office is located at
               C/O Vistra (BVI) Limited, Vistra Corporate Services Centre,
               Wickhams Cay II, Road Town, Tortola, VG1110.
@@ -737,11 +737,11 @@ export default function HomeHeroPage() {
           </div>
         </div>
 
-        <div className="bg-slate-950 py-12 px-8 md:px-16">
+        <div className="bg-slate-950 relative z-50 py-12 px-8 md:px-16">
           {/* Heading Section */}
           <div className="text-center mb-12">
             <h1 className="text-teal-600 text-lg font-semibold mb-3">
-              koinfu Features
+              KoinFu Features
             </h1>
             <h2 className="text-white text-3xl font-bold mb-4">
               Crypto Best Features
@@ -1052,7 +1052,7 @@ export default function HomeHeroPage() {
           {/* Heading Section */}
           <div className="text-center mb-12">
             <h1 className="text-teal-500 text-lg font-semibold mb-3">
-              koinfu Testimonials
+              KoinFu Testimonials
             </h1>
             <h2 className="text-white text-5xl font-bold mb-4">
               This are what some of our clients are saying
@@ -1329,10 +1329,10 @@ export default function HomeHeroPage() {
           </div>
 
           <div className="flex flex-col md:flex-row">
-            {/* Left Side: koinfuItems */}
+            {/* Left Side: KoinFuItems */}
             <div className="w-full md:w-1/4 p-4 bg-slate-800 rounded-lg shadow-lg mb-4 md:mb-0">
               <ul className="space-y-3">
-                {koinfuItems.map((item, index) => (
+                {KoinFuItems.map((item, index) => (
                   <li
                     key={index}
                     className={`flex items-center p-3 rounded-lg text-lg transition-all duration-300 ${

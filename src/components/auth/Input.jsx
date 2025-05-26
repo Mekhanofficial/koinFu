@@ -22,9 +22,7 @@ const Input = ({ id, name, type, label, placeholder, value, onChange }) => {
           type={showPassword ? "text" : type}
           placeholder={placeholder}
           className={`border-b-2 w-full rounded-sm text-[#97afd5] transition-all duration-500 outline-none placeholder:text-[#97afd5] placeholder:opacity-70 px-5 py-3 bg-transparent ${
-            isFocused
-              ? "border-[rgba(244,_47,_84,_1)]"
-              : "border-[rgba(244,_47,_84,_0.3)]"
+            isFocused ? "border-slate-500" : "border-slate-800"
           }`}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
