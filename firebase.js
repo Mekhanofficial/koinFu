@@ -1,8 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { getFirestore } from "firebase/firestore";
-
+import { getStorage, connectStorageEmulator } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -16,13 +15,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-// Export individual Firebase services
-export { auth, db };
+const storage = getStorage(app);
 
-// Export Firestore functions directly
+// For debugging during development only:
+if (window.location.hostname === "localhost") {
+  connectStorageEmulator(storage, "localhost", 9199);
+  console.log("Using Firebase Storage emulator");
+}
+
+export { auth, db, storage };
 export { doc, setDoc, getDoc } from "firebase/firestore";
-
-
-
-
-
