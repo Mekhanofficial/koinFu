@@ -2,6 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Add to your global CSS */
+@keyframes skillBarFill {
+  from { width: 0%; }
+  to { width: var(--target-width); }
+}
+
+.bg-teal-500 {
+  animation: skillBarFill 1.5s ease-out forwards;
+}
+
+
+
+@keyframes infinite-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-infinite-scroll {
+  animation: infinite-scroll 20s linear infinite;
+}
+
 @keyframes spin-slow {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

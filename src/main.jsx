@@ -50,6 +50,8 @@ import AdminSignup from "./app/admin/AdminSignup.jsx";
 import AdminLogin from "./app/admin/AdminLogin.jsx";
 import ProtectedAdminRoute from "../src/app/admin/ProtectedAdminRoute.jsx";
 import ForgotPassword from "./app/(auth)/login/ForgotPassword";
+import AboutPage from "./pages/about/Hero";
+import ServicePage from "./pages/services/Hero";
 
 
 
@@ -59,6 +61,14 @@ const proRouter = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />,
+  },
+  {
+    path: "/about",
+    element: <AboutPage />,
+  },
+  {
+    path: "/services",
+    element: <ServicePage />,
   },
   {
     path: "/LoginPage",
@@ -296,7 +306,7 @@ const proRouter = createBrowserRouter([
       </ProtectedAdminRoute>
     ),
   },
-  
+
   {
     path: "/AdminSignup",
     element: <AdminSignup />,
@@ -305,8 +315,6 @@ const proRouter = createBrowserRouter([
     path: "/AdminLogin",
     element: <AdminLogin />,
   },
-  
-
 ]);
 
 
