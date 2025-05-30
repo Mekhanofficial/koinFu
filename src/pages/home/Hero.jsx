@@ -1126,7 +1126,7 @@ export default function HomeHeroPage() {
           </div>
         </div>
 
-        <div className="bg-gray-950 text-white py-12 px-6 sm:px-10 md:px-16 lg:px-20 ">
+        <div className="bg-slate-950 text-white py-12 px-6 sm:px-10 md:px-16 lg:px-20 relative z-40">
           <div className="text-center mb-12">
             <h1 className="text-teal-500 text-lg font-semibold mb-3">
               Pricing Plan
