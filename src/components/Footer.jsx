@@ -10,7 +10,7 @@ import px12 from "../pictures/px12.png";
 
 export default function FooterPage() {
   return (
-    <footer className="bg-slate-950 text-white p-10">
+    <footer className="bg-slate-950 text-white p-10 relative z-40">
       <div className="flex flex-wrap justify-between gap-10 items-start">
         <div className="max-w-md">
           <h1 className="text-lg font-semibold leading-relaxed">

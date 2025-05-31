@@ -280,7 +280,7 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <div className="bg-slate-950 relative z-50 py-12 px-8 md:px-16">
+      <div className="bg-gray-950 relative z-50 py-12 px-8 md:px-16">
         {/* Heading Section */}
         <div className="text-center mb-12">
           <h1 className="text-teal-600 text-lg font-semibold mb-3">
@@ -362,7 +362,7 @@ export default function AboutPage() {
 
       <div
         id="stats-section"
-        className="bg-slate-950 py-16 px-4 sm:px-8 lg:px-20"
+        className="bg-gray-950 py-16 px-4 sm:px-8 lg:px-20"
       >
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, index) => (

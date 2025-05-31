@@ -52,6 +52,7 @@ import ProtectedAdminRoute from "../src/app/admin/ProtectedAdminRoute.jsx";
 import ForgotPassword from "./app/(auth)/login/ForgotPassword";
 import AboutPage from "./pages/about/Hero";
 import ServicePage from "./pages/services/Hero";
+import ContactPage from "./pages/contact/Hero";
 
 
 
@@ -69,6 +70,10 @@ const proRouter = createBrowserRouter([
   {
     path: "/services",
     element: <ServicePage />,
+  },
+  {
+    path: "/contact",
+    element: <ContactPage />,
   },
   {
     path: "/LoginPage",
