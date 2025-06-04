@@ -50,14 +50,14 @@ const ContactUs = () => {
                 <textarea
                   id="message"
                   placeholder="Leave your question or comment here"
-                  className="w-full border border-[rgba(101,119,151,0.4)] rounded text-[#97afd5] outline-none placeholder:text-[#97afd5] placeholder:opacity-70 px-4 py-3 bg-transparent h-40 resize-none focus:border-blue-500 transition-colors"
+                  className="w-full border border-[rgba(101,119,151,0.4)] rounded text-[#97afd5] outline-none placeholder:text-[#97afd5] placeholder:opacity-70 px-4 py-3 bg-transparent h-40 resize-none focus:border-teal-500 transition-colors"
                   required
                 ></textarea>
               </div>
 
               <button
                 type="submit"
-                className="mt-8 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-300 w-full sm:w-auto"
+                className="mt-8 px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition-colors duration-300 w-full sm:w-auto"
               >
                 Send Message
               </button>

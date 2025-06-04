@@ -15,6 +15,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faMessage } from "@fortawesome/free-regular-svg-icons";
 import FooterPage from "../../components/Footer";
+import RandomAlert from "../../constants/RandomAlert";
+import ChatBot from "../../components/ChatBot";
 const features = [
   {
     image: px6,
@@ -379,6 +381,8 @@ export default function ServicePage() {
           </div>
         </div>
       </div>
+      <RandomAlert />
+      <ChatBot />
       <FooterPage />
     </>
   );

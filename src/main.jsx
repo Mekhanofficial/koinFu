@@ -1,15 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import HomePage from "./pages/Home.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ParticlesComponent from "./components/ParticlesBackground.jsx";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-// import CoinLibHorizontalliveTicker from "./components/CoinLib.jsx";
 import SideImg from "./components/ContactImg.jsx";
-import FAQ from "./components/faq/index.jsx";
-import FaqItem from "./components/faq/FaqItem.jsx";
 import ContactUs from "./components/ContactIndex.jsx";
 import TradingViewChart from "./components/Tradingview.jsx";
 import CryptocurrencyMarketWidget from "./components/trading-view-widgets/CryptocurrencyMarketWidget.jsx";
@@ -53,6 +49,7 @@ import ForgotPassword from "./app/(auth)/login/ForgotPassword";
 import AboutPage from "./pages/about/Hero";
 import ServicePage from "./pages/services/Hero";
 import ContactPage from "./pages/contact/Hero";
+import HomePage from "./pages/home/Home";
 
 
 
@@ -293,10 +290,6 @@ const proRouter = createBrowserRouter([
   {
     path: "/CryptocurrencyMarketWidget",
     element: <CryptocurrencyMarketWidget />,
-  },
-  {
-    path: "/faqItem",
-    element: <FaqItem />,
   },
   {
     path: "/ContactImg",

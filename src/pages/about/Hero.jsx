@@ -15,6 +15,8 @@ import brand4 from "../../../public/brand.png";
 import FooterPage from "../../components/Footer";
 import { useState, useEffect } from "react";
 import SkillsSection from "./Skill";
+import RandomAlert from "../../constants/RandomAlert";
+import ChatBot from "../../components/ChatBot";
 
 const features = [
   {
@@ -384,6 +386,8 @@ export default function AboutPage() {
           ))}
         </div>
       </div>
+      <RandomAlert/>
+      <ChatBot/>
       <FooterPage />
     </>
   );

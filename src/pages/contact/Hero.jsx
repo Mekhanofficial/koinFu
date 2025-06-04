@@ -7,6 +7,8 @@ import ContactUs from "../../components/ContactIndex";
 import FooterPage from "../../components/Footer";
 import { faMessage, faPaperPlane } from "@fortawesome/free-regular-svg-icons";
 import { faSquarePhone } from "@fortawesome/free-solid-svg-icons";
+import RandomAlert from "../../constants/RandomAlert";
+import ChatBot from "../../components/ChatBot";
 
 export default function ContactPage() {
   const contactMethods = [
@@ -93,8 +95,9 @@ export default function ContactPage() {
           ))}
         </div>
       </section>
-
       <ContactUs />
+        <RandomAlert/>
+            <ChatBot/>
       <FooterPage />
     </>
   );

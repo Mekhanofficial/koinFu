@@ -15,7 +15,7 @@ export default function FooterPage() {
         <div className="max-w-md">
           <h1 className="text-lg font-semibold leading-relaxed">
             Expert insights, innovative technology, and unmatched support -
-            discover the CoinLog advantage.
+            discover the KoinFu advantage.
           </h1>
           <div className="flex gap-3 mt-4">
             {[faFacebook, faTwitter, faInstagram, faPinterest].map(
