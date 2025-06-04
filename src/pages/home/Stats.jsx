@@ -88,7 +88,7 @@ export default function StatsPage(){
 
         <div
           id="stats-section"
-          className="flex bg-slate-950 flex-wrap sm:flex-nowrap justify-between text-center  p-20  text-white space-y-6 sm:space-y-0 sm:space-x-8"
+          className="flex bg-gray-950 flex-wrap sm:flex-nowrap justify-between text-center  p-20  text-white space-y-6 sm:space-y-0 sm:space-x-8"
         >
           {stats.map((stat, index) => (
             <div

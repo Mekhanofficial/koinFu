@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ParticlesComponent from "./components/ParticlesBackground.jsx";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import SideImg from "./components/ContactImg.jsx";
@@ -279,10 +278,7 @@ const proRouter = createBrowserRouter([
     path: "/Modal",
     element: <Modal />,
   },
-  {
-    path: "/ParticleBackground",
-    element: <ParticlesComponent id="particles" />,
-  },
+
   {
     path: "/trading-view",
     element: <TradingViewChart />,
