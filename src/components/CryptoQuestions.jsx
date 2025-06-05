@@ -1,4 +1,4 @@
-// src/data/CryptoQuestions.js
+
 const CryptoQuestions = [
   {
     keyword: "price",
