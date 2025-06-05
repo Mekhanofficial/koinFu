@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faX } from "@fortawesome/free-solid-svg-icons";
-import koinfu from "../pictures/koinfu.png";
+import koinfu from "../pictures/logodark.png";
 
 export default function HomeHeaderPage() {
   const location = useLocation();
@@ -68,7 +68,7 @@ export default function HomeHeaderPage() {
           <img
             src={koinfu}
             alt="Company Logo"
-            className="h-12 w-auto md:h-16"
+            className="h-8 w-auto md:h-10"
           />
         </div>
 
