@@ -112,7 +112,7 @@ export default function DashPage() {
     <Layout user={user}>
       <section
         className={`flex flex-col lg:flex-row min-h-screen bg-gray-100 dark:bg-zinc-950 text-gray-900 dark:text-white p- lg:p-8 overflow-x-hidden`}
-      >
+      > 
         <div className="w-full lg:w-1/2 lg:pr-4">
           <div
             className={`bg-gradient-to-r ${

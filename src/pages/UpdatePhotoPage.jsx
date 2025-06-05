@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { FaUser, FaCheck, FaUpload, FaArrowLeft, FaSpinner } from "react-icons/fa";
 import { auth } from "../../firebase";
 import { updateProfile } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -11,15 +12,18 @@ const defaultAvatars = [
   "https://cdn.pixabay.com/photo/2022/05/10/15/08/bitcoin-7187347_640.png",
   "https://cdn.pixabay.com/photo/2017/08/14/14/38/bitcoin-2640692_640.png",
   "https://cdn.pixabay.com/photo/2021/05/24/09/15/ethereum-logo-6278329_640.png",
+  "https://cdn.pixabay.com/photo/2018/01/15/07/51/woman-3083379_640.jpg",
+  "https://cdn.pixabay.com/photo/2016/11/21/12/42/beard-1845166_640.jpg",
 ];
 
-export default function UpdatePhotoPage() {
+export default function updateProfilePage() {
   const [user, setUser] = useState(null);
   const [selectedAvatar, setSelectedAvatar] = useState("");
   const [customImageFile, setCustomImageFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -74,23 +78,14 @@ export default function UpdatePhotoPage() {
       let photoURL = user.photoURL || "";
 
       if (customImageFile) {
-        console.log("Starting upload..."); // Debug log
         const fileExt = customImageFile.name.split(".").pop();
         const fileRef = ref(
           storage,
           `user_avatars/${user.uid}/${Date.now()}.${fileExt}`
         );
-
-        // Add upload progress monitoring
-        const uploadTask = uploadBytes(fileRef, customImageFile);
-        uploadTask.then((snapshot) => {
-          console.log("Upload completed:", snapshot); // Debug log
-        });
-
-        await uploadTask;
-        console.log("Getting download URL..."); // Debug log
+        
+        await uploadBytes(fileRef, customImageFile);
         photoURL = await getDownloadURL(fileRef);
-        console.log("Download URL:", photoURL); // Debug log
       } else if (selectedAvatar) {
         photoURL = selectedAvatar;
       } else {
@@ -99,118 +94,172 @@ export default function UpdatePhotoPage() {
         return;
       }
 
-      console.log("Updating profile..."); // Debug log
       await updateProfile(user, { photoURL });
-      console.log("Profile updated successfully"); // Debug log
-
+      
       setMessage("Profile photo updated successfully!");
-      setTimeout(() => navigate("/account"), 1500);
+      setIsSuccess(true);
+      
+      setTimeout(() => {
+        navigate("/account");
+      }, 2000);
     } catch (error) {
-      console.error("Full error:", error); // More detailed error log
       setMessage(`Error: ${error.message}`);
-
-      // Check for specific storage errors
-      if (error.code) {
-        console.error("Firebase error code:", error.code);
-        setMessage(`Error (${error.code}): ${error.message}`);
-      }
     } finally {
       setLoading(false);
-      console.log("Finished save operation"); // Debug log
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6 flex flex-col items-center">
-      <h1 className="text-3xl font-bold mb-6">Update Profile Photo</h1>
-
-      {/* Preview */}
-      <div className="mb-6">
-        {previewUrl ? (
-          <img
-            src={previewUrl}
-            alt="Preview"
-            className="w-32 h-32 rounded-full border-4 border-teal-500 shadow-lg mb-4 object-cover"
-          />
-        ) : (
-          <div className="w-32 h-32 rounded-full border-4 border-slate-700 bg-slate-800 flex items-center justify-center">
-            <span className="text-slate-500">No image selected</span>
+    <div className="min-h-screen pt-10 bg-gradient-to-br from-slate-900 to-slate-800 text-white flex flex-col items-center justify-center p-4">
+      <div className="w-full max-w-2xl bg-slate-800/50 backdrop-blur-lg rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-teal-600 to-emerald-700 p-6 relative">
+          <button 
+            onClick={() => navigate(-1)}
+            className="absolute top-6 left-6 bg-white/20 hover:bg-white/30 p-2 rounded-full transition-colors"
+          >
+            <FaArrowLeft className="text-white text-lg" />
+          </button>
+          <div className="flex justify-center">
+            <div className="bg-white/20 p-4 rounded-full">
+              <FaUser className="text-white text-2xl" />
+            </div>
           </div>
-        )}
+          <h1 className="text-2xl font-bold text-white text-center mt-4">
+            {isSuccess ? "Photo Updated!" : "Update Profile Photo"}
+          </h1>
+        </div>
+        
+        <div className="p-6">
+          {isSuccess ? (
+            <div className="text-center py-8">
+              <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <FaCheck className="text-green-400 text-3xl" />
+              </div>
+              <p className="text-lg font-medium text-white">
+                Your profile photo has been updated successfully!
+              </p>
+              <p className="text-slate-400 mt-2">
+                You'll be redirected back to your account shortly.
+              </p>
+            </div>
+          ) : (
+            <>
+              {/* Preview */}
+              <div className="flex justify-center mb-8">
+                <div className="relative">
+                  {previewUrl ? (
+                    <img
+                      src={previewUrl}
+                      alt="Preview"
+                      className="w-40 h-40 rounded-full border-4 border-teal-500 shadow-xl object-cover"
+                    />
+                  ) : (
+                    <div className="w-40 h-40 rounded-full border-4 border-slate-700 bg-slate-700 flex items-center justify-center">
+                      <FaUser className="text-slate-500 text-5xl" />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Avatar Grid */}
+              <div className="mb-8">
+                <h2 className="text-lg font-semibold mb-4 text-center text-slate-300">
+                  Choose a default avatar
+                </h2>
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                  {defaultAvatars.map((src, idx) => (
+                    <div 
+                      key={idx}
+                      onClick={() => handleAvatarSelect(src)}
+                      className={`relative rounded-full cursor-pointer transition-all transform hover:scale-105 ${
+                        selectedAvatar === src ? "ring-4 ring-teal-500" : ""
+                      }`}
+                    >
+                      <img
+                        src={src}
+                        alt={`Avatar ${idx + 1}`}
+                        className="w-full h-full rounded-full object-cover aspect-square"
+                      />
+                      {selectedAvatar === src && (
+                        <div className="absolute inset-0 bg-teal-500/30 rounded-full flex items-center justify-center">
+                          <FaCheck className="text-white text-xl" />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Upload Section */}
+              <div className="mb-8">
+                <h2 className="text-lg font-semibold mb-4 text-center text-slate-300">
+                  Or upload your own
+                </h2>
+                <div className="flex justify-center">
+                  <label className="flex flex-col items-center justify-center w-full max-w-xs cursor-pointer">
+                    <div className="bg-slate-700/50 hover:bg-slate-700 border-2 border-dashed border-slate-600 rounded-xl p-6 text-center transition-colors w-full">
+                      <div className="flex flex-col items-center">
+                        <div className="bg-teal-600/20 p-3 rounded-full mb-3">
+                          <FaUpload className="text-teal-400 text-xl" />
+                        </div>
+                        <p className="font-medium">Upload an image</p>
+                        <p className="text-sm text-slate-400 mt-1">
+                          JPG, PNG (max 5MB)
+                        </p>
+                      </div>
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="hidden"
+                      disabled={loading}
+                    />
+                  </label>
+                </div>
+              </div>
+
+              {/* Save Button */}
+              <div className="flex justify-center">
+                <button
+                  onClick={handleSave}
+                  disabled={loading || (!customImageFile && !selectedAvatar)}
+                  className={`px-8 py-3 rounded-lg font-medium text-white shadow-lg transition-all ${
+                    loading 
+                      ? "bg-teal-500 cursor-not-allowed" 
+                      : "bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 hover:shadow-xl transform hover:-translate-y-0.5"
+                  }`}
+                >
+                  {loading ? (
+                    <div className="flex items-center justify-center">
+                      <FaSpinner className="animate-spin mr-2" />
+                      Saving...
+                    </div>
+                  ) : "Save Profile Photo"}
+                </button>
+              </div>
+
+              {/* Message */}
+              {message && (
+                <p
+                  className={`text-center mt-4 p-3 rounded-lg ${
+                    message.includes("Error") 
+                      ? "bg-red-900/30 text-red-400" 
+                      : "bg-teal-900/30 text-teal-400"
+                  }`}
+                >
+                  {message}
+                </p>
+              )}
+            </>
+          )}
+        </div>
       </div>
-
-      {/* Avatar Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-        {defaultAvatars.map((src, idx) => (
-          <img
-            key={idx}
-            src={src}
-            alt={`Avatar ${idx + 1}`}
-            onClick={() => handleAvatarSelect(src)}
-            className={`w-20 h-20 rounded-full cursor-pointer border-4 ${
-              selectedAvatar === src ? "border-teal-500" : "border-slate-700"
-            } hover:scale-105 transition object-cover`}
-          />
-        ))}
+      
+      <div className="mt-8 text-center text-slate-500 text-sm">
+        <p>Your profile photo is visible to other users</p>
       </div>
-
-      {/* Upload Button */}
-      <label className="mb-6 block w-full max-w-xs">
-        <span className="block text-sm mb-2">Or upload a custom image</span>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="block w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-teal-600 file:text-white hover:file:bg-teal-700"
-          disabled={loading}
-        />
-      </label>
-
-      {/* Save Button */}
-      <button
-        onClick={handleSave}
-        disabled={loading || (!customImageFile && !selectedAvatar)}
-        className="bg-teal-600 hover:bg-teal-700 px-6 py-2 rounded-lg text-white disabled:opacity-50 mb-3 transition-colors"
-      >
-        {loading ? (
-          <span className="flex items-center justify-center">
-            <svg
-              className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            Saving...
-          </span>
-        ) : (
-          "Save Photo"
-        )}
-      </button>
-
-      {/* Message */}
-      {message && (
-        <p
-          className={`text-sm mt-2 text-center ${
-            message.includes("Error") ? "text-red-400" : "text-teal-400"
-          }`}
-        >
-          {message}
-        </p>
-      )}
     </div>
   );
 }

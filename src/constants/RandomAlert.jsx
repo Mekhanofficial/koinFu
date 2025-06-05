@@ -47,9 +47,9 @@ const ACTIONS = [
   { text: "completed KYC verification", hasAmount: false },
 ];
 
-const DISPLAY_DURATION = 5000;
-const TRANSITION_DURATION = 500;
-const INITIAL_DELAY = 3000;
+const INITIAL_DELAY = 12000;       // Wait 10s before starting
+const DISPLAY_DURATION = 10000;    // Show each user for 10s
+const TRANSITION_DURATION = 2000;  // Fade-in/out takes 2s
 
 const formatAmount = (min, max) => {
   const amount = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -66,9 +66,11 @@ const RandomAlert = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [playSound] = useSound(alert, {
-    volume: 0.75,
+    volume: 0.1,
     interrupt: true,
   });
+
+  
 
   // Handle user interaction to enable sound
   useEffect(() => {

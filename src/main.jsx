@@ -27,7 +27,6 @@ import VerifyAccountPage from "./pages/VerifyAccount.jsx";
 import AccountPage from "./pages/Account.jsx";
 import AccountSetPage from "./pages/AccountSettings.jsx";
 import EmailUpdatePage from "./pages/EmailUpdate.jsx";
-import PasswordUpdate from "./pages/PasswordUpdate.jsx";
 import UpdatePhotoPage from "./pages/UpdatePhotoPage.jsx";
 import ReferralsPage from "./pages/Referrals.jsx";
 import DailySignalPage from "./pages/DailySignal.jsx";
@@ -49,8 +48,7 @@ import AboutPage from "./pages/about/Hero";
 import ServicePage from "./pages/services/Hero";
 import ContactPage from "./pages/contact/Hero";
 import HomePage from "./pages/home/Home";
-
-
+import PasswordUpdate from './pages/PasswordUpdate.jsx'
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -152,6 +150,14 @@ const proRouter = createBrowserRouter([
         ),
       },
       {
+        path: "/PasswordUpdate",
+        element: (
+          <Layout>
+            <PasswordUpdate />
+          </Layout>
+        ),
+      },
+      {
         path: "/Referrals",
         element: (
           <Layout>
@@ -166,10 +172,6 @@ const proRouter = createBrowserRouter([
             <EmailUpdatePage />
           </Layout>
         ),
-      },
-      {
-        path: "/PasswordUpdate",
-        element: <PasswordUpdate />,
       },
       {
         path: "/UpdatePhotoPage",

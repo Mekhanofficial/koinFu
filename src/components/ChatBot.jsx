@@ -1,346 +1,383 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { FaUser, FaRobot, FaPaperPlane, FaTimes, FaCog, FaVolumeUp, FaVolumeMute, FaTrash, FaLock } from "react-icons/fa";
+import { BsLightningChargeFill } from "react-icons/bs";
+import { SiBitcoincash } from "react-icons/si";
+import cryptoQuestions from "./CryptoQuestion";
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
-  const [isVisible, setIsVisible] = useState(false);
-  const [showOptions, setShowOptions] = useState(false);
-  const [showGDPR, setShowGDPR] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [welcomeShown, setWelcomeShown] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
+  const [conversationHistory, setConversationHistory] = useState([]);
+  const messagesEndRef = useRef(null);
+  const typingTimeoutRef = useRef(null);
+
+  // Simulated AI API integration
+  const cryptoApi = {
+    getPrice: async (symbol) => {
+      const prices = {
+        btc: { price: 62850, change: 2.4 },
+        eth: { price: 3450, change: -1.2 },
+        sol: { price: 150, change: 5.7 },
+        ada: { price: 0.48, change: 0.8 },
+        doge: { price: 0.15, change: -3.2 }
+      };
+      
+      const coin = symbol.toLowerCase();
+      const data = prices[coin] || { price: "N/A", change: "N/A" };
+      
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve(`Current ${symbol.toUpperCase()} price: $${data.price.toLocaleString()} (${data.change > 0 ? '📈' : '📉'} ${Math.abs(data.change)}%)`);
+        }, 800);
+      });
+    },
+    
+    getPortfolio: async () => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve("Your portfolio: 0.5 BTC ($31,425), 3.2 ETH ($11,040), 50 SOL ($7,500). Total: $49,965 📊");
+        }, 1000);
+      });
+    },
+    
+    getNews: async () => {
+      const headlines = [
+        "Bitcoin ETF approval expected next month",
+        "Ethereum completes major network upgrade",
+        "Crypto market cap surpasses $2.5 trillion",
+        "New regulation proposal for stablecoins"
+      ];
+      
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve(`Latest crypto news:\n${headlines.map((h, i) => `${i+1}. ${h}`).join('\n')}`);
+        }, 1200);
+      });
+    }
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsOpen(true);
-      setMessages([
-        {
-          text: "Welcome to KoinFu! 👋\nHow can I assist you with your crypto questions today?",
-          sender: "bot",
-          timestamp: new Date(),
-        },
-      ]);
-      setWelcomeShown(true);
+      if (!isOpen) {
+        setIsOpen(true);
+        addBotMessage("Welcome to KoinFu! 👋\nHow can I assist you with your crypto questions today?");
+      }
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [isOpen]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsVisible(window.scrollY > 100);
-    };
+    scrollToBottom();
+  }, [messages]);
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  useEffect(() => {
+    if (isTyping && typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+  }, [isTyping]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const addBotMessage = (text) => {
+    setMessages(prev => [
+      ...prev,
+      {
+        text,
+        sender: "bot",
+        timestamp: new Date()
+      }
+    ]);
+    
+    if (soundEnabled) {
+      playNotificationSound();
+    }
+  };
+
+  const playNotificationSound = () => {
+    const audio = new Audio("/sounds/notification.mp3");
+    audio.volume = 0.3;
+    audio.play().catch(e => console.log("Audio play failed:", e));
+  };
 
   const getAIResponse = async (query) => {
-    const mockResponses = {
-      "price btc": "BTC is currently at $62,450. 📈 +2.4% in 24h.",
-      "my balance": "Your portfolio: 0.5 BTC ($31,225), 3.2 ETH ($9,600).",
-      "buy eth": "To buy ETH, go to Trade → Spot → Select ETH/USDT.",
-      default:
-        "I can check prices, portfolios, or help with trades. Try: 'What's SOL's price?'",
-    };
-
-    const responseKey = Object.keys(mockResponses).find((key) =>
-      query.toLowerCase().includes(key)
+    setIsTyping(true);
+    
+    // Check for predefined quick questions
+    const quickQuestion = cryptoQuestions.find(q => 
+      query.toLowerCase().includes(q.keyword.toLowerCase())
     );
-    return mockResponses[responseKey || "default"];
+    
+    if (quickQuestion) {
+      setTimeout(() => {
+        addBotMessage(quickQuestion.response);
+        setIsTyping(false);
+      }, 1000);
+      return;
+    }
+    
+    // Handle specific commands
+    if (query.toLowerCase().includes("price") || query.toLowerCase().includes("how much")) {
+      const coinMatch = query.match(/(btc|bitcoin|eth|ethereum|sol|solana|ada|cardano|doge|dogecoin)/i);
+      const symbol = coinMatch ? coinMatch[0].slice(0, 3) : "btc";
+      const response = await cryptoApi.getPrice(symbol);
+      addBotMessage(response);
+      setIsTyping(false);
+      return;
+    }
+    
+    if (query.toLowerCase().includes("portfolio") || query.toLowerCase().includes("balance")) {
+      const response = await cryptoApi.getPortfolio();
+      addBotMessage(response);
+      setIsTyping(false);
+      return;
+    }
+    
+    if (query.toLowerCase().includes("news") || query.toLowerCase().includes("update")) {
+      const response = await cryptoApi.getNews();
+      addBotMessage(response);
+      setIsTyping(false);
+      return;
+    }
+    
+    // Default response for other queries
+    typingTimeoutRef.current = setTimeout(() => {
+      addBotMessage("I can help with crypto prices, portfolio info, news, and trading strategies. Try asking:\n• 'What's the price of ETH?'\n• 'Show my portfolio balance'\n• 'Latest crypto news'");
+      setIsTyping(false);
+    }, 1500);
   };
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
-
+    if (!inputValue.trim() || isTyping) return;
+    
+    // Add user message
     const userMsg = {
       text: inputValue,
       sender: "user",
-      timestamp: new Date(),
+      timestamp: new Date()
     };
-    setMessages((prev) => [...prev, userMsg]);
+    setMessages(prev => [...prev, userMsg]);
+    setConversationHistory(prev => [...prev, userMsg]);
     setInputValue("");
-
-    const aiResponse = await getAIResponse(inputValue);
-    setMessages((prev) => [
-      ...prev,
-      {
-        text: aiResponse,
-        sender: "bot",
-        timestamp: new Date(),
-      },
-    ]);
+    
+    // Get AI response
+    await getAIResponse(inputValue);
   };
 
-  const formatTime = (date) => {
-    return new Date(date).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
   };
 
   const toggleSound = () => {
     setSoundEnabled(!soundEnabled);
   };
 
+  const clearChat = () => {
+    setMessages([]);
+    setConversationHistory([]);
+    setShowOptions(false);
+    addBotMessage("Chat history cleared. How can I assist you with your crypto questions today?");
+  };
+
+  const formatTime = (date) => {
+    return new Date(date).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  };
+
   return (
     <div className="fixed bottom-6 right-6 z-50">
       {isOpen ? (
-        <div className="w-full max-w-md h-[32rem] bg-slate-800 border border-teal-400 rounded-xl shadow-xl overflow-hidden flex flex-col">
+        <div className="w-full max-w-md h-[32rem] bg-slate-900 border border-teal-500/50 rounded-xl shadow-2xl overflow-hidden flex flex-col backdrop-blur-lg">
           {/* Header */}
-          <div className="bg-gradient-to-r from-teal-700 to-slate-700 p-4 flex justify-between items-center">
-            <div className="flex items-center space-x-2">
-              <div className="h-3 w-3 bg-teal-400 rounded-full animate-pulse"></div>
-              <div className="flex items-center">
-                <img
-                  src="../../public/assistanticon.png"
-                  alt="KoinFu Logo"
-                  className="h-6 w-6 mr-2 rounded-full"
-                />
-                <h3 className="font-bold text-white">
+          <div className="bg-gradient-to-r from-slate-800 to-slate-900 p-4 flex justify-between items-center border-b border-slate-700">
+            <div className="flex items-center space-x-3">
+              <div className="bg-gradient-to-br from-teal-500 to-emerald-500 p-2 rounded-lg">
+                <SiBitcoincash className="text-white text-xl" />
+              </div>
+              <div>
+                <h3 className="font-bold text-white flex items-center">
                   KoinFu Assistant
-                  <span className="block text-xs font-normal text-teal-200">
-                    Real-time crypto support
+                  <span className="ml-2 bg-emerald-500/20 text-emerald-300 text-xs px-2 py-0.5 rounded-full flex items-center">
+                    <BsLightningChargeFill className="mr-1" /> AI Powered
                   </span>
                 </h3>
+                <p className="text-xs text-teal-300">Real-time crypto support</p>
               </div>
             </div>
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => setShowOptions(!showOptions)}
-                className="text-white hover:text-teal-300 transition-colors"
+                className="text-slate-300 hover:text-teal-300 transition-colors p-1 rounded-full hover:bg-slate-700"
                 aria-label="Options"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                </svg>
+                <FaCog />
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-white hover:text-teal-300 transition-colors"
+                className="text-slate-300 hover:text-teal-300 transition-colors p-1 rounded-full hover:bg-slate-700"
                 aria-label="Close chat"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
+                <FaTimes />
               </button>
             </div>
           </div>
 
           {/* Options Menu */}
           {showOptions && (
-            <div className="absolute right-4 top-14 bg-slate-700 shadow-lg rounded-md border border-teal-400 z-10 w-60">
+            <div className="absolute right-3 top-14 bg-slate-800 shadow-xl rounded-lg border border-teal-500/30 z-10 w-56 overflow-hidden">
               <button
                 onClick={toggleSound}
-                className="w-full text-left px-4 py-2 hover:bg-slate-600 text-sm text-white flex items-center"
+                className="w-full text-left px-4 py-3 hover:bg-slate-700/80 text-sm text-white flex items-center border-b border-slate-700"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 mr-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15.536 8.464a5 5 0 010 7.072M12 6a7.975 7.975 0 015.657 2.343m0 0a7.975 7.975 0 010 11.314m-11.314 0a7.975 7.975 0 010-11.314m0 0a7.975 7.975 0 015.657-2.343"
-                  />
-                </svg>
+                <div className="mr-3">
+                  {soundEnabled ? <FaVolumeUp className="text-teal-400" /> : <FaVolumeMute className="text-slate-400" />}
+                </div>
                 Sound {soundEnabled ? "On" : "Off"}
-                <div className="ml-auto flex items-center">
-                  <div
-                    className={`w-10 h-5 flex items-center rounded-full p-1 ${
-                      soundEnabled ? "bg-teal-500" : "bg-gray-500"
-                    }`}
-                  >
-                    <div
-                      className={`bg-white w-3 h-3 rounded-full shadow-md transform duration-300 ease-in-out ${
-                        soundEnabled ? "translate-x-5" : ""
-                      }`}
-                    ></div>
-                  </div>
-                </div>
               </button>
-
               <button
-                className="w-full text-left px-4 py-2 text-sm text-slate-400 flex items-center cursor-not-allowed"
-                disabled
+                onClick={clearChat}
+                className="w-full text-left px-4 py-3 hover:bg-slate-700/80 text-sm text-white flex items-center"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 mr-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                  />
-                </svg>
-                Download transcript
-              </button>
-
-              <button
-                onClick={() => setShowGDPR(!showGDPR)}
-                className="w-full text-left px-4 py-2 hover:bg-slate-600 text-sm text-white flex items-center justify-between"
-              >
-                <div className="flex items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 mr-2"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                    />
-                  </svg>
-                  Privacy Policy
+                <div className="mr-3">
+                  <FaTrash className="text-rose-400" />
                 </div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className={`h-4 w-4 transition-transform duration-200 ${
-                    showGDPR ? "rotate-180" : ""
-                  }`}
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                Clear Conversation
               </button>
-
-              {showGDPR && (
-                <div className="px-4 py-3 bg-slate-800 text-xs text-slate-300 border-t border-slate-600">
-                  <p className="mb-2">
-                    We process personal data in compliance with GDPR
-                    regulations. Your data is used solely to provide customer
-                    service and improve your experience.
-                  </p>
-                  <p>
-                    For more information about how we handle your data, please
-                    contact our support team.
-                  </p>
-                </div>
-              )}
+              <div className="px-4 py-3 bg-slate-900/80 border-t border-slate-700 flex items-center text-xs text-slate-400">
+                <FaLock className="mr-2 text-xs" />
+                <span>End-to-end encrypted</span>
+              </div>
             </div>
           )}
 
           {/* Messages */}
-          <div className="flex-1 p-4 overflow-y-auto bg-slate-800">
+          <div className="flex-1 p-4 overflow-y-auto bg-gradient-to-b from-slate-900/70 to-slate-900">
             {messages.length === 0 ? (
-              <div className="h-full flex flex-col justify-center items-center text-slate-400">
-                <p className="mb-4">
-                  Ask me about crypto prices, portfolios, or trading
-                </p>
-                <div className="flex flex-wrap justify-center gap-2">
-                  <button
-                    onClick={() => setInputValue("Price of BTC")}
-                    className="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg text-teal-200"
-                  >
-                    Price of BTC
-                  </button>
-                  <button
-                    onClick={() => setInputValue("My balance")}
-                    className="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg text-teal-200"
-                  >
-                    My balance
-                  </button>
-                  <button
-                    onClick={() => setInputValue("How to buy ETH")}
-                    className="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg text-teal-200"
-                  >
-                    How to buy ETH
-                  </button>
+              <div className="h-full flex flex-col justify-center items-center text-slate-500">
+                <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-8 text-center max-w-xs">
+                  <div className="bg-gradient-to-br from-teal-600 to-emerald-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <SiBitcoincash className="text-white text-xl" />
+                  </div>
+                  <h3 className="font-medium text-white mb-2">Crypto Assistant</h3>
+                  <p className="text-sm mb-4">
+                    Ask me about prices, portfolios, trading, or crypto news
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => setInputValue("Price of BTC")}
+                      className="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded-lg text-teal-300 border border-slate-700 transition-colors"
+                    >
+                      Price of BTC
+                    </button>
+                    <button
+                      onClick={() => setInputValue("My portfolio")}
+                      className="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded-lg text-teal-300 border border-slate-700 transition-colors"
+                    >
+                      My portfolio
+                    </button>
+                    <button
+                      onClick={() => setInputValue("Crypto news")}
+                      className="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded-lg text-teal-300 border border-slate-700 transition-colors"
+                    >
+                      Crypto news
+                    </button>
+                    <button
+                      onClick={() => setInputValue("How to buy ETH")}
+                      className="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded-lg text-teal-300 border border-slate-700 transition-colors"
+                    >
+                      Buy ETH
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
               <div className="space-y-4">
                 {messages.map((msg, index) => (
                   <div key={index} className="flex flex-col">
-                    {index === 0 && (
-                      <div className="text-center text-slate-400 text-xs mb-2">
-                        {formatTime(msg.timestamp)}
-                      </div>
-                    )}
                     <div
                       className={`flex ${
                         msg.sender === "user" ? "justify-end" : "justify-start"
                       }`}
                     >
                       <div
-                        className={`max-w-[80%] px-4 py-2 rounded-lg whitespace-pre-line ${
+                        className={`max-w-[85%] px-4 py-3 rounded-2xl relative ${
                           msg.sender === "user"
-                            ? "bg-teal-600 text-white"
-                            : "bg-slate-700 text-slate-100"
+                            ? "bg-gradient-to-br from-teal-700/80 to-teal-800 text-white rounded-br-none"
+                            : "bg-slate-800/70 text-slate-100 rounded-bl-none border border-slate-700"
                         }`}
                       >
-                        {msg.text}
+                        {msg.sender === "bot" && (
+                          <div className="absolute -left-2 -top-2 bg-gradient-to-br from-cyan-500 to-blue-500 w-8 h-8 rounded-full flex items-center justify-center border-2 border-slate-900">
+                            <SiBitcoincash className="text-white text-xs" />
+                          </div>
+                        )}
+                        <div className="whitespace-pre-line">{msg.text}</div>
+                        <div
+                          className={`text-xs mt-2 ${
+                            msg.sender === "user" ? "text-teal-300/70" : "text-slate-500"
+                          }`}
+                        >
+                          {formatTime(msg.timestamp)}
+                        </div>
                       </div>
                     </div>
                   </div>
                 ))}
+                
+                {isTyping && (
+                  <div className="flex justify-start">
+                    <div className="bg-slate-800/70 px-4 py-3 rounded-2xl rounded-bl-none border border-slate-700">
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 rounded-full bg-slate-400 animate-pulse"></div>
+                        <div className="w-2 h-2 rounded-full bg-slate-400 animate-pulse delay-75"></div>
+                        <div className="w-2 h-2 rounded-full bg-slate-400 animate-pulse delay-150"></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                <div ref={messagesEndRef} />
               </div>
             )}
           </div>
 
           {/* Input */}
-          <div className="p-4 border-t border-slate-700 bg-slate-800">
-            <div className="flex">
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                placeholder="Ask about crypto..."
-                className="flex-1 bg-slate-700 border border-slate-600 rounded-l-lg px-4 py-3 text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 placeholder-slate-400"
-              />
-              <button
-                onClick={handleSendMessage}
-                className="bg-teal-600 hover:bg-teal-700 px-4 rounded-r-lg text-white transition-colors flex items-center justify-center"
-                aria-label="Send message"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
+          <div className="p-4 border-t border-slate-800 bg-slate-900/50">
+            <div className="flex items-end">
+              <div className="flex-1 relative">
+                <textarea
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={handleKeyPress}
+                  placeholder="Ask about crypto..."
+                  className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 focus:outline-none focus:ring-1 focus:ring-teal-500 placeholder-slate-500 resize-none pr-12"
+                  rows={1}
+                  style={{ minHeight: "3rem", maxHeight: "8rem" }}
+                />
+                <button
+                  onClick={handleSendMessage}
+                  disabled={!inputValue.trim() || isTyping}
+                  className={`absolute right-3 bottom-3 p-2 rounded-full ${
+                    inputValue.trim()
+                      ? "bg-gradient-to-br from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-white"
+                      : "text-slate-500"
+                  } transition-all`}
+                  aria-label="Send message"
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
+                  <FaPaperPlane className="text-sm" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -348,29 +385,21 @@ const ChatBot = () => {
         <button
           onClick={() => setIsOpen(true)}
           className={`
-            bg-gradient-to-r from-teal-600 to-slate-700 hover:from-teal-500 hover:to-slate-600 
-            p-4 rounded-full shadow-lg transition-all duration-300
-            ${isVisible ? "opacity-100" : "opacity-100"} 
-            hover:scale-110 focus:outline-none focus:ring-2 focus:ring-teal-500
-            animate-pulse
+            bg-gradient-to-br from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 
+            p-5 rounded-full shadow-xl transition-all duration-300
+            hover:scale-110 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-slate-900
+            animate-bounce-slow
           `}
           aria-label="Open chat"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-8 w-8 text-white"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-            <path d="M8 10h.01" />
-            <path d="M12 10h.01" />
-            <path d="M16 10h.01" />
-          </svg>
+          <div className="relative">
+            <div className="absolute -inset-1.5 bg-emerald-400/30 rounded-full animate-ping-slow"></div>
+            <div className="relative">
+              <div className="bg-gradient-to-br from-cyan-500 to-blue-500 w-10 h-10 rounded-full flex items-center justify-center">
+                <SiBitcoincash className="text-white text-xl" />
+              </div>
+            </div>
+          </div>
         </button>
       )}
     </div>

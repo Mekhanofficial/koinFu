@@ -1,7 +1,6 @@
 import { useTheme } from "next-themes";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
 import {
   faBars,
   faSun,
@@ -14,10 +13,15 @@ import {
   faLightbulb,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef, useEffect } from "react";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "../../firebase";
 
-export default function HeaderPage({ isSidebarOpen, setIsSidebarOpen, user }) {
+export default function HeaderPage({ isSidebarOpen, setIsSidebarOpen }) {
   const { theme, setTheme } = useTheme();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const [user, setUser] = useState(null);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNotificationMenuOpen, setIsNotificationMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
@@ -41,6 +45,23 @@ export default function HeaderPage({ isSidebarOpen, setIsSidebarOpen, user }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser({
+          uid: currentUser.uid,
+          name: currentUser.displayName || "User",
+          email: currentUser.email || "user@example.com",
+          photoURL: currentUser.photoURL || null,
+        });
+      } else {
+        setUser(null);
+        navigate("/login");
+      }
+    });
+    return () => unsubscribe();
+  }, [navigate]);
 
   const pageTitles = {
     "/Dashboard": "Dashboard",
@@ -105,6 +126,17 @@ export default function HeaderPage({ isSidebarOpen, setIsSidebarOpen, user }) {
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  };
+
+  if (!user) return null;
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 h-16 z-30 w-full bg-white dark:bg-slate-950 border-b border-gray-200 dark:border-slate-700 transition-all duration-200 ${
@@ -123,7 +155,7 @@ export default function HeaderPage({ isSidebarOpen, setIsSidebarOpen, user }) {
           />
         </button>
         {currentPage && (
-          <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white ml-4 md:ml-6">
+          <h1 className="text-xl md:text-2xl font-bold ml-4 md:ml-6">
             {currentPage}
           </h1>
         )}
@@ -141,19 +173,17 @@ export default function HeaderPage({ isSidebarOpen, setIsSidebarOpen, user }) {
           />
         </button>
 
+        {/* Notifications */}
         <div className="relative" ref={notificationMenuRef}>
           <button
             onClick={() => {
               setIsNotificationMenuOpen(!isNotificationMenuOpen);
               setIsUserMenuOpen(false);
             }}
-            className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-800 transition-colors duration-200 relative"
+            className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-800 relative"
             aria-label="Notifications"
           >
-            <FontAwesomeIcon
-              icon={faBell}
-              className="h-4 w-4 text-gray-700 dark:text-gray-300"
-            />
+            <FontAwesomeIcon icon={faBell} className="h-4 w-4" />
             {unreadCount > 0 && (
               <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                 {unreadCount}
@@ -162,39 +192,27 @@ export default function HeaderPage({ isSidebarOpen, setIsSidebarOpen, user }) {
           </button>
 
           {isNotificationMenuOpen && (
-            <div className="absolute right-0 mt-2 w-72 bg-white dark:bg-slate-800 rounded-md shadow-lg overflow-hidden z-50 border border-gray-200 dark:border-slate-700">
+            <div className="absolute right-0 mt-2 w-72 bg-white dark:bg-slate-800 rounded-md shadow-lg z-50 border border-gray-200 dark:border-slate-700">
               <div className="py-1">
-                <div className="px-4 py-2 border-b border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-700">
-                  <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                    Notifications
-                  </h3>
+                <div className="px-4 py-2 border-b bg-gray-100 dark:bg-slate-700">
+                  <h3 className="text-sm font-medium">Notifications</h3>
                 </div>
-                {notifications.length > 0 ? (
-                  notifications.map((notification) => (
-                    <div
-                      key={notification.id}
-                      className={`px-4 py-3 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer ${
-                        !notification.read
-                          ? "bg-blue-50 dark:bg-slate-700/50"
-                          : ""
-                      }`}
-                    >
-                      <p className="text-sm text-gray-800 dark:text-gray-200">
-                        {notification.text}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {notification.time}
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <div className="px-4 py-3 text-center">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      No new notifications
+                {notifications.map((notification) => (
+                  <div
+                    key={notification.id}
+                    className={`px-4 py-3 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer ${
+                      !notification.read
+                        ? "bg-blue-50 dark:bg-slate-700/50"
+                        : ""
+                    }`}
+                  >
+                    <p className="text-sm">{notification.text}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      {notification.time}
                     </p>
                   </div>
-                )}
-                <div className="px-4 py-2 border-t border-gray-200 dark:border-slate-700 text-center">
+                ))}
+                <div className="px-4 py-2 border-t text-center">
                   <Link
                     to="/notifications"
                     className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
@@ -207,59 +225,62 @@ export default function HeaderPage({ isSidebarOpen, setIsSidebarOpen, user }) {
           )}
         </div>
 
+        {/* User Menu */}
         <div className="relative" ref={userMenuRef}>
           <button
             onClick={() => {
               setIsUserMenuOpen(!isUserMenuOpen);
               setIsNotificationMenuOpen(false);
             }}
-            className="flex items-center gap-2 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-slate-800 transition-colors duration-200"
+            className="flex items-center gap-2 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-slate-800"
             aria-label="User menu"
           >
-            <div className="h-8 w-8 rounded-full bg-gray-300 dark:bg-slate-700 flex items-center justify-center">
-              <FontAwesomeIcon
-                icon={faUser}
-                className="h-4 w-4 text-gray-700 dark:text-gray-300"
-              />
+            <div className="h-8 w-8 rounded-full bg-gray-300 dark:bg-slate-700 flex items-center justify-center overflow-hidden">
+              {user.photoURL ? (
+                <img
+                  src={user.photoURL}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <FontAwesomeIcon icon={faUser} className="text-2xl text-slate-400" />
+              )}
             </div>
-            <span className="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300 truncate max-w-[120px]">
-              {user?.name || "User"}
+            <span className="hidden md:inline text-sm font-medium truncate max-w-[120px]">
+              {user.name}
             </span>
           </button>
 
           {isUserMenuOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-md shadow-lg overflow-hidden z-50 border border-gray-200 dark:border-slate-700">
-              <div className="py-1">
-                <Link
-                  to="/account"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
-                >
-                  <FontAwesomeIcon icon={faUser} className="mr-2" />
-                  Profile
-                </Link>
-                <Link
-                  to="/settings"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
-                >
-                  <FontAwesomeIcon icon={faCog} className="mr-2" />
-                  Settings
-                </Link>
-                <Link
-                  to="/messages"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
-                >
-                  <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
-                  Messages
-                </Link>
-                <div className="border-t border-gray-200 dark:border-slate-700"></div>
-                <Link
-                  to="/logout"
-                  className="block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-slate-700"
-                >
-                  <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
-                  Sign out
-                </Link>
-              </div>
+            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-md shadow-lg z-50 border">
+              <Link
+                to="/account"
+                className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
+              >
+                <FontAwesomeIcon icon={faUser} className="mr-2" />
+                Profile
+              </Link>
+              <Link
+                to="/settings"
+                className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
+              >
+                <FontAwesomeIcon icon={faCog} className="mr-2" />
+                Settings
+              </Link>
+              <Link
+                to="/messages"
+                className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
+              >
+                <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
+                Messages
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-slate-700"
+              >
+                <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
+                Logout
+              </button>
             </div>
           )}
         </div>
