@@ -99,10 +99,10 @@ export default function HeroPage() {
             className="flex items-center justify-center md:justify-start mb-4"
             variants={itemVariants}
           >
-            <div className="rounded-full bg-teal-500 text-white flex items-center justify-center w-10 h-10 relative left-3">
+            <div className="rounded-full bg-teal-500 bg-opacity-60 text-white flex items-center justify-center p-2 w-8 h-10 relative left-3">
               <FontAwesomeIcon className="h-6" icon={faEye} />
             </div>
-            <button className="bg-gray-600 bg-opacity-40 border-teal-300 text-white px-4 py-2 rounded-full">
+            <button className="bg-gray-600 bg-opacity-20 border-teal-300 text-white px-4 py-2 rounded-full">
               AI Auto Trading Assistant
             </button>
           </motion.div>
