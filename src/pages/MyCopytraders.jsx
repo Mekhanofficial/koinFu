@@ -1,22 +1,30 @@
 import { useTheme } from "next-themes";
+import { TraderCard } from "./TraderCard";
+import { useCopyTraders } from "../context/CopyTraderContext";
 
-export default function MyCopyTradersPage() {
+export function MyCopyTradersPage() {
   const { theme } = useTheme();
+  const { copiedTraders, removeCopiedTrader } = useCopyTraders();
+
+  const handleRemove = (id) => {
+    removeCopiedTrader(id);
+  };
 
   return (
-    <>
-      <section
-        className={`px-10 min-h-screen text-center ${
-          theme === "dark" ? "bg-slate-950" : "bg-gray-100"
+    <section
+      className={`px-10 py-14 min-h-screen ${
+        theme === "dark" ? "bg-slate-950" : "bg-gray-100"
+      }`}
+    >
+      <h1
+        className={`text-3xl font-bold ${
+          theme === "dark" ? "text-gray-400" : "text-gray-600"
         }`}
       >
-        <h1
-          className={`text-3xl font-bold ${
-            theme === "dark" ? "text-gray-400" : "text-gray-600"
-          }`}
-        >
-          My Copy Traders
-        </h1>
+        My Copy Traders
+      </h1>
+
+      {copiedTraders.length === 0 ? (
         <p
           className={`text-lg mt-7 rounded-3xl p-10 transition-all duration-300 border ${
             theme === "dark"
@@ -26,7 +34,26 @@ export default function MyCopyTradersPage() {
         >
           No copy traders yet.
         </p>
-      </section>
-    </>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-7">
+          {copiedTraders.map((trader) => (
+            <div key={trader.id} className="relative group">
+              <TraderCard trader={trader} theme={theme} isCopied={true} />
+              <button
+                onClick={() => handleRemove(trader.id)}
+                className={`absolute top-2 right-2 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity ${
+                  theme === "dark"
+                    ? "bg-red-600 hover:bg-red-700"
+                    : "bg-red-500 hover:bg-red-600"
+                } text-white`}
+                title="Remove trader"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }

@@ -23,7 +23,7 @@ export default function PlaceTradePage() {
   return (
     <>
       <section
-        className={`overflow-x-hidden px-4 md:px-6 lg:px-10 py-5 ${
+        className={`overflow-x-hidden px-10 md:px-6 lg:px-10 py-14 ${
           theme === "dark" ? "bg-slate-950" : "bg-gray-100"
         }`}
       >

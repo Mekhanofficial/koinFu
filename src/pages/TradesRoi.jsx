@@ -8,7 +8,7 @@ export default function TradesRoiPage() {
     <>
       <HeaderPage />
       <section
-        className={`min-h-screen overflow-x-hidden ${
+        className={`min-h-screen overflow-x-hidden px-10 py-14 ${
           theme === "dark" ? "bg-slate-950" : "bg-gray-100"
         }`}
       >

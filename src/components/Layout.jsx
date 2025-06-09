@@ -4,19 +4,22 @@ import Sidebar from "./SideBar";
 import ScrollToTop from "./ScrollToTop";
 import FooterDash from "./FooterDash";
 import { ThemeProvider, useTheme } from "next-themes";
+import { CopyTradersProvider } from "../context/CopyTraderContext";
 
 const Layout = ({ children, user }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-      <LayoutContent
-        user={user}
-        isSidebarOpen={isSidebarOpen}
-        setIsSidebarOpen={setIsSidebarOpen}
-      >
-        {children}
-      </LayoutContent>
+      <CopyTradersProvider>
+        <LayoutContent
+          user={user}
+          isSidebarOpen={isSidebarOpen}
+          setIsSidebarOpen={setIsSidebarOpen}
+        >
+          {children}
+        </LayoutContent>
+      </CopyTradersProvider>
     </ThemeProvider>
   );
 };

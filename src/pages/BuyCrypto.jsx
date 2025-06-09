@@ -39,17 +39,23 @@ const BuyCrypto = () => {
 
   return (
     <>
-      <div className={`min-h-screen flex flex-col items-center py-12 ${
-        theme === "dark" ? "bg-slate-950" : "bg-gray-100"
-      }`}>
-        <h1 className={`text-4xl font-extrabold mb-4 ${
-          theme === "dark" ? "text-teal-500" : "text-teal-600"
-        }`}>
+      <div
+        className={`min-h-screen flex flex-col items-center px-10 py-14 ${
+          theme === "dark" ? "bg-slate-950" : "bg-gray-100"
+        }`}
+      >
+        <h1
+          className={`text-4xl font-extrabold mb-4 ${
+            theme === "dark" ? "text-teal-500" : "text-teal-600"
+          }`}
+        >
           Buy Cryptocurrency
         </h1>
-        <p className={`text-lg mb-8 text-center max-w-xl ${
-          theme === "dark" ? "text-slate-400" : "text-gray-500"
-        }`}>
+        <p
+          className={`text-lg mb-8 text-center max-w-xl ${
+            theme === "dark" ? "text-slate-400" : "text-gray-500"
+          }`}
+        >
           Tap on any of the links below to purchase from our trusted partners
           and start your crypto journey today.
         </p>
@@ -72,9 +78,11 @@ const BuyCrypto = () => {
                 alt={exchange.name}
                 className="h-20 w-20 object-contain mb-4"
               />
-              <span className={`text-xl font-semibold ${
-                theme === "dark" ? "text-white" : "text-gray-800"
-              }`}>
+              <span
+                className={`text-xl font-semibold ${
+                  theme === "dark" ? "text-white" : "text-gray-800"
+                }`}
+              >
                 {exchange.name}
               </span>
             </a>

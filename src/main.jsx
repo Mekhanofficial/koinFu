@@ -19,7 +19,6 @@ import DepositPage from "./pages/Deposits.jsx";
 import MyTraderPage from "./pages/MyTraders.jsx";
 import BuyCrypto from "./pages/BuyCrypto.jsx";
 import TradesRoiPage from "./pages/TradesRoi.jsx";
-import MycopyTradersPage from "./pages/MyCopytraders.jsx";
 import BuyBotPage from "./pages/BuyBots.jsx";
 import StakePage from "./pages/Stake.jsx";
 import SubscriptionPage from "./pages/Subscription.jsx";
@@ -49,6 +48,7 @@ import ServicePage from "./pages/services/Hero";
 import ContactPage from "./pages/contact/Hero";
 import HomePage from "./pages/home/Home";
 import PasswordUpdate from './pages/PasswordUpdate.jsx'
+import { MyCopyTradersPage } from "./pages/MyCopytraders";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -213,7 +213,7 @@ const proRouter = createBrowserRouter([
         path: "/MyCopytraders",
         element: (
           <Layout>
-            <MycopyTradersPage />
+            <MyCopyTradersPage />
           </Layout>
         ),
       },

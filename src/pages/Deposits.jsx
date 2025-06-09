@@ -48,7 +48,7 @@ export default function DepositPage() {
   return (
     <>
       <section
-        className={`min-h-screen p-6 flex flex-col md:flex-row gap-6 ${
+        className={`min-h-screen px-10 py-14 flex flex-col md:flex-row gap-6 ${
           theme === "dark"
             ? "bg-gray-900 text-white"
             : "bg-gray-100 text-gray-900"

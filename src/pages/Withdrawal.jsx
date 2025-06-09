@@ -7,7 +7,7 @@ const CustomAlert = ({ message, onClose }) => {
   const { theme } = useTheme();
   
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ">
       <div className={`p-6 rounded-lg shadow-lg border max-w-md w-full ${
         theme === 'dark' 
           ? 'bg-slate-900 border-slate-700 text-gray-200' 

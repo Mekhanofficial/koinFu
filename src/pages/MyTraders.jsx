@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import traderImages from "./MyTradersImg"; 
 import { useTheme } from "next-themes";
+import { TraderCard } from "./TraderCard";
+import { useCopyTraders } from "../context/CopyTraderContext";
 
 
-const names = [
+
+const NAMES = [
   "Lisa Dawson",
   "John Cerasani",
   "Defend Dark",
@@ -96,22 +99,30 @@ const names = [
   "Julia Baker",
 ];
 
-const traders = Array.from({ length: 100 }, (_, i) => ({
-  id: i + 1,
-  name: names[i % names.length],
-  winRate: Math.floor(Math.random() * 31) + 70,
-  profitShare: Math.floor(Math.random() * 21) + 10,
-  balance: (Math.random() * 500 + 200).toFixed(2),
-  losses: Math.floor(Math.random() * 10),
-  wins: Math.floor(Math.random() * 50) + 1,
-  image: traderImages[i % traderImages.length],
-}));
+// Utility function to generate traders data
+const generateTraders = () => {
+  return Array.from({ length: 100 }, (_, i) => ({
+    id: i + 1,
+    name: NAMES[i % NAMES.length],
+    winRate: Math.floor(Math.random() * 31) + 70,
+    profitShare: Math.floor(Math.random() * 21) + 10,
+    balance: (Math.random() * 500 + 200).toFixed(2),
+    losses: Math.floor(Math.random() * 10),
+    wins: Math.floor(Math.random() * 50) + 1,
+    image: traderImages[i % traderImages.length],
+  }));
+};
 
 export default function MyTraderPage() {
   const { theme } = useTheme();
   const [search, setSearch] = useState("");
-  const [copyStatus, setCopyStatus] = useState({});
   const [loadingId, setLoadingId] = useState(null);
+  const { copiedTraders, addCopiedTrader } = useCopyTraders();
+  const [traders, setTraders] = useState([]);
+
+  useEffect(() => {
+    setTraders(generateTraders());
+  }, []);
 
   const filteredTraders = traders.filter((trader) =>
     trader.name.toLowerCase().includes(search.toLowerCase())
@@ -119,126 +130,44 @@ export default function MyTraderPage() {
 
   const handleCopy = (id) => {
     setLoadingId(id);
-    setCopyStatus((prev) => ({
-      ...prev,
-      [id]: "Copying...",
-    }));
 
     setTimeout(() => {
+      const traderToCopy = traders.find((t) => t.id === id);
+      addCopiedTrader(traderToCopy);
       setLoadingId(null);
-      setCopyStatus((prev) => ({
-        ...prev,
-        [id]: "Copied!",
-      }));
     }, 2000);
   };
 
   return (
-    <div className={`p-10 min-h-screen ${
-      theme === 'dark' 
-        ? 'bg-gradient-to-r from-gray-800 to-black text-white' 
-        : 'bg-gradient-to-r from-gray-100 to-gray-300 text-gray-800'
-    }`}>
-      {/* Search Input */}
+    <div
+      className={`p-10 min-h-screen ${
+        theme === "dark"
+          ? "bg-gradient-to-r from-gray-800 to-black text-white"
+          : "bg-gradient-to-r from-gray-100 to-gray-300 text-gray-800"
+      }`}
+    >
       <input
         type="text"
         placeholder="Search traders..."
         className={`w-full p-3 mb-6 rounded-lg focus:ring-2 focus:outline-none ${
-          theme === 'dark'
-            ? 'bg-gray-700 text-white border-gray-600 focus:ring-amber-300'
-            : 'bg-white text-gray-800 border-gray-300 focus:ring-amber-500'
+          theme === "dark"
+            ? "bg-gray-700 text-white border-gray-600 focus:ring-amber-300"
+            : "bg-white text-gray-800 border-gray-300 focus:ring-amber-500"
         } border`}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      {/* Trader Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {filteredTraders.map((trader) => (
-          <div
+          <TraderCard
             key={trader.id}
-            className={`p-6 rounded-xl shadow-lg text-center transition-all duration-300 hover:scale-[1.02] ${
-              theme === 'dark'
-                ? 'bg-gray-900 border-gray-800 hover:border-yellow-500 hover:shadow-yellow-500/50'
-                : 'bg-white border-gray-200 hover:border-yellow-400 hover:shadow-yellow-400/50'
-            } border`}
-          >
-            {/* Trader Image */}
-            <div className="relative mx-auto w-24 h-24">
-              <img
-                src={trader.image}
-                alt={trader.name}
-                className="w-full h-full rounded-full border-4 border-white"
-              />
-              <span className={`absolute bottom-0 right-1 w-6 h-6 rounded-full border-2 ${
-                theme === 'dark' ? 'bg-green-500 border-gray-900' : 'bg-green-400 border-white'
-              }`}></span>
-            </div>
-
-            {/* Trader Name and Balance */}
-            <h2 className={`mt-4 font-bold text-xl ${
-              theme === 'dark' ? 'text-white' : 'text-gray-800'
-            }`}>
-              {trader.name}
-            </h2>
-            <p className={`text-lg font-semibold ${
-              theme === 'dark' ? 'text-amber-300' : 'text-amber-500'
-            }`}>
-              ${trader.balance}
-            </p>
-            <p className={`text-sm ${
-              theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
-            }`}>
-              Profit Share: {trader.profitShare}%
-            </p>
-
-            {/* Win Rate and Losses */}
-            <div className="flex justify-between items-center mt-4 text-sm">
-              <div className={`text-left ${
-                theme === 'dark' ? 'text-white' : 'text-gray-800'
-              }`}>
-                <div className="flex gap-2 items-center">
-                  <p className="font-bold text-xl">{trader.winRate}%</p>
-                  <p className={`text-xs ${
-                    theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
-                  }`}>WIN RATE</p>
-                </div>
-                <p className="font-bold text-md">{trader.wins} WINS</p>
-              </div>
-              <div className={`w-px h-10 ${
-                theme === 'dark' ? 'bg-gray-600' : 'bg-gray-300'
-              }`}></div>
-              <div className={`text-right ${
-                theme === 'dark' ? 'text-white' : 'text-gray-800'
-              }`}>
-                <p className="font-bold text-xl">{trader.losses}</p>
-                <p className={theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}>
-                  LOSSES
-                </p>
-              </div>
-            </div>
-
-            {/* Copy Button */}
-            <button
-              className={`mt-6 w-full font-bold py-3 rounded-lg transition duration-200 hover:scale-[1.03] focus:outline-none ${
-                theme === 'dark'
-                  ? 'bg-gradient-to-r from-orange-500 to-amber-400 text-black'
-                  : 'bg-gradient-to-r from-orange-400 to-amber-300 text-black'
-              }`}
-              onClick={() => handleCopy(trader.id)}
-              disabled={loadingId === trader.id}
-            >
-              {loadingId === trader.id ? (
-                <div className="flex justify-center items-center">
-                  <div className={`animate-spin rounded-full h-5 w-5 ${
-                    theme === 'dark' ? 'border-b-2 border-black' : 'border-b-2 border-gray-800'
-                  }`}></div>
-                </div>
-              ) : (
-                copyStatus[trader.id] || "Copy"
-              )}
-            </button>
-          </div>
+            trader={trader}
+            theme={theme}
+            onCopy={handleCopy}
+            isCopying={loadingId === trader.id}
+            isCopied={copiedTraders.some((t) => t.id === trader.id)}
+          />
         ))}
       </div>
     </div>
