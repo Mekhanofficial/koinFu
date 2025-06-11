@@ -10,6 +10,15 @@ export default {
       xl: "1280px",
     },
     extend: {
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(-50%)' },
+          '50%': { transform: 'translateY(-55%)' },
+        },
+      },
+      animation: {
+        float: 'float 3s ease-in-out infinite',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

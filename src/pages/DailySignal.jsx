@@ -236,7 +236,7 @@ export default function DailySignalPage() {
       return (
         <div
           className={`p-3 rounded-lg shadow-lg ${
-            theme === "dark" ? "bg-slate-800" : "bg-white"
+            theme === "dark" ? "bg-slate-900" : "bg-white"
           } border ${
             theme === "dark" ? "border-slate-700" : "border-gray-200"
           }`}
@@ -257,18 +257,18 @@ export default function DailySignalPage() {
       <section
         className={`min-h-screen mx-auto px-4 sm:px-6 lg:px-8 py-10 ${
           theme === "dark"
-            ? "bg-gradient-to-br from-slate-900 to-slate-800"
+            ? "bg-zinc-950"
             : "bg-gradient-to-br from-slate-50 to-slate-100"
         }`}
       >
         {/* Header */}
         <div className="max-w-7xl mx-auto mb-12 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-500 to-cyan-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-teal-500 to-blue-600 bg-clip-text text-transparent">
             Trading Signal Services
           </h1>
           <p
             className={`text-xl max-w-2xl mx-auto ${
-              theme === "dark" ? "text-slate-300" : "text-slate-600"
+              theme === "dark" ? "text-gray-300" : "text-gray-600"
             }`}
           >
             Premium trading signals to maximize your profits and minimize risks
@@ -278,16 +278,18 @@ export default function DailySignalPage() {
         {/* Signal Stats Card */}
         <div className="max-w-7xl mx-auto mb-10">
           <div
-            className={`rounded-2xl shadow-xl overflow-hidden ${
-              theme === "dark" ? "bg-slate-800/50" : "bg-white"
+            className={`rounded-xl shadow-xl overflow-hidden ${
+              theme === "dark" ? "bg-slate-900" : "bg-white"
+            } border ${
+              theme === "dark" ? "border-slate-700" : "border-gray-200"
             }`}
           >
             <div className="p-6 flex flex-col md:flex-row gap-6 items-stretch">
               {/* Current Signal Info */}
               <div className="flex-1">
                 <div
-                  className={`p-6 rounded-xl h-full ${
-                    theme === "dark" ? "bg-slate-700/30" : "bg-slate-50"
+                  className={`p-5 rounded-xl h-full ${
+                    theme === "dark" ? "bg-slate-800" : "bg-slate-50"
                   } border ${
                     theme === "dark" ? "border-slate-700" : "border-slate-200"
                   }`}
@@ -308,7 +310,7 @@ export default function DailySignalPage() {
                     <div>
                       <p
                         className={`text-sm ${
-                          theme === "dark" ? "text-slate-400" : "text-slate-500"
+                          theme === "dark" ? "text-gray-400" : "text-gray-500"
                         }`}
                       >
                         Current Signal
@@ -316,7 +318,7 @@ export default function DailySignalPage() {
                       <h2 className="text-2xl font-bold">
                         <span
                           className={
-                            activeSignal ? "text-blue-500" : "text-slate-400"
+                            activeSignal ? "text-blue-500" : "text-gray-400"
                           }
                         >
                           {activeSignal
@@ -331,7 +333,7 @@ export default function DailySignalPage() {
                     <div className="grid grid-cols-2 gap-4 mb-6">
                       <div
                         className={`p-3 rounded-xl ${
-                          theme === "dark" ? "bg-slate-800/50" : "bg-slate-100"
+                          theme === "dark" ? "bg-slate-700" : "bg-slate-100"
                         }`}
                       >
                         <p className="font-semibold text-sm mb-1">Win Rate</p>
@@ -341,7 +343,7 @@ export default function DailySignalPage() {
                       </div>
                       <div
                         className={`p-3 rounded-xl ${
-                          theme === "dark" ? "bg-slate-800/50" : "bg-slate-100"
+                          theme === "dark" ? "bg-slate-700" : "bg-slate-100"
                         }`}
                       >
                         <p className="font-semibold text-sm mb-1">
@@ -353,7 +355,7 @@ export default function DailySignalPage() {
                       </div>
                       <div
                         className={`p-3 rounded-xl ${
-                          theme === "dark" ? "bg-slate-800/50" : "bg-slate-100"
+                          theme === "dark" ? "bg-slate-700" : "bg-slate-100"
                         }`}
                       >
                         <p className="font-semibold text-sm mb-1">
@@ -365,7 +367,7 @@ export default function DailySignalPage() {
                       </div>
                       <div
                         className={`p-3 rounded-xl ${
-                          theme === "dark" ? "bg-slate-800/50" : "bg-slate-100"
+                          theme === "dark" ? "bg-slate-700" : "bg-slate-100"
                         }`}
                       >
                         <p className="font-semibold text-sm mb-1">Purchased</p>
@@ -378,13 +380,13 @@ export default function DailySignalPage() {
                     </div>
                   ) : (
                     <div
-                      className={`p-6 rounded-xl text-center mb-6 ${
-                        theme === "dark" ? "bg-slate-800/50" : "bg-slate-100"
+                      className={`p-5 rounded-xl text-center mb-6 ${
+                        theme === "dark" ? "bg-slate-800" : "bg-slate-100"
                       }`}
                     >
                       <p
                         className={`mb-4 ${
-                          theme === "dark" ? "text-slate-400" : "text-slate-600"
+                          theme === "dark" ? "text-gray-400" : "text-gray-600"
                         }`}
                       >
                         You don't have an active signal service. Subscribe to
@@ -397,8 +399,8 @@ export default function DailySignalPage() {
                     onClick={toggleSignalManager}
                     className={`w-full py-3 rounded-xl font-medium transition-all ${
                       theme === "dark"
-                        ? "bg-gradient-to-r from-blue-600 to-cyan-700 hover:from-blue-700 hover:to-cyan-800 text-white"
-                        : "bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white"
+                        ? "bg-gradient-to-r from-teal-600 to-blue-700 hover:from-teal-700 hover:to-blue-800 text-white"
+                        : "bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700 text-white"
                     }`}
                   >
                     {showSignalManager
@@ -425,7 +427,7 @@ export default function DailySignalPage() {
                   </div>
                   <h3
                     className={`text-xl font-bold ${
-                      theme === "dark" ? "text-white" : "text-slate-800"
+                      theme === "dark" ? "text-white" : "text-gray-900"
                     }`}
                   >
                     Signal Performance
@@ -518,11 +520,11 @@ export default function DailySignalPage() {
                     className={`px-4 py-2 rounded-lg font-medium text-sm ${
                       activeTab === "performance"
                         ? theme === "dark"
-                          ? "bg-blue-600 text-white"
-                          : "bg-blue-500 text-white"
+                          ? "bg-teal-600 text-white"
+                          : "bg-teal-500 text-white"
                         : theme === "dark"
-                        ? "bg-slate-700 text-slate-300"
-                        : "bg-slate-200 text-slate-700"
+                        ? "bg-slate-700 text-gray-300"
+                        : "bg-slate-200 text-gray-700"
                     }`}
                   >
                     Performance
@@ -532,11 +534,11 @@ export default function DailySignalPage() {
                     className={`px-4 py-2 rounded-lg font-medium text-sm ${
                       activeTab === "historical"
                         ? theme === "dark"
-                          ? "bg-teal-600 text-white"
-                          : "bg-teal-500 text-white"
+                          ? "bg-blue-600 text-white"
+                          : "bg-blue-500 text-white"
                         : theme === "dark"
-                        ? "bg-slate-700 text-slate-300"
-                        : "bg-slate-200 text-slate-700"
+                        ? "bg-slate-700 text-gray-300"
+                        : "bg-slate-200 text-gray-700"
                     }`}
                   >
                     Historical Data
@@ -551,14 +553,16 @@ export default function DailySignalPage() {
         {showSignalManager && (
           <div className="max-w-7xl mx-auto mb-12">
             <div
-              className={`rounded-2xl shadow-xl p-8 ${
-                theme === "dark" ? "bg-slate-800" : "bg-white"
+              className={`rounded-xl shadow-xl p-6 ${
+                theme === "dark" ? "bg-slate-900" : "bg-white"
+              } border ${
+                theme === "dark" ? "border-slate-700" : "border-gray-200"
               }`}
             >
               <div className="flex justify-between items-center mb-6">
                 <h2
                   className={`text-2xl font-bold ${
-                    theme === "dark" ? "text-white" : "text-slate-800"
+                    theme === "dark" ? "text-white" : "text-gray-900"
                   }`}
                 >
                   Signal Service Management
@@ -567,8 +571,8 @@ export default function DailySignalPage() {
                   onClick={toggleSignalManager}
                   className={`p-2 rounded-full ${
                     theme === "dark"
-                      ? "hover:bg-slate-700 text-slate-300"
-                      : "hover:bg-slate-100 text-slate-500"
+                      ? "hover:bg-slate-700 text-gray-300"
+                      : "hover:bg-gray-100 text-gray-500"
                   }`}
                 >
                   <FontAwesomeIcon icon={faTimes} />
@@ -578,8 +582,8 @@ export default function DailySignalPage() {
               {activeSignal ? (
                 <div className="space-y-6">
                   <div
-                    className={`p-6 rounded-xl ${
-                      theme === "dark" ? "bg-slate-700/50" : "bg-slate-100"
+                    className={`p-5 rounded-xl ${
+                      theme === "dark" ? "bg-slate-800" : "bg-gray-100"
                     }`}
                   >
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -590,9 +594,7 @@ export default function DailySignalPage() {
                         <p className="font-medium">{activeSignal.name}</p>
                         <p
                           className={`${
-                            theme === "dark"
-                              ? "text-slate-400"
-                              : "text-slate-600"
+                            theme === "dark" ? "text-gray-400" : "text-gray-600"
                           }`}
                         >
                           {activeSignal.description}
@@ -650,7 +652,7 @@ export default function DailySignalPage() {
                       className={`flex-1 py-3 rounded-xl font-medium ${
                         theme === "dark"
                           ? "bg-slate-700 hover:bg-slate-600 text-white"
-                          : "bg-slate-200 hover:bg-slate-300 text-slate-800"
+                          : "bg-gray-200 hover:bg-gray-300 text-gray-800"
                       }`}
                     >
                       Renew Subscription
@@ -659,7 +661,7 @@ export default function DailySignalPage() {
                       className={`flex-1 py-3 rounded-xl font-medium ${
                         theme === "dark"
                           ? "bg-slate-700 hover:bg-slate-600 text-white"
-                          : "bg-slate-200 hover:bg-slate-300 text-slate-800"
+                          : "bg-gray-200 hover:bg-gray-300 text-gray-800"
                       }`}
                     >
                       Download Reports
@@ -668,8 +670,8 @@ export default function DailySignalPage() {
                 </div>
               ) : (
                 <div
-                  className={`p-8 rounded-xl text-center ${
-                    theme === "dark" ? "bg-slate-700/50" : "bg-slate-100"
+                  className={`p-6 rounded-xl text-center ${
+                    theme === "dark" ? "bg-slate-800" : "bg-gray-100"
                   }`}
                 >
                   <div className="w-16 h-16 mx-auto rounded-full bg-blue-500/20 flex items-center justify-center mb-4">
@@ -680,14 +682,14 @@ export default function DailySignalPage() {
                   </div>
                   <h3
                     className={`text-xl font-bold mb-2 ${
-                      theme === "dark" ? "text-white" : "text-slate-800"
+                      theme === "dark" ? "text-white" : "text-gray-900"
                     }`}
                   >
                     No Active Signal Service
                   </h3>
                   <p
                     className={`mb-6 max-w-md mx-auto ${
-                      theme === "dark" ? "text-slate-400" : "text-slate-600"
+                      theme === "dark" ? "text-gray-400" : "text-gray-600"
                     }`}
                   >
                     You don't have an active signal service. Subscribe to one of
@@ -697,8 +699,8 @@ export default function DailySignalPage() {
                     onClick={toggleSignalManager}
                     className={`px-6 py-3 rounded-xl font-medium ${
                       theme === "dark"
-                        ? "bg-gradient-to-r from-blue-600 to-cyan-700 hover:from-blue-700 hover:to-cyan-800 text-white"
-                        : "bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white"
+                        ? "bg-gradient-to-r from-teal-600 to-blue-700 hover:from-teal-700 hover:to-blue-800 text-white"
+                        : "bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700 text-white"
                     }`}
                   >
                     View Signal Plans
@@ -715,7 +717,7 @@ export default function DailySignalPage() {
             <h2 className="text-3xl font-bold mb-4">Premium Signal Services</h2>
             <p
               className={`text-xl max-w-2xl mx-auto ${
-                theme === "dark" ? "text-slate-400" : "text-slate-600"
+                theme === "dark" ? "text-gray-400" : "text-gray-600"
               }`}
             >
               Choose the signal service that matches your trading style and
@@ -723,25 +725,27 @@ export default function DailySignalPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {plans.map((plan) => (
               <div
                 key={plan.id}
-                className={`rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${
-                  theme === "dark" ? "bg-slate-800" : "bg-white"
+                className={`rounded-xl shadow-xl overflow-hidden transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${
+                  theme === "dark"
+                    ? "bg-gradient-to-r from-slate-700 to-slate-900"
+                    : "bg-gradient-to-b from-white to-slate-50"
                 } border ${
                   plan.active
                     ? theme === "dark"
-                      ? "border-blue-500 ring-2 ring-blue-500/50"
-                      : "border-blue-400 ring-2 ring-blue-400/50"
+                      ? "border-teal-500 ring-2 ring-teal-500/50"
+                      : "border-teal-400 ring-2 ring-teal-400/50"
                     : theme === "dark"
-                    ? "border-slate-700"
-                    : "border-slate-200"
+                    ? "border-slate-600"
+                    : "border-gray-200"
                 }`}
               >
                 {/* Plan Header */}
                 <div
-                  className={`p-6 bg-gradient-to-r ${
+                  className={`p-5 bg-gradient-to-r ${
                     theme === "dark" ? plan.darkColor : plan.color
                   }`}
                 >
@@ -771,15 +775,13 @@ export default function DailySignalPage() {
                 </div>
 
                 {/* Plan Body */}
-                <div className="p-6">
+                <div className="p-5">
                   <div className="mb-6">
                     <div className="flex justify-between mb-4">
                       <div>
                         <span
                           className={`font-medium ${
-                            theme === "dark"
-                              ? "text-slate-400"
-                              : "text-slate-600"
+                            theme === "dark" ? "text-gray-400" : "text-gray-600"
                           }`}
                         >
                           Win Rate
@@ -791,9 +793,7 @@ export default function DailySignalPage() {
                       <div className="text-right">
                         <span
                           className={`font-medium ${
-                            theme === "dark"
-                              ? "text-slate-400"
-                              : "text-slate-600"
+                            theme === "dark" ? "text-gray-400" : "text-gray-600"
                           }`}
                         >
                           Signals/Day
@@ -806,7 +806,7 @@ export default function DailySignalPage() {
 
                     <h5
                       className={`font-bold mb-3 ${
-                        theme === "dark" ? "text-slate-300" : "text-slate-800"
+                        theme === "dark" ? "text-gray-300" : "text-gray-800"
                       }`}
                     >
                       Key Features
@@ -825,8 +825,8 @@ export default function DailySignalPage() {
                           <span
                             className={`${
                               theme === "dark"
-                                ? "text-slate-300"
-                                : "text-slate-700"
+                                ? "text-gray-300"
+                                : "text-gray-700"
                             }`}
                           >
                             {feature}
@@ -839,7 +839,7 @@ export default function DailySignalPage() {
                   <div className="pt-4">
                     <label
                       className={`block text-sm font-semibold mb-2 ${
-                        theme === "dark" ? "text-slate-300" : "text-slate-700"
+                        theme === "dark" ? "text-gray-300" : "text-gray-700"
                       }`}
                     >
                       Custom Investment (USD)
@@ -847,7 +847,7 @@ export default function DailySignalPage() {
                     <div className="relative mb-4">
                       <span
                         className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
-                          theme === "dark" ? "text-slate-400" : "text-slate-500"
+                          theme === "dark" ? "text-gray-400" : "text-gray-500"
                         }`}
                       >
                         $
@@ -859,8 +859,8 @@ export default function DailySignalPage() {
                         placeholder={plan.price.toString()}
                         className={`w-full rounded-xl px-8 py-3 focus:outline-none focus:ring-2 ${
                           theme === "dark"
-                            ? "bg-slate-700 text-white focus:ring-blue-500"
-                            : "bg-slate-100 text-slate-900 focus:ring-blue-400"
+                            ? "bg-slate-800 text-white focus:ring-teal-500"
+                            : "bg-slate-100 text-gray-900 focus:ring-teal-400"
                         }`}
                       />
                     </div>
@@ -872,8 +872,8 @@ export default function DailySignalPage() {
                         plan.active
                           ? "bg-gradient-to-r from-gray-500 to-gray-600 cursor-not-allowed"
                           : theme === "dark"
-                          ? "bg-gradient-to-r from-blue-600 to-cyan-700 hover:from-blue-700 hover:to-cyan-800"
-                          : "bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700"
+                          ? "bg-gradient-to-r from-teal-600 to-blue-700 hover:from-teal-700 hover:to-blue-800"
+                          : "bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700"
                       }`}
                     >
                       {plan.active ? "Active Plan" : "Subscribe Now"}

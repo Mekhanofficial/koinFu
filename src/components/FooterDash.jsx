@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHome,
@@ -15,81 +15,85 @@ import dashbar from "../pictures/dashbar.png";
 import { Link } from "react-router-dom";
 import { useTheme } from "next-themes";
 
-const FooterActionWidget = ({ isOpen, onClose }) => {
+// --- FooterActionWidget ---
+const FooterActionWidget = ({ isOpen, onClose, centerX }) => {
   const { theme } = useTheme();
 
-  if (!isOpen) return null;
-
-  const actions = [
-    { icon: faArrowDown, label: "Deposit", path: "/deposits" },
-    { icon: faArrowUp, label: "Withdraw", path: "/withdrawal" },
-    { icon: faFileAlt, label: "Proof", path: "/paymentproof" },
-    { icon: faDatabase, label: "Stake", path: "/stake" },
-  ];
+  if (!isOpen || centerX === null) return null;
 
   return (
     <div
-      className={`fixed bottom-20 left-1/2 transform -translate-x-1/2 rounded-xl px-3 py-2 flex gap-3 z-30 shadow-lg ${
-        theme === "dark"
-          ? "bg-slate-800 text-white"
-          : "bg-teal-500 text-white"
-      }`}
+      className={`fixed bottom-20 z-40 px-6 py-4 rounded-2xl shadow-2xl backdrop-blur-md bg-opacity-80 transition-all duration-300 flex gap-6`}
+      style={{
+        left: `${centerX}px`,
+        transform: "translateX(-50%)",
+        ...(theme === "dark"
+          ? { backgroundColor: "rgba(30, 41, 59, 0.8)", color: "#99f6e4" }
+          : { backgroundColor: "rgba(13, 148, 136, 0.9)", color: "#fff" }),
+      }}
     >
-      {actions.map((action, index) => (
+      {[
+        { icon: faArrowDown, label: "Deposit", path: "/deposits" },
+        { icon: faArrowUp, label: "Withdraw", path: "/withdrawal" },
+        { icon: faFileAlt, label: "Proof", path: "/paymentproof" },
+        { icon: faDatabase, label: "Stake", path: "/stake" },
+      ].map(({ icon, label, path }, index) => (
         <Link
-          to={action.path}
+          to={path}
           key={index}
-          className={`flex flex-col items-center hover:scale-105 transition-transform min-w-[60px] ${
-            theme === "dark" ? "hover:text-teal-300" : "hover:text-amber-100"
-          }`}
           onClick={onClose}
+          className="flex flex-col items-center hover:scale-110 transition-transform"
         >
-          <FontAwesomeIcon icon={action.icon} className="h-4 w-4" />
-          <span className="text-xs mt-1">{action.label}</span>
+          <FontAwesomeIcon icon={icon} className="h-5 w-5" />
+          <span className="text-[11px] mt-1 font-medium">{label}</span>
         </Link>
       ))}
     </div>
   );
 };
 
+// --- FooterNavItem ---
 const FooterNavItem = ({ icon, label, path }) => {
   const { theme } = useTheme();
 
   return (
     <Link
       to={path}
-      className={`flex flex-col items-center transition-colors min-w-[50px] ${
+      className={`flex flex-col items-center gap-0.5 text-xs transition-all duration-150 ${
         theme === "dark"
-          ? "text-gray-400 hover:text-teal-400"
-          : "text-gray-600 hover:text-teal-500"
+          ? "text-slate-400 hover:text-teal-300"
+          : "text-slate-600 hover:text-teal-600"
       }`}
     >
       <FontAwesomeIcon icon={icon} className="h-4 w-4" />
-      <span className="text-xs mt-1">{label}</span>
+      <span>{label}</span>
     </Link>
   );
 };
 
-const FooterToggleButton = ({ isWidgetOpen, onClick }) => {
+// --- FooterToggleButton ---
+const FooterToggleButton = ({ isWidgetOpen, onClick, buttonRef }) => {
   const { theme } = useTheme();
 
   return (
     <button
+      ref={buttonRef}
       onClick={onClick}
-      className={`rounded-full p-2 relative -top-4 z-30 transition-transform hover:scale-105 focus:outline-none ${
-        theme === "dark"
-          ? "bg-teal-700 focus:ring-teal-500"
-          : "bg-teal-600 focus:ring-teal-400"
-      } focus:ring-2`}
       aria-label={isWidgetOpen ? "Close menu" : "Open menu"}
+      className={`rounded-full p-3 shadow-md relative -top-4 transition-transform hover:scale-105 focus:outline-none
+        ${
+          theme === "dark"
+            ? "bg-teal-700 focus:ring-2 focus:ring-teal-400"
+            : "bg-teal-500 focus:ring-2 focus:ring-teal-300"
+        }`}
     >
       {isWidgetOpen ? (
-        <FontAwesomeIcon icon={faTimes} className="h-3 w-3 text-white" />
+        <FontAwesomeIcon icon={faTimes} className="h-4 w-4 text-white" />
       ) : (
         <img
           src={dashbar}
-          className="h-4 w-4"
           alt="Menu"
+          className="h-4 w-4"
           style={{ filter: theme === "dark" ? "invert(1)" : "none" }}
         />
       )}
@@ -97,9 +101,27 @@ const FooterToggleButton = ({ isWidgetOpen, onClick }) => {
   );
 };
 
+// --- FooterDash ---
 export default function FooterDash({ isSidebarOpen }) {
   const [isWidgetOpen, setIsWidgetOpen] = useState(false);
+  const [buttonCenter, setButtonCenter] = useState(null);
+  const buttonRef = useRef(null);
   const { theme } = useTheme();
+
+  const updateButtonCenter = () => {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setButtonCenter(rect.left + rect.width / 2);
+    }
+  };
+
+  useEffect(() => {
+    if (isWidgetOpen) {
+      updateButtonCenter();
+      window.addEventListener("resize", updateButtonCenter);
+    }
+    return () => window.removeEventListener("resize", updateButtonCenter);
+  }, [isWidgetOpen]);
 
   const leftNavItems = [
     { icon: faHome, label: "Home", path: "/dashboard" },
@@ -116,43 +138,35 @@ export default function FooterDash({ isSidebarOpen }) {
       <FooterActionWidget
         isOpen={isWidgetOpen}
         onClose={() => setIsWidgetOpen(false)}
+        centerX={buttonCenter}
       />
 
       <footer
-        className={`fixed bottom-0 h-14 z-20 transition-all duration-200 ${
-          isSidebarOpen ? "md:left-64 left-0" : "md:left-16 left-0"
-        } right-0 ${
+        className={`fixed bottom-0 w-full h-16 z-30 transition-all duration-200 border-t px-4
+        ${isSidebarOpen ? "md:left-64 left-0" : "md:left-16 left-0"} right-0
+        ${
           theme === "dark"
-            ? "bg-slate-900 text-gray-300 border-slate-700"
-            : "bg-white text-gray-700 border-gray-200"
-        } border-t`}
+            ? "bg-slate-900 border-slate-700 text-slate-300"
+            : "bg-white border-slate-200 text-slate-700"
+        }`}
       >
-        <div className="flex justify-center items-center h-full px-2">
-          <div className="flex justify-between items-center w-full max-w-xs">
-            <div className="flex gap-2">
-              {leftNavItems.map((item, index) => (
-                <FooterNavItem
-                  key={index}
-                  icon={item.icon}
-                  label={item.label}
-                  path={item.path}
-                />
+        <div className="flex justify-center items-center h-full">
+          <div className="flex items-center gap-x-6">
+            <div className="flex gap-x-4">
+              {leftNavItems.map((item, i) => (
+                <FooterNavItem key={i} {...item} />
               ))}
             </div>
 
             <FooterToggleButton
               isWidgetOpen={isWidgetOpen}
               onClick={() => setIsWidgetOpen(!isWidgetOpen)}
+              buttonRef={buttonRef}
             />
 
-            <div className="flex gap-2">
-              {rightNavItems.map((item, index) => (
-                <FooterNavItem
-                  key={index}
-                  icon={item.icon}
-                  label={item.label}
-                  path={item.path}
-                />
+            <div className="flex gap-x-4">
+              {rightNavItems.map((item, i) => (
+                <FooterNavItem key={i} {...item} />
               ))}
             </div>
           </div>
