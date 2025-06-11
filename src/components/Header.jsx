@@ -139,37 +139,38 @@ export default function HeaderPage({ isSidebarOpen, setIsSidebarOpen }) {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 h-16 z-30 w-full bg-white dark:bg-slate-950 border-b border-gray-200 dark:border-slate-700 transition-all duration-200 ${
+      className={`fixed top-0 left-0 right-0 h-16 z-30 w-full backdrop-blur-md bg-white/70 dark:bg-slate-900/70 border-b border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-200 ${
         isSidebarOpen ? "md:pl-64" : "md:pl-16"
-      } pl-0 pr-4 flex justify-between items-center text-gray-900 dark:text-white`}
+      } pl-0 pr-4 flex justify-between items-center text-slate-900 dark:text-white`}
     >
       <div className="flex items-center">
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="md:hidden p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-800 transition-colors duration-200 mr-2"
+          className="md:hidden p-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
           aria-label="Toggle sidebar"
         >
           <FontAwesomeIcon
             icon={faBars}
-            className="h-5 w-5 text-gray-700 dark:text-gray-300"
+            className="h-5 w-5 text-slate-600 dark:text-slate-300"
           />
         </button>
         {currentPage && (
-          <h1 className="text-xl md:text-2xl font-bold ml-4 md:ml-6">
+          <h1 className="text-xl md:text-2xl font-semibold ml-4 md:ml-6 text-dark-teal dark:text-teal-400">
             {currentPage}
           </h1>
         )}
       </div>
 
-      <div className="flex gap-5 items-center">
+      <div className="flex items-center gap-4">
+        {/* Theme Toggle */}
         <button
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-800 transition-colors duration-200"
+          className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
           aria-label="Toggle theme"
         >
           <FontAwesomeIcon
             icon={theme === "dark" ? faLightbulb : faMoon}
-            className="h-5 w-5 text-amber-500 dark:text-amber-400"
+            className="h-5 w-5 text-teal-600 dark:text-amber-400"
           />
         </button>
 
@@ -180,46 +181,49 @@ export default function HeaderPage({ isSidebarOpen, setIsSidebarOpen }) {
               setIsNotificationMenuOpen(!isNotificationMenuOpen);
               setIsUserMenuOpen(false);
             }}
-            className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-800 relative"
+            className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition relative"
             aria-label="Notifications"
           >
-            <FontAwesomeIcon icon={faBell} className="h-4 w-4" />
+            <FontAwesomeIcon
+              icon={faBell}
+              className="h-5 w-5 text-slate-700 dark:text-slate-300"
+            />
             {unreadCount > 0 && (
-              <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md">
                 {unreadCount}
               </span>
             )}
           </button>
 
           {isNotificationMenuOpen && (
-            <div className="absolute right-0 mt-2 w-72 bg-white dark:bg-slate-800 rounded-md shadow-lg z-50 border border-gray-200 dark:border-slate-700">
-              <div className="py-1">
-                <div className="px-4 py-2 border-b bg-gray-100 dark:bg-slate-700">
-                  <h3 className="text-sm font-medium">Notifications</h3>
-                </div>
+            <div className="absolute right-0 mt-2 w-72 bg-white dark:bg-slate-800 rounded-xl shadow-lg z-50 border border-slate-200 dark:border-slate-700 overflow-hidden">
+              <div className="bg-slate-100 dark:bg-slate-700 px-4 py-2">
+                <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                  Notifications
+                </h3>
+              </div>
+              <div>
                 {notifications.map((notification) => (
                   <div
                     key={notification.id}
-                    className={`px-4 py-3 hover:bg-gray-100 dark:hover:bg-slate-700 cursor-pointer ${
-                      !notification.read
-                        ? "bg-blue-50 dark:bg-slate-700/50"
-                        : ""
+                    className={`px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition ${
+                      !notification.read ? "bg-teal-50 dark:bg-teal-900/30" : ""
                     }`}
                   >
                     <p className="text-sm">{notification.text}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                       {notification.time}
                     </p>
                   </div>
                 ))}
-                <div className="px-4 py-2 border-t text-center">
-                  <Link
-                    to="/notifications"
-                    className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
-                  >
-                    View all notifications
-                  </Link>
-                </div>
+              </div>
+              <div className="px-4 py-2 border-t border-slate-200 dark:border-slate-600 text-center">
+                <Link
+                  to="/notifications"
+                  className="text-xs text-teal-600 dark:text-teal-400 hover:underline"
+                >
+                  View all notifications
+                </Link>
               </div>
             </div>
           )}
@@ -232,10 +236,10 @@ export default function HeaderPage({ isSidebarOpen, setIsSidebarOpen }) {
               setIsUserMenuOpen(!isUserMenuOpen);
               setIsNotificationMenuOpen(false);
             }}
-            className="flex items-center gap-2 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-slate-800"
+            className="flex items-center gap-2 p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition"
             aria-label="User menu"
           >
-            <div className="h-8 w-8 rounded-full bg-gray-300 dark:bg-slate-700 flex items-center justify-center overflow-hidden">
+            <div className="h-9 w-9 rounded-full bg-slate-300 dark:bg-slate-700 flex items-center justify-center overflow-hidden">
               {user.photoURL ? (
                 <img
                   src={user.photoURL}
@@ -243,40 +247,43 @@ export default function HeaderPage({ isSidebarOpen, setIsSidebarOpen }) {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <FontAwesomeIcon icon={faUser} className="text-2xl text-slate-400" />
+                <FontAwesomeIcon
+                  icon={faUser}
+                  className="text-xl text-slate-500"
+                />
               )}
             </div>
-            <span className="hidden md:inline text-sm font-medium truncate max-w-[120px]">
+            <span className="hidden md:inline text-sm font-medium truncate max-w-[120px] text-slate-700 dark:text-slate-300">
               {user.name}
             </span>
           </button>
 
           {isUserMenuOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-md shadow-lg z-50 border">
+            <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-slate-800 rounded-xl shadow-xl z-50 border border-slate-200 dark:border-slate-700 overflow-hidden">
               <Link
                 to="/account"
-                className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
+                className="block px-4 py-3 text-sm text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
               >
                 <FontAwesomeIcon icon={faUser} className="mr-2" />
                 Profile
               </Link>
               <Link
                 to="/settings"
-                className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
+                className="block px-4 py-3 text-sm text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
               >
                 <FontAwesomeIcon icon={faCog} className="mr-2" />
                 Settings
               </Link>
               <Link
                 to="/messages"
-                className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-slate-700"
+                className="block px-4 py-3 text-sm text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
               >
                 <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
                 Messages
               </Link>
               <button
                 onClick={handleLogout}
-                className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-slate-700"
+                className="w-full text-left px-4 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-700"
               >
                 <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
                 Logout

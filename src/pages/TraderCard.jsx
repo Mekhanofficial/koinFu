@@ -1,5 +1,3 @@
-import { useTheme } from "next-themes";
-
 export const TraderCard = ({ trader, theme, onCopy, isCopying, isCopied }) => {
   const isDarkMode =
     theme === "dark" ||
@@ -10,11 +8,11 @@ export const TraderCard = ({ trader, theme, onCopy, isCopying, isCopied }) => {
     <div
       className={`relative rounded-2xl overflow-hidden shadow-xl transition-all duration-300 hover:shadow-2xl ${
         isDarkMode
-          ? "bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700"
-          : "bg-gradient-to-br from-white to-gray-50 border border-gray-200"
+          ? "bg-gradient-to-br from-teal-800 to-slate-900 border border-slate-700"
+          : "bg-gradient-to-br from-teal-50 to-slate-100 border border-slate-200"
       } ${isCopied ? "ring-2 ring-green-500" : ""}`}
     >
-      {/* Status indicator with pulse animation */}
+      {/* Status indicator */}
       <div className="absolute top-4 right-4 z-10">
         <div className="relative">
           <div
@@ -38,12 +36,12 @@ export const TraderCard = ({ trader, theme, onCopy, isCopying, isCopied }) => {
         </div>
       </div>
 
-      {/* Header with gradient */}
+      {/* Header with tinted gradient */}
       <div
         className={`h-28 relative overflow-hidden ${
           isDarkMode
-            ? "bg-gradient-to-r from-amber-700/30 to-yellow-600/30"
-            : "bg-gradient-to-r from-amber-300/50 to-yellow-300/50"
+            ? "bg-gradient-to-r from-teal-700/30 to-slate-800/30"
+            : "bg-gradient-to-r from-teal-200/50 to-slate-200/50"
         }`}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/5"></div>
@@ -94,7 +92,7 @@ export const TraderCard = ({ trader, theme, onCopy, isCopying, isCopied }) => {
             </p>
             <p
               className={`text-lg font-bold ${
-                isDarkMode ? "text-amber-300" : "text-amber-600"
+                isDarkMode ? "text-teal-300" : "text-teal-700"
               }`}
             >
               {trader.profitShare}%
@@ -134,7 +132,7 @@ export const TraderCard = ({ trader, theme, onCopy, isCopying, isCopied }) => {
               }`}
             >
               <div
-                className="h-full bg-gradient-to-r from-green-500 to-emerald-500"
+                className="h-full bg-gradient-to-r from-teal-400 to-emerald-400"
                 style={{ width: `${trader.winRate}%` }}
               />
             </div>
@@ -166,12 +164,12 @@ export const TraderCard = ({ trader, theme, onCopy, isCopying, isCopied }) => {
         <button
           className={`w-full py-3 rounded-xl font-bold transition-all duration-300 flex items-center justify-center gap-2 ${
             isCopied
-              ? "bg-green-600 text-white cursor-default"
+              ? "bg-teal-600 text-white cursor-default"
               : isCopying
               ? "bg-blue-600 text-white cursor-wait"
               : isDarkMode
-              ? "bg-gradient-to-r from-amber-600 to-yellow-600 text-white hover:from-amber-500 hover:to-yellow-500"
-              : "bg-gradient-to-r from-amber-500 to-yellow-500 text-white hover:from-amber-400 hover:to-yellow-400"
+              ? "bg-gradient-to-r from-teal-700 to-teal-500 text-white hover:from-teal-600 hover:to-teal-400"
+              : "bg-gradient-to-r from-teal-500 to-teal-400 text-white hover:from-teal-600 hover:to-teal-500"
           }`}
           onClick={() => !isCopied && onCopy && onCopy(trader.id)}
           disabled={isCopying || isCopied}

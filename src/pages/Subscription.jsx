@@ -70,7 +70,7 @@ export default function SubscriptionPage() {
     {
       name: "Platinum",
       price: "$10,000.00",
-      minAmount: "Minimum $5,000",
+      minAmount: "Minimum $10,000",
       description: "Professional trading tools for serious investors",
       duration: "3 Days",
       roi: "15.00%",
@@ -262,7 +262,7 @@ export default function SubscriptionPage() {
       <section
         className={`min-h-screen mx-auto px-4 sm:px-6 lg:px-8 py-10 ${
           theme === "dark"
-            ? "bg-gradient-to-br from-slate-900 to-slate-800"
+            ? "bg-zinc-950"
             : "bg-gradient-to-br from-slate-50 to-slate-100"
         }`}
       >
@@ -273,7 +273,7 @@ export default function SubscriptionPage() {
           </h1>
           <p
             className={`text-xl max-w-2xl mx-auto ${
-              theme === "dark" ? "text-slate-300" : "text-slate-600"
+              theme === "dark" ? "text-gray-300" : "text-gray-600"
             }`}
           >
             Choose the perfect plan to maximize your returns with our advanced
@@ -284,16 +284,18 @@ export default function SubscriptionPage() {
         {isClient && (
           <div className="max-w-7xl mx-auto mb-16">
             <div
-              className={`rounded-3xl shadow-xl overflow-hidden ${
-                theme === "dark" ? "bg-slate-800/50" : "bg-white"
+              className={`rounded-xl shadow-xl overflow-hidden ${
+                theme === "dark" ? "bg-slate-900" : "bg-white"
+              } border ${
+                theme === "dark" ? "border-slate-700" : "border-gray-200"
               }`}
             >
-              <div className="p-8 flex flex-col lg:flex-row gap-8 items-stretch">
+              <div className="p-6 flex flex-col lg:flex-row gap-6 items-stretch">
                 {/* Plan Info Section */}
                 <div className="flex-1">
                   <div
-                    className={`p-6 rounded-2xl h-full ${
-                      theme === "dark" ? "bg-slate-700/30" : "bg-slate-50"
+                    className={`p-5 rounded-xl h-full ${
+                      theme === "dark" ? "bg-slate-800" : "bg-slate-50"
                     } border ${
                       theme === "dark" ? "border-slate-700" : "border-slate-200"
                     }`}
@@ -316,9 +318,7 @@ export default function SubscriptionPage() {
                       <div>
                         <p
                           className={`text-sm ${
-                            theme === "dark"
-                              ? "text-slate-400"
-                              : "text-slate-500"
+                            theme === "dark" ? "text-gray-400" : "text-gray-500"
                           }`}
                         >
                           Current Plan
@@ -339,7 +339,7 @@ export default function SubscriptionPage() {
 
                     <p
                       className={`text-lg mb-6 ${
-                        theme === "dark" ? "text-slate-300" : "text-slate-600"
+                        theme === "dark" ? "text-gray-300" : "text-gray-600"
                       }`}
                     >
                       {currentPlan === "Basic"
@@ -351,7 +351,7 @@ export default function SubscriptionPage() {
                     <div className="grid grid-cols-2 gap-4 mb-6">
                       <div
                         className={`p-4 rounded-xl ${
-                          theme === "dark" ? "bg-slate-800/50" : "bg-slate-100"
+                          theme === "dark" ? "bg-slate-700" : "bg-slate-100"
                         }`}
                       >
                         <p className="font-semibold text-sm mb-1">ROI:</p>
@@ -368,7 +368,7 @@ export default function SubscriptionPage() {
                       </div>
                       <div
                         className={`p-4 rounded-xl ${
-                          theme === "dark" ? "bg-slate-800/50" : "bg-slate-100"
+                          theme === "dark" ? "bg-slate-700" : "bg-slate-100"
                         }`}
                       >
                         <p className="font-semibold text-sm mb-1">Duration:</p>
@@ -381,7 +381,7 @@ export default function SubscriptionPage() {
                       </div>
                       <div
                         className={`p-4 rounded-xl ${
-                          theme === "dark" ? "bg-slate-800/50" : "bg-slate-100"
+                          theme === "dark" ? "bg-slate-700" : "bg-slate-100"
                         }`}
                       >
                         <p className="font-semibold text-sm mb-1">Price:</p>
@@ -394,7 +394,7 @@ export default function SubscriptionPage() {
                       </div>
                       <div
                         className={`p-4 rounded-xl ${
-                          theme === "dark" ? "bg-slate-800/50" : "bg-slate-100"
+                          theme === "dark" ? "bg-slate-700" : "bg-slate-100"
                         }`}
                       >
                         <p className="font-semibold text-sm mb-1">
@@ -523,12 +523,12 @@ export default function SubscriptionPage() {
 
                   <div
                     className={`mt-4 p-4 rounded-xl ${
-                      theme === "dark" ? "bg-slate-800/50" : "bg-slate-100"
+                      theme === "dark" ? "bg-slate-800" : "bg-slate-100"
                     }`}
                   >
                     <p
                       className={`text-sm ${
-                        theme === "dark" ? "text-slate-300" : "text-slate-600"
+                        theme === "dark" ? "text-gray-300" : "text-gray-600"
                       }`}
                     >
                       <span className="font-semibold">Tip:</span> Higher-tier
@@ -550,20 +550,20 @@ export default function SubscriptionPage() {
             </h2>
             <p
               className={`text-xl max-w-2xl mx-auto ${
-                theme === "dark" ? "text-slate-400" : "text-slate-600"
+                theme === "dark" ? "text-gray-400" : "text-gray-600"
               }`}
             >
               Select the plan that matches your investment goals and budget
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {paidPlans.map((plan, index) => (
               <div
                 key={index}
-                className={`rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${
+                className={`rounded-xl shadow-xl overflow-hidden transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${
                   theme === "dark"
-                    ? "bg-gradient-to-b from-slate-800 to-slate-900"
+                    ? "bg-gradient-to-r from-slate-700 to-slate-900"
                     : "bg-gradient-to-b from-white to-slate-50"
                 } border ${
                   currentPlan === plan.name
@@ -571,13 +571,13 @@ export default function SubscriptionPage() {
                       ? "border-teal-500 ring-2 ring-teal-500/50"
                       : "border-teal-400 ring-2 ring-teal-400/50"
                     : theme === "dark"
-                    ? "border-slate-700"
+                    ? "border-slate-600"
                     : "border-slate-200"
                 }`}
               >
                 {/* Plan Header */}
                 <div
-                  className={`p-6 bg-gradient-to-r ${
+                  className={`p-5 bg-gradient-to-r ${
                     theme === "dark" ? plan.darkColor : plan.color
                   }`}
                 >
@@ -612,10 +612,10 @@ export default function SubscriptionPage() {
                 </div>
 
                 {/* Plan Body */}
-                <div className="p-6">
+                <div className="p-5">
                   <h4
                     className={`text-lg mb-4 font-medium ${
-                      theme === "dark" ? "text-slate-300" : "text-slate-700"
+                      theme === "dark" ? "text-gray-300" : "text-gray-700"
                     }`}
                   >
                     {plan.description}
@@ -625,7 +625,7 @@ export default function SubscriptionPage() {
                     <div className="flex justify-between mb-3">
                       <span
                         className={`font-medium ${
-                          theme === "dark" ? "text-slate-400" : "text-slate-600"
+                          theme === "dark" ? "text-gray-400" : "text-gray-600"
                         }`}
                       >
                         Duration
@@ -635,7 +635,7 @@ export default function SubscriptionPage() {
                     <div className="flex justify-between">
                       <span
                         className={`font-medium ${
-                          theme === "dark" ? "text-slate-400" : "text-slate-600"
+                          theme === "dark" ? "text-gray-400" : "text-gray-600"
                         }`}
                       >
                         ROI
@@ -653,7 +653,7 @@ export default function SubscriptionPage() {
                   <div className="mb-6">
                     <h5
                       className={`font-bold mb-3 ${
-                        theme === "dark" ? "text-slate-300" : "text-slate-800"
+                        theme === "dark" ? "text-gray-300" : "text-gray-800"
                       }`}
                     >
                       Features
@@ -672,8 +672,8 @@ export default function SubscriptionPage() {
                           <span
                             className={`${
                               theme === "dark"
-                                ? "text-slate-300"
-                                : "text-slate-700"
+                                ? "text-gray-300"
+                                : "text-gray-700"
                             }`}
                           >
                             {feature}
@@ -686,7 +686,7 @@ export default function SubscriptionPage() {
                   <div className="pt-4">
                     <label
                       className={`block text-sm font-semibold mb-2 ${
-                        theme === "dark" ? "text-slate-300" : "text-slate-700"
+                        theme === "dark" ? "text-gray-300" : "text-gray-700"
                       }`}
                     >
                       Investment Amount
@@ -694,7 +694,7 @@ export default function SubscriptionPage() {
                     <div className="relative mb-4">
                       <span
                         className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
-                          theme === "dark" ? "text-slate-400" : "text-slate-500"
+                          theme === "dark" ? "text-gray-400" : "text-gray-500"
                         }`}
                       >
                         $
@@ -708,7 +708,7 @@ export default function SubscriptionPage() {
                         className={`w-full rounded-xl px-8 py-3 focus:outline-none focus:ring-2 ${
                           theme === "dark"
                             ? "bg-slate-800 text-white focus:ring-teal-500"
-                            : "bg-slate-100 text-slate-900 focus:ring-teal-400"
+                            : "bg-slate-100 text-gray-900 focus:ring-teal-400"
                         }`}
                         min={plan.price.replace("$", "").replace(",", "")}
                       />
@@ -760,13 +760,15 @@ export default function SubscriptionPage() {
           <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
             <div
               className={`rounded-2xl p-6 max-w-md w-full mx-4 transform transition-all duration-300 scale-95 animate-scaleIn ${
-                theme === "dark" ? "bg-slate-800" : "bg-white"
+                theme === "dark" ? "bg-slate-900" : "bg-white"
+              } border ${
+                theme === "dark" ? "border-slate-700" : "border-gray-200"
               }`}
             >
               <div className="flex justify-between items-center mb-6">
                 <h2
                   className={`text-2xl font-bold ${
-                    theme === "dark" ? "text-white" : "text-slate-800"
+                    theme === "dark" ? "text-white" : "text-gray-900"
                   }`}
                 >
                   Manage Your Plan
@@ -775,8 +777,8 @@ export default function SubscriptionPage() {
                   onClick={() => setShowManageModal(false)}
                   className={`p-2 rounded-full ${
                     theme === "dark"
-                      ? "hover:bg-slate-700 text-slate-300"
-                      : "hover:bg-slate-100 text-slate-500"
+                      ? "hover:bg-slate-700 text-gray-300"
+                      : "hover:bg-gray-100 text-gray-500"
                   }`}
                 >
                   <FontAwesomeIcon icon={faTimes} />
@@ -785,13 +787,13 @@ export default function SubscriptionPage() {
 
               <div
                 className={`p-5 rounded-xl mb-6 ${
-                  theme === "dark" ? "bg-slate-700/50" : "bg-slate-100"
+                  theme === "dark" ? "bg-slate-800" : "bg-gray-100"
                 }`}
               >
                 <div className="flex justify-between items-center mb-4">
                   <span
                     className={`font-semibold ${
-                      theme === "dark" ? "text-slate-300" : "text-slate-700"
+                      theme === "dark" ? "text-gray-300" : "text-gray-700"
                     }`}
                   >
                     Plan:
@@ -805,7 +807,7 @@ export default function SubscriptionPage() {
                   <div className="flex justify-between">
                     <span
                       className={`${
-                        theme === "dark" ? "text-slate-400" : "text-slate-600"
+                        theme === "dark" ? "text-gray-400" : "text-gray-600"
                       }`}
                     >
                       Status:
@@ -815,7 +817,7 @@ export default function SubscriptionPage() {
                   <div className="flex justify-between">
                     <span
                       className={`${
-                        theme === "dark" ? "text-slate-400" : "text-slate-600"
+                        theme === "dark" ? "text-gray-400" : "text-gray-600"
                       }`}
                     >
                       Investment:
@@ -827,7 +829,7 @@ export default function SubscriptionPage() {
                   <div className="flex justify-between">
                     <span
                       className={`${
-                        theme === "dark" ? "text-slate-400" : "text-slate-600"
+                        theme === "dark" ? "text-gray-400" : "text-gray-600"
                       }`}
                     >
                       Next Renewal:
@@ -843,7 +845,7 @@ export default function SubscriptionPage() {
                   className={`w-full py-3 rounded-xl font-medium ${
                     theme === "dark"
                       ? "bg-slate-700 hover:bg-slate-600 text-white"
-                      : "bg-slate-200 hover:bg-slate-300 text-slate-800"
+                      : "bg-gray-200 hover:bg-gray-300 text-gray-800"
                   }`}
                 >
                   Update Payment Method
@@ -865,8 +867,8 @@ export default function SubscriptionPage() {
                   onClick={() => setShowManageModal(false)}
                   className={`w-full py-3 rounded-xl font-medium ${
                     theme === "dark"
-                      ? "text-slate-300 hover:text-white"
-                      : "text-slate-600 hover:text-slate-800"
+                      ? "text-gray-300 hover:text-white"
+                      : "text-gray-600 hover:text-gray-800"
                   }`}
                 >
                   Close
@@ -881,7 +883,9 @@ export default function SubscriptionPage() {
           <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
             <div
               className={`rounded-2xl p-6 max-w-md w-full mx-4 transform transition-all duration-300 scale-95 animate-scaleIn ${
-                theme === "dark" ? "bg-slate-800" : "bg-white"
+                theme === "dark" ? "bg-slate-900" : "bg-white"
+              } border ${
+                theme === "dark" ? "border-slate-700" : "border-gray-200"
               }`}
             >
               <div className="text-center">
@@ -903,7 +907,7 @@ export default function SubscriptionPage() {
 
                 <h2
                   className={`text-2xl font-bold mb-2 ${
-                    theme === "dark" ? "text-white" : "text-slate-800"
+                    theme === "dark" ? "text-white" : "text-gray-900"
                   }`}
                 >
                   Success!
@@ -911,7 +915,7 @@ export default function SubscriptionPage() {
 
                 <p
                   className={`mb-6 px-4 ${
-                    theme === "dark" ? "text-slate-300" : "text-slate-600"
+                    theme === "dark" ? "text-gray-300" : "text-gray-600"
                   }`}
                 >
                   {successMessage}

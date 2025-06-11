@@ -87,9 +87,7 @@ export default function BuyBotPage() {
 
   useEffect(() => {
     const stored = localStorage.getItem("purchasedBots");
-    if (stored) {
-      setPurchasedBots(JSON.parse(stored));
-    }
+    if (stored) setPurchasedBots(JSON.parse(stored));
   }, []);
 
   useEffect(() => {
@@ -112,8 +110,8 @@ export default function BuyBotPage() {
     <section
       className={`min-h-screen ${
         theme === "dark"
-          ? "bg-gradient-to-br from-gray-900 to-slate-950"
-          : "bg-gradient-to-br from-gray-50 to-gray-100"
+          ? "bg-gradient-to-br from-teal-950 via-slate-900 to-slate-950"
+          : "bg-gradient-to-br from-gray-50 to-slate-100"
       }`}
     >
       <div className="container mx-auto px-4 py-16">
@@ -121,12 +119,12 @@ export default function BuyBotPage() {
           <div className="inline-flex items-center justify-center mb-6">
             <div
               className={`w-16 h-16 rounded-full flex items-center justify-center ${
-                theme === "dark" ? "bg-indigo-900" : "bg-indigo-100"
+                theme === "dark" ? "bg-slate-800" : "bg-teal-100"
               }`}
             >
               <FaRobot
                 className={`text-3xl ${
-                  theme === "dark" ? "text-indigo-400" : "text-indigo-600"
+                  theme === "dark" ? "text-teal-400" : "text-teal-600"
                 }`}
               />
             </div>
@@ -135,15 +133,16 @@ export default function BuyBotPage() {
           <h1
             className={`text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${
               theme === "dark"
-                ? "from-teal-400 to-indigo-400"
-                : "from-teal-600 to-indigo-600"
+                ? "from-teal-400 to-cyan-500"
+                : "from-teal-600 to-cyan-700"
             }`}
           >
             AI Trading Bots
           </h1>
+
           <p
             className={`mt-4 max-w-2xl mx-auto text-xl ${
-              theme === "dark" ? "text-indigo-200" : "text-indigo-800"
+              theme === "dark" ? "text-slate-300" : "text-slate-600"
             }`}
           >
             Advanced algorithms that trade 24/7 to maximize your profits
@@ -153,14 +152,12 @@ export default function BuyBotPage() {
             onClick={toggleManager}
             className={`mt-8 px-8 py-3 rounded-xl font-bold transition-all duration-300 flex items-center gap-2 mx-auto shadow-lg ${
               theme === "dark"
-                ? "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white"
-                : "bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-400 hover:to-purple-400 text-white"
+                ? "bg-gradient-to-r from-teal-600 to-slate-700 hover:from-teal-500 hover:to-slate-600 text-white"
+                : "bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white"
             }`}
           >
             {showManager ? (
-              <>
-                <span>Close Manager</span>
-              </>
+              <span>Close Manager</span>
             ) : (
               <>
                 <FaRobot className="text-xl" />
@@ -176,18 +173,18 @@ export default function BuyBotPage() {
             className={`mb-16 max-w-6xl mx-auto p-6 rounded-2xl backdrop-blur-lg ${
               theme === "dark"
                 ? "bg-slate-800/70 border border-slate-700"
-                : "bg-white/80 border border-gray-200"
+                : "bg-white/80 border border-slate-200"
             }`}
           >
             <h2 className="text-2xl font-bold mb-6 text-center flex items-center justify-center gap-2">
               <FaCrown
                 className={`${
-                  theme === "dark" ? "text-yellow-400" : "text-yellow-500"
+                  theme === "dark" ? "text-yellow-400" : "text-yellow-600"
                 }`}
               />
               <span
-                className={`${
-                  theme === "dark" ? "text-indigo-300" : "text-indigo-600"
+                className={`$${
+                  theme === "dark" ? "text-teal-300" : "text-teal-600"
                 }`}
               >
                 My Trading Fleet
@@ -195,12 +192,12 @@ export default function BuyBotPage() {
             </h2>
             {purchasedBots.length === 0 ? (
               <div className="text-center py-10">
-                <div className="inline-block p-5 rounded-full bg-gray-200/30 dark:bg-slate-700/50 mb-4">
-                  <FaRobot className="text-4xl text-gray-400 dark:text-slate-500" />
+                <div className="inline-block p-5 rounded-full bg-slate-600/30 dark:bg-slate-700/50 mb-4">
+                  <FaRobot className="text-4xl text-slate-400 dark:text-slate-500" />
                 </div>
                 <p
                   className={`text-lg ${
-                    theme === "dark" ? "text-slate-400" : "text-gray-500"
+                    theme === "dark" ? "text-slate-400" : "text-slate-600"
                   }`}
                 >
                   No active bots. Purchase one to get started!
@@ -216,7 +213,7 @@ export default function BuyBotPage() {
                       className={`p-5 rounded-xl transition-all duration-300 ${
                         theme === "dark"
                           ? "bg-slate-700/50 hover:bg-slate-700"
-                          : "bg-white hover:bg-gray-50"
+                          : "bg-white hover:bg-slate-100"
                       } shadow-md`}
                     >
                       <div className="flex items-center gap-4 mb-4">
@@ -224,7 +221,7 @@ export default function BuyBotPage() {
                           <img
                             src={bot.image}
                             alt={bot.name}
-                            className="w-16 h-16 rounded-xl object-cover border-2 border-indigo-500/30"
+                            className="w-16 h-16 rounded-xl object-cover border-2 border-teal-400/30"
                           />
                           <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
                             Active
@@ -234,16 +231,14 @@ export default function BuyBotPage() {
                           <h3 className="font-bold text-lg dark:text-white">
                             {bot.name}
                           </h3>
-                          <div className="flex items-center gap-1">
-                            <span className="text-xs px-2 py-1 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full">
-                              +{bot.profitRate} ROI
-                            </span>
-                          </div>
+                          <span className="text-xs px-2 py-1 bg-gradient-to-r from-teal-500 to-green-500 text-white rounded-full">
+                            +{bot.profitRate} ROI
+                          </span>
                         </div>
                       </div>
                       <button
                         onClick={() => handleUnsubscribe(bot.id)}
-                        className="w-full mt-2 px-4 py-2 text-sm rounded-lg bg-gradient-to-r from-gray-500 to-gray-600 text-white hover:from-gray-600 hover:to-gray-700 transition-all flex items-center justify-center gap-2"
+                        className="w-full mt-2 px-4 py-2 text-sm rounded-lg bg-gradient-to-r from-slate-500 to-slate-600 text-white hover:from-slate-600 hover:to-slate-700 transition-all flex items-center justify-center gap-2"
                       >
                         <span>Deactivate</span>
                       </button>
@@ -256,161 +251,81 @@ export default function BuyBotPage() {
 
         {/* Main Bot Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {bots.map((bot) => {
-            const isPurchased = purchasedBots.includes(bot.id);
-            return (
-              <div
-                key={bot.id}
-                className={`relative rounded-2xl overflow-hidden transition-all duration-500 ${
-                  theme === "dark"
-                    ? "bg-gradient-to-br from-slate-800 to-slate-900"
-                    : "bg-gradient-to-br from-white to-gray-50"
-                } shadow-xl hover:shadow-2xl border ${
-                  theme === "dark"
-                    ? "border-slate-700 hover:border-indigo-500/50"
-                    : "border-gray-200 hover:border-indigo-300"
-                }`}
-                onMouseEnter={() => setHoveredBot(bot.id)}
-                onMouseLeave={() => setHoveredBot(null)}
-              >
-                {isPurchased && (
-                  <div className="absolute top-4 right-4 z-10">
-                    <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
-                      <FaBolt className="text-yellow-300" />
-                      <span>ACTIVE</span>
-                    </div>
-                  </div>
-                )}
+  {bots.map((bot) => {
+    const isPurchased = purchasedBots.includes(bot.id);
+    return (
+      <div
+        key={bot.id}
+        className={`relative rounded-3xl overflow-hidden transition duration-500 shadow-lg hover:shadow-2xl border-2
+          ${theme === "dark" ? "bg-slate-900 border-teal-700 hover:border-teal-500" : "bg-white border-slate-200 hover:border-slate-400"}
+        `}
+        onMouseEnter={() => setHoveredBot(bot.id)}
+        onMouseLeave={() => setHoveredBot(null)}
+      >
+        {isPurchased && (
+          <div className="absolute top-4 right-4 z-10">
+            <div className="bg-teal-600 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-md">
+              <FaBolt className="text-yellow-300" />
+              <span>ACTIVE</span>
+            </div>
+          </div>
+        )}
 
-                {/* Animated Header */}
-                <div
-                  className={`h-32 relative overflow-hidden transition-all duration-500 ${
-                    hoveredBot === bot.id ? "h-40" : "h-32"
-                  }`}
-                >
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-r ${
-                      theme === "dark"
-                        ? "from-indigo-900/80 to-purple-900/80"
-                        : "from-indigo-500/20 to-purple-500/20"
-                    }`}
-                  />
-                  <div className="absolute top-6 left-6 w-16 h-16 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <img
-                      src={bot.image}
-                      alt={bot.name}
-                      className="w-12 h-12 object-contain"
-                    />
-                  </div>
-                  <div className="absolute bottom-6 left-6">
-                    <h2 className="text-2xl font-bold text-white">
-                      {bot.name}
-                    </h2>
-                    <div className="flex items-center gap-2 mt-1">
-                      <FaChartLine className="text-green-400" />
-                      <span className="text-green-400 font-bold">
-                        {bot.profitRate}
-                      </span>
-                      <span className="text-indigo-200 text-sm">
-                        Avg. Profit
-                      </span>
-                    </div>
-                  </div>
-                </div>
+        {/* Top Banner with bot info */}
+        <div
+          className={`h-36 relative bg-gradient-to-r 
+            ${theme === "dark" ? "from-teal-900 via-slate-800 to-slate-900" : "from-teal-100 via-slate-50 to-white"}`}
+        >
+          <img
+            src={bot.image}
+            alt={bot.name}
+            className="absolute top-4 left-4 w-14 h-14 object-cover rounded-xl border-2 border-white/30"
+          />
+          <div className="absolute bottom-4 left-4">
+            <h2 className="text-lg font-bold text-white drop-shadow-md">{bot.name}</h2>
+            <div className="text-sm text-teal-300 flex items-center gap-2">
+              <FaChartLine />
+              {bot.profitRate} Profit
+            </div>
+          </div>
+        </div>
 
-                <div className="p-6">
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div
-                      className={`p-3 rounded-lg ${
-                        theme === "dark" ? "bg-slate-800/50" : "bg-indigo-50"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2 mb-1">
-                        <FaCoins
-                          className={`${
-                            theme === "dark"
-                              ? "text-yellow-400"
-                              : "text-yellow-500"
-                          }`}
-                        />
-                        <span className="text-sm font-medium dark:text-slate-300">
-                          Investment
-                        </span>
-                      </div>
-                      <span
-                        className={`font-bold ${
-                          theme === "dark" ? "text-white" : "text-gray-800"
-                        }`}
-                      >
-                        {bot.amount}
-                      </span>
-                    </div>
+        {/* Details */}
+        <div className="p-5">
+          <div className="flex justify-between text-sm text-slate-400 mb-2">
+            <span>Investment</span>
+            <span className="text-slate-200 font-semibold">{bot.amount}</span>
+          </div>
+          <div className="flex justify-between text-sm text-slate-400 mb-2">
+            <span>Level</span>
+            <span className="text-slate-200 font-semibold">{bot.botLevel}</span>
+          </div>
+          <div className="flex justify-between text-sm text-slate-400 mb-4">
+            <span>Win Rate</span>
+            <span className="text-green-400 font-semibold">{bot.winRate}</span>
+          </div>
 
-                    <div
-                      className={`p-3 rounded-lg ${
-                        theme === "dark" ? "bg-slate-800/50" : "bg-indigo-50"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2 mb-1">
-                        <div
-                          className={`w-2 h-2 rounded-full ${
-                            parseInt(bot.botLevel) > 25
-                              ? "bg-green-500"
-                              : "bg-orange-500"
-                          }`}
-                        ></div>
-                        <span className="text-sm font-medium dark:text-slate-300">
-                          Level
-                        </span>
-                      </div>
-                      <span
-                        className={`font-bold ${
-                          theme === "dark" ? "text-white" : "text-gray-800"
-                        }`}
-                      >
-                        {bot.botLevel}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="mb-6">
-                    <div className="flex justify-between text-sm mb-1">
-                      <span className="dark:text-slate-400">Win Rate</span>
-                      <span className="dark:text-slate-200 font-medium">
-                        {bot.winRate}
-                      </span>
-                    </div>
-                    <div
-                      className={`h-2 rounded-full overflow-hidden ${
-                        theme === "dark" ? "bg-slate-700" : "bg-gray-200"
-                      }`}
-                    >
-                      <div
-                        className="h-full bg-gradient-to-r from-green-500 to-emerald-500"
-                        style={{ width: bot.winRate }}
-                      />
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => handlePurchase(bot.id)}
-                    disabled={isPurchased}
-                    className={`w-full py-3 rounded-xl font-bold transition-all duration-300 ${
-                      isPurchased
-                        ? "bg-gray-500 text-gray-300 cursor-not-allowed"
-                        : theme === "dark"
-                        ? "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg hover:shadow-indigo-500/30"
-                        : "bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-400 hover:to-purple-400 text-white shadow-lg hover:shadow-indigo-400/30"
-                    }`}
-                  >
-                    {isPurchased ? "Activated" : "Purchase Bot"}
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+          {!isPurchased ? (
+            <button
+              onClick={() => handlePurchase(bot.id)}
+              className="w-full py-2 rounded-xl bg-gradient-to-r from-teal-600 to-slate-700 text-white hover:from-teal-500 hover:to-slate-600 transition-all"
+            >
+              Purchase
+            </button>
+          ) : (
+            <button
+              onClick={() => handleUnsubscribe(bot.id)}
+              className="w-full py-2 rounded-xl bg-slate-600 text-white hover:bg-slate-700 transition-all"
+            >
+              Deactivate
+            </button>
+          )}
         </div>
       </div>
+    );
+  })}
+</div>
+</div>
     </section>
   );
 }
