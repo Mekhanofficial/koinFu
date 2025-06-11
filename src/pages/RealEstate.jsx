@@ -446,7 +446,7 @@ export default function RealestPage() {
             <FaBuilding className="text-xl" />
             Available Properties
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
             {available.map((real) => (
               <PropertyCard
                 key={real.id}
