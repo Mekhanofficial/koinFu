@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { FaLock, FaEye, FaEyeSlash, FaCheck, FaEnvelope } from "react-icons/fa";
 import { auth } from "../../firebase";
-import { 
-  reauthenticateWithCredential, 
+import {
+  reauthenticateWithCredential,
   EmailAuthProvider,
-  updatePassword
+  updatePassword,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
@@ -22,53 +22,58 @@ export default function PasswordUpdate() {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!currentPassword) {
       newErrors.currentPassword = "Current password is required";
     }
-    
+
     if (!newPassword) {
       newErrors.newPassword = "New password is required";
     } else if (newPassword.length < 8) {
       newErrors.newPassword = "Password must be at least 8 characters";
     } else if (!/[A-Z]/.test(newPassword)) {
-      newErrors.newPassword = "Password must contain at least one uppercase letter";
+      newErrors.newPassword =
+        "Password must contain at least one uppercase letter";
     } else if (!/[0-9]/.test(newPassword)) {
       newErrors.newPassword = "Password must contain at least one number";
     } else if (!/[!@#$%^&*]/.test(newPassword)) {
-      newErrors.newPassword = "Password must contain at least one special character";
+      newErrors.newPassword =
+        "Password must contain at least one special character";
     }
-    
+
     if (newPassword !== confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     setLoading(true);
-    
+
     try {
       const user = auth.currentUser;
-      
+
       // Reauthenticate user with current password
-      const credential = EmailAuthProvider.credential(user.email, currentPassword);
+      const credential = EmailAuthProvider.credential(
+        user.email,
+        currentPassword
+      );
       await reauthenticateWithCredential(user, credential);
-      
+
       // Update password
       await updatePassword(user, newPassword);
-      
+
       // Send email notification (simulated)
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       setIsSuccess(true);
-      
+
       // Reset form after success
       setTimeout(() => {
         setCurrentPassword("");
@@ -77,16 +82,16 @@ export default function PasswordUpdate() {
         setIsSuccess(false);
         navigate("/account");
       }, 3000);
-      
     } catch (error) {
       let errorMessage = "Failed to update password";
-      
+
       switch (error.code) {
         case "auth/wrong-password":
           errorMessage = "Incorrect current password";
           break;
         case "auth/requires-recent-login":
-          errorMessage = "This operation requires recent authentication. Please log in again.";
+          errorMessage =
+            "This operation requires recent authentication. Please log in again.";
           break;
         case "auth/too-many-requests":
           errorMessage = "Too many attempts. Please try again later.";
@@ -94,7 +99,7 @@ export default function PasswordUpdate() {
         default:
           errorMessage = error.message;
       }
-      
+
       setErrors({ form: errorMessage });
     } finally {
       setLoading(false);
@@ -106,12 +111,23 @@ export default function PasswordUpdate() {
       <div className="w-full max-w-md bg-slate-800/50 backdrop-blur-lg rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-teal-600 to-emerald-700 p-6 relative">
-          <button 
+          <button
             onClick={() => navigate(-1)}
             className="absolute top-6 left-6 bg-white/20 hover:bg-white/30 p-2 rounded-full transition-colors"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
           </button>
           <div className="flex justify-center">
@@ -123,7 +139,7 @@ export default function PasswordUpdate() {
             {isSuccess ? "Password Updated!" : "Update Password"}
           </h1>
         </div>
-        
+
         <div className="p-6">
           {isSuccess ? (
             <div className="text-center py-8">
@@ -136,7 +152,8 @@ export default function PasswordUpdate() {
               <div className="mt-6 p-4 bg-blue-900/20 rounded-lg border border-blue-700 flex items-start">
                 <FaEnvelope className="text-blue-400 text-xl mt-1 mr-3" />
                 <p className="text-blue-300 text-left">
-                  A confirmation email has been sent to your registered email address.
+                  A confirmation email has been sent to your registered email
+                  address.
                 </p>
               </div>
             </div>
@@ -155,7 +172,9 @@ export default function PasswordUpdate() {
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                     className={`pl-10 w-full p-3 rounded-lg border ${
-                      errors.currentPassword ? "border-red-500" : "border-slate-700"
+                      errors.currentPassword
+                        ? "border-red-500"
+                        : "border-slate-700"
                     } focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-slate-700/50 text-white`}
                     placeholder="Enter your current password"
                   />
@@ -168,7 +187,9 @@ export default function PasswordUpdate() {
                   </button>
                 </div>
                 {errors.currentPassword && (
-                  <p className="mt-1 text-sm text-red-400">{errors.currentPassword}</p>
+                  <p className="mt-1 text-sm text-red-400">
+                    {errors.currentPassword}
+                  </p>
                 )}
               </div>
 
@@ -198,23 +219,41 @@ export default function PasswordUpdate() {
                   </button>
                 </div>
                 {errors.newPassword && (
-                  <p className="mt-1 text-sm text-red-400">{errors.newPassword}</p>
+                  <p className="mt-1 text-sm text-red-400">
+                    {errors.newPassword}
+                  </p>
                 )}
                 <div className="mt-2 p-3 bg-slate-800/50 rounded-lg">
                   <p className="text-slate-400 text-sm font-medium mb-2">
                     Password Requirements:
                   </p>
                   <ul className="text-xs text-slate-500 space-y-1">
-                    <li className={`flex items-center ${newPassword.length >= 8 ? 'text-teal-400' : ''}`}>
+                    <li
+                      className={`flex items-center ${
+                        newPassword.length >= 8 ? "text-teal-400" : ""
+                      }`}
+                    >
                       <span className="mr-2">•</span> At least 8 characters
                     </li>
-                    <li className={`flex items-center ${/[A-Z]/.test(newPassword) ? 'text-teal-400' : ''}`}>
+                    <li
+                      className={`flex items-center ${
+                        /[A-Z]/.test(newPassword) ? "text-teal-400" : ""
+                      }`}
+                    >
                       <span className="mr-2">•</span> One uppercase letter
                     </li>
-                    <li className={`flex items-center ${/[0-9]/.test(newPassword) ? 'text-teal-400' : ''}`}>
+                    <li
+                      className={`flex items-center ${
+                        /[0-9]/.test(newPassword) ? "text-teal-400" : ""
+                      }`}
+                    >
                       <span className="mr-2">•</span> One number
                     </li>
-                    <li className={`flex items-center ${/[!@#$%^&*]/.test(newPassword) ? 'text-teal-400' : ''}`}>
+                    <li
+                      className={`flex items-center ${
+                        /[!@#$%^&*]/.test(newPassword) ? "text-teal-400" : ""
+                      }`}
+                    >
                       <span className="mr-2">•</span> One special character
                     </li>
                   </ul>
@@ -234,7 +273,9 @@ export default function PasswordUpdate() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     className={`pl-10 w-full p-3 rounded-lg border ${
-                      errors.confirmPassword ? "border-red-500" : "border-slate-700"
+                      errors.confirmPassword
+                        ? "border-red-500"
+                        : "border-slate-700"
                     } focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-slate-700/50 text-white`}
                     placeholder="Confirm your new password"
                   />
@@ -247,7 +288,9 @@ export default function PasswordUpdate() {
                   </button>
                 </div>
                 {errors.confirmPassword && (
-                  <p className="mt-1 text-sm text-red-400">{errors.confirmPassword}</p>
+                  <p className="mt-1 text-sm text-red-400">
+                    {errors.confirmPassword}
+                  </p>
                 )}
               </div>
 
@@ -261,35 +304,49 @@ export default function PasswordUpdate() {
                 type="submit"
                 disabled={loading}
                 className={`w-full py-3 px-4 rounded-lg font-medium text-white shadow-lg transition-all ${
-                  loading 
-                    ? "bg-teal-500 cursor-not-allowed" 
+                  loading
+                    ? "bg-teal-500 cursor-not-allowed"
                     : "bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 hover:shadow-xl transform hover:-translate-y-0.5"
                 }`}
               >
                 {loading ? (
                   <div className="flex items-center justify-center">
-                    <svg 
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      fill="none" 
+                    <svg
+                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
                       viewBox="0 0 24 24"
                     >
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     Updating Password...
                   </div>
-                ) : "Update Password"}
+                ) : (
+                  "Update Password"
+                )}
               </button>
             </form>
           )}
         </div>
       </div>
-      
+
       <div className="mt-8 text-center text-slate-500 text-sm max-w-md">
         <p>
-          For security reasons, we require your current password to update your account credentials.
-          An email notification will be sent to your registered address after any password change.
+          For security reasons, we require your current password to update your
+          account credentials. An email notification will be sent to your
+          registered address after any password change.
         </p>
       </div>
     </div>

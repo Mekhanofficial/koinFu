@@ -59,7 +59,7 @@ export default function FundAccountPage() {
           <div className="mt-6 relative">
             <h6 className="text-gray-500 mb-2">To</h6>
             <button
-              className="w-full flex justify-between items-center p-4 bg-amber-400 text-white text-lg font-medium rounded-xl shadow-md hover:bg-amber-500 transition"
+              className="w-full flex justify-between items-center p-4 bg-teal-400 text-white text-lg font-medium rounded-xl shadow-md hover:bg-teal-500 transition"
               onClick={toggleDropdown}
             >
               {selectedOption}

@@ -37,7 +37,7 @@ export default function CoinMarketCapWidget() {
           href="https://coinmarketcap.com/"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-amber-300 underline"
+          className="text-teal-300 underline"
         >
           View More on CoinMarketCap
         </a>

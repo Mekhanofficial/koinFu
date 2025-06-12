@@ -31,7 +31,7 @@ const ParticleBack = () => {
         },
         particles: {
           color: {
-            value: "#0D9488", // Teal color to match your theme
+            value: "#0D9488", // teal color to match your theme
           },
           links: {
             color: "#0D9488",

@@ -106,8 +106,8 @@ const SIGNAL_PLANS = [
     dailySignals: 5,
     description: "Premium signals for serious traders",
     icon: faCrown,
-    color: "from-amber-500 to-orange-500",
-    darkColor: "from-amber-600 to-orange-600",
+    color: "from-teal-500 to-orange-500",
+    darkColor: "from-teal-600 to-orange-600",
     features: [
       "90% Win Rate",
       "5 Daily Signals",
@@ -157,10 +157,11 @@ export default function DailySignalPage() {
   const { theme } = useTheme();
   const [activeSignal, setActiveSignal] = useState(null);
   const [showSignalManager, setShowSignalManager] = useState(false);
-  const [signalAmount, setSignalAmount] = useState("");
+  const [planAmounts, setPlanAmounts] = useState({});
   const [plans, setPlans] = useState(SIGNAL_PLANS);
   const [activeTab, setActiveTab] = useState("performance");
-
+  const [errors, setErrors] = useState({});
+  
   // Load active signal from localStorage
   useEffect(() => {
     const storedSignal = localStorage.getItem("activeSignal");
@@ -176,19 +177,34 @@ export default function DailySignalPage() {
     }
   }, [activeSignal]);
 
-  // Handle signal purchase
+  // Handle signal purchase with amount validation
   const handlePurchase = (planId) => {
     const selectedPlan = plans.find((plan) => plan.id === planId);
     if (!selectedPlan) return;
 
-    const amount = signalAmount || selectedPlan.price;
+    const amount = planAmounts[planId] || selectedPlan.price;
+    const parsedAmount = parseFloat(amount);
+
+    // Validate that the amount matches the plan price
+    if (parsedAmount !== selectedPlan.price) {
+      setErrors((prev) => ({
+        ...prev,
+        [planId]: `Amount must be exactly ${formatCurrency(
+          selectedPlan.price
+        )}`,
+      }));
+      return;
+    }
+
+    // Clear any previous errors
+    setErrors((prev) => ({ ...prev, [planId]: null }));
 
     // Update active signal
     const newActiveSignal = {
       ...selectedPlan,
       active: true,
       purchaseDate: new Date().toISOString(),
-      amountPaid: parseFloat(amount),
+      amountPaid: parsedAmount,
     };
 
     setActiveSignal(newActiveSignal);
@@ -201,7 +217,8 @@ export default function DailySignalPage() {
       }))
     );
 
-    setSignalAmount("");
+    // Clear the amount for this plan
+    setPlanAmounts((prev) => ({ ...prev, [planId]: "" }));
   };
 
   // Handle signal cancellation
@@ -228,6 +245,15 @@ export default function DailySignalPage() {
   // Toggle signal manager visibility
   const toggleSignalManager = () => {
     setShowSignalManager(!showSignalManager);
+  };
+
+  // Handle amount change for a specific plan
+  const handleAmountChange = (planId, value) => {
+    setPlanAmounts((prev) => ({
+      ...prev,
+      [planId]: value,
+    }));
+    setErrors((prev) => ({ ...prev, [planId]: null }));
   };
 
   // Custom tooltip for performance chart
@@ -349,7 +375,7 @@ export default function DailySignalPage() {
                         <p className="font-semibold text-sm mb-1">
                           Daily Signals
                         </p>
-                        <p className="text-2xl font-bold text-amber-500">
+                        <p className="text-2xl font-bold text-teal-500">
                           {activeSignal.dailySignals}
                         </p>
                       </div>
@@ -613,7 +639,7 @@ export default function DailySignalPage() {
                           </div>
                           <div>
                             <p className="text-sm">Daily Signals</p>
-                            <p className="text-xl font-bold text-amber-500">
+                            <p className="text-xl font-bold text-teal-500">
                               {activeSignal.dailySignals}
                             </p>
                           </div>
@@ -798,7 +824,7 @@ export default function DailySignalPage() {
                         >
                           Signals/Day
                         </span>
-                        <p className="text-xl font-bold text-amber-500">
+                        <p className="text-xl font-bold text-teal-500">
                           {plan.dailySignals}
                         </p>
                       </div>
@@ -842,9 +868,9 @@ export default function DailySignalPage() {
                         theme === "dark" ? "text-gray-300" : "text-gray-700"
                       }`}
                     >
-                      Custom Investment (USD)
+                      Amount to Pay (USD)
                     </label>
-                    <div className="relative mb-4">
+                    <div className="relative mb-1">
                       <span
                         className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
                           theme === "dark" ? "text-gray-400" : "text-gray-500"
@@ -854,8 +880,10 @@ export default function DailySignalPage() {
                       </span>
                       <input
                         type="number"
-                        value={signalAmount}
-                        onChange={(e) => setSignalAmount(e.target.value)}
+                        value={planAmounts[plan.id] || ""}
+                        onChange={(e) =>
+                          handleAmountChange(plan.id, e.target.value)
+                        }
                         placeholder={plan.price.toString()}
                         className={`w-full rounded-xl px-8 py-3 focus:outline-none focus:ring-2 ${
                           theme === "dark"
@@ -864,6 +892,11 @@ export default function DailySignalPage() {
                         }`}
                       />
                     </div>
+                    {errors[plan.id] && (
+                      <p className="text-red-500 text-sm mb-3">
+                        {errors[plan.id]}
+                      </p>
+                    )}
 
                     <button
                       onClick={() => handlePurchase(plan.id)}

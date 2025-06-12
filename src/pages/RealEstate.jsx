@@ -5,7 +5,7 @@ import px19 from "../pictures/px19.png";
 import px20 from "../pictures/px20.png";
 import px21 from "../pictures/px21.png";
 import px22 from "../pictures/px22.png";
-import ProjectDetail from "./RealEstatedetails";
+import ProjectDetail from "../components/RealEstatedetails";
 import { useTheme } from "next-themes";
 import {
   FaChartLine,
@@ -440,7 +440,7 @@ export default function RealestPage() {
         <div className="mb-12">
           <h2
             className={`text-2xl font-bold mb-6 flex items-center gap-2 ${
-              isDarkMode ? "text-amber-400" : "text-amber-600"
+              isDarkMode ? "text-teal-400" : "text-teal-600"
             }`}
           >
             <FaBuilding className="text-xl" />
@@ -567,7 +567,7 @@ function PropertyCard({
             </div>
             <div
               className={`font-bold ${
-                isDarkMode ? "text-amber-300" : "text-amber-600"
+                isDarkMode ? "text-teal-300" : "text-teal-600"
               }`}
             >
               {real.amount}
@@ -750,7 +750,7 @@ const InvestmentModal = ({
                 </p>
                 <p
                   className={`text-2xl font-bold ${
-                    isDarkMode ? "text-amber-300" : "text-amber-600"
+                    isDarkMode ? "text-teal-300" : "text-teal-600"
                   }`}
                 >
                   {details.minimum}

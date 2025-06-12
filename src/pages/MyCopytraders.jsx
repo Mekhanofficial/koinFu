@@ -1,5 +1,5 @@
 import { useTheme } from "next-themes";
-import { TraderCard } from "./TraderCard";
+import { TraderCard } from "../components/TraderCard";
 import { useCopyTraders } from "../context/CopyTraderContext";
 
 export function MyCopyTradersPage() {

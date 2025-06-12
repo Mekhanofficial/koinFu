@@ -170,7 +170,7 @@ export default function HeaderPage({ isSidebarOpen, setIsSidebarOpen }) {
         >
           <FontAwesomeIcon
             icon={theme === "dark" ? faLightbulb : faMoon}
-            className="h-5 w-5 text-teal-600 dark:text-amber-400"
+            className="h-5 w-5 text-teal-600 dark:text-teal-400"
           />
         </button>
 
