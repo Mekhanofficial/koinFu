@@ -8,14 +8,23 @@ import {
   FaPercentage,
   FaChevronRight,
 } from "react-icons/fa";
-import bt1 from "../pictures/bt1.jpeg";
+import cp1 from "../pictures/cp1.avif";
+import cp2 from "../pictures/cp2.avif";
+import cp3 from "../pictures/cp3.avif";
+import cp4 from "../pictures/cp4.avif";
+import cp5 from "../pictures/cp5.avif";
+import cp6 from "../pictures/cp6.avif";
+import cp7 from "../pictures/cp7.avif";
+import cp8 from "../pictures/cp8.avif";
+import cp9 from "../pictures/cp9.avif";
+
 
 // Staking asset data
 const stakeAssets = [
   {
     name: "Bitcoin",
     symbol: "BTC",
-    img: bt1,
+    img: cp1,
     min: 1,
     max: 10,
     apy: 5.2,
@@ -24,7 +33,7 @@ const stakeAssets = [
   {
     name: "Ethereum",
     symbol: "ETH",
-    img: bt1,
+    img: cp2,
     min: 0.1,
     max: 50,
     apy: 6.8,
@@ -33,7 +42,7 @@ const stakeAssets = [
   {
     name: "Cardano",
     symbol: "ADA",
-    img: bt1,
+    img: cp3,
     min: 100,
     max: 5000,
     apy: 4.5,
@@ -42,7 +51,7 @@ const stakeAssets = [
   {
     name: "Solana",
     symbol: "SOL",
-    img: bt1,
+    img: cp4,
     min: 1,
     max: 100,
     apy: 7.2,
@@ -51,7 +60,7 @@ const stakeAssets = [
   {
     name: "Polkadot",
     symbol: "DOT",
-    img: bt1,
+    img: cp5,
     min: 5,
     max: 500,
     apy: 8.1,
@@ -60,7 +69,7 @@ const stakeAssets = [
   {
     name: "Avalanche",
     symbol: "AVAX",
-    img: bt1,
+    img: cp6,
     min: 1,
     max: 200,
     apy: 6.5,
@@ -69,7 +78,7 @@ const stakeAssets = [
   {
     name: "Chainlink",
     symbol: "LINK",
-    img: bt1,
+    img: cp7,
     min: 10,
     max: 1000,
     apy: 5.9,
@@ -78,7 +87,7 @@ const stakeAssets = [
   {
     name: "Litecoin",
     symbol: "LTC",
-    img: bt1,
+    img: cp8,
     min: 0.5,
     max: 100,
     apy: 4.8,
@@ -87,7 +96,7 @@ const stakeAssets = [
   {
     name: "Ripple",
     symbol: "XRP",
-    img: bt1,
+    img: cp9,
     min: 50,
     max: 5000,
     apy: 3.7,

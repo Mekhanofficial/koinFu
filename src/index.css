@@ -239,3 +239,25 @@
 .animate-progress {
   animation: progress linear 1 forwards;
 }
+
+@keyframes spin-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes spin-reverse {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+@keyframes fade-in-out {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.animate-spin-slow {
+  animation: spin-slow 2.5s linear infinite;
+}
+.animate-spin-reverse {
+  animation: spin-reverse 2s linear infinite;
+}
+.animate-fade-in-out {
+  animation: fade-in-out 1.5s ease-in-out infinite;
+}

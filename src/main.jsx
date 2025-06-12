@@ -9,7 +9,6 @@ import ContactUs from "./components/ContactIndex.jsx";
 import TradingViewChart from "./components/Tradingview.jsx";
 import CryptocurrencyMarketWidget from "./components/trading-view-widgets/CryptocurrencyMarketWidget.jsx";
 import LoginPage from "./app/(auth)/login/LoginPage.jsx";
-import DashPage from "./pages/Dashboard.jsx";
 import SignUpPage from "./components/auth/sign-up/Form.jsx";
 import TransactionPage from "./pages/Transactions.jsx";
 import PaymentProofPage from "./pages/PaymentProof.jsx";
@@ -49,6 +48,7 @@ import ContactPage from "./pages/contact/Hero";
 import HomePage from "./pages/home/Home";
 import PasswordUpdate from "./pages/PasswordUpdate.jsx";
 import { MyCopyTradersPage } from "./pages/MyCopytraders";
+import DashPage from "./pages/dashboard/Hero";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

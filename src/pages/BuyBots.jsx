@@ -1,6 +1,14 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
-import bt1 from "../pictures/bt1.jpeg";
+import bt1 from "../pictures/bt9.avif";
+import bt2 from "../pictures/bt10.avif";
+import bt3 from "../pictures/bt3.jpg";
+import bt4 from "../pictures/bt4.jpg";
+import bt5 from "../pictures/bt5.png";
+import bt6 from "../pictures/bt6.png";
+import bt7 from "../pictures/bt2.jpg";
+import bt8 from "../pictures/bt8.avif";
+
 import { FaBolt, FaChartLine, FaCrown, FaCoins, FaRobot } from "react-icons/fa";
 
 const bots = [
@@ -16,7 +24,7 @@ const bots = [
   {
     id: 2,
     name: "CRYPTOHOPPER",
-    image: bt1,
+    image: bt2,
     profitRate: "30%",
     amount: "$1000",
     botLevel: "30",
@@ -25,7 +33,7 @@ const bots = [
   {
     id: 3,
     name: "TRADINGVIEW",
-    image: bt1,
+    image: bt3,
     profitRate: "22%",
     amount: "$600",
     botLevel: "20",
@@ -34,7 +42,7 @@ const bots = [
   {
     id: 4,
     name: "ZIGNALY",
-    image: bt1,
+    image: bt4,
     profitRate: "28%",
     amount: "$900",
     botLevel: "28",
@@ -43,7 +51,7 @@ const bots = [
   {
     id: 5,
     name: "SHRIMMPY",
-    image: bt1,
+    image: bt5,
     profitRate: "35%",
     amount: "$1200",
     botLevel: "35",
@@ -52,7 +60,7 @@ const bots = [
   {
     id: 6,
     name: "COINRULE",
-    image: bt1,
+    image: bt6,
     profitRate: "20%",
     amount: "$500",
     botLevel: "18",
@@ -61,7 +69,7 @@ const bots = [
   {
     id: 7,
     name: "TRADEBOT",
-    image: bt1,
+    image: bt7,
     profitRate: "27%",
     amount: "$850",
     botLevel: "25",
@@ -70,7 +78,7 @@ const bots = [
   {
     id: 8,
     name: "BITUNIVERSE",
-    image: bt1,
+    image: bt8,
     profitRate: "33%",
     amount: "$1100",
     botLevel: "32",
