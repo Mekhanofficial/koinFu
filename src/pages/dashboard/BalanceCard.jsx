@@ -74,17 +74,17 @@ export default function BalanceCard({
         </button>
       </div>
 
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 w-full">
         <h1
           className={`text-3xl lg:text-4xl font-bold ${textColor} tracking-tight`}
         >
           {formatBalance()}
         </h1>
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 w-full">
           <button
             onClick={handleViewTransactions}
-            className="group flex items-center gap-2 cursor-pointer"
+            className="group flex items-center gap-2 cursor-pointer w-full sm:w-auto justify-center sm:justify-start"
           >
             <span
               className={`font-medium ${secondaryTextColor} group-hover:text-teal-400 transition-colors`}
