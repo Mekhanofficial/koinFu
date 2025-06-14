@@ -36,7 +36,7 @@ export default function TradeProgress({
       transition={{ duration: 0.5 }}
       className={`relative overflow-hidden rounded-2xl p-3 mb-4 shadow-xl ${
         theme === "dark"
-          ? "bg-gradient-to-br from-slate-800 to-slate-900"
+          ? "bg-gradient-to-br from-slate-800 to-slate-950"
           : "bg-gradient-to-br from-slate-100 to-slate-300"
       } border ${borderColor} transition-all duration-300`}
       whileHover={{

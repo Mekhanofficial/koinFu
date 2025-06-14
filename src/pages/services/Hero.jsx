@@ -172,12 +172,12 @@ export default function ServicePage() {
                 Looking for a Crypto Expert?
               </h1>
               <p className="text-gray-400 text-lg leading-relaxed">
-                At Quantumedgecoin, we're committed to delivering premium
-                cryptocurrency mining services. Whether you're investing in
-                Bitcoin, Ethereum, or other digital assets, our platform
-                combines intuitive design with competitive fees and exceptional
-                returns. Join our growing community of savvy investors and start
-                building your crypto portfolio with confidence.
+                At KoinFu, we're committed to delivering premium cryptocurrency
+                mining services. Whether you're investing in Bitcoin, Ethereum,
+                or other digital assets, our platform combines intuitive design
+                with competitive fees and exceptional returns. Join our growing
+                community of savvy investors and start building your crypto
+                portfolio with confidence.
               </p>
             </div>
 

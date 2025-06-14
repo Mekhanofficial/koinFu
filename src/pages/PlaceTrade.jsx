@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
 import { useTheme } from "next-themes";
-import HeaderPage from "../components/Header";
 import TradingViewChart from "../components/Tradingview";
 
 // Trade form component
@@ -23,7 +22,7 @@ const TradeForm = ({ theme, tradeType, setTradeType, assets }) => {
 
   return (
     <div
-      className={`w-full lg:w-1/3 p-6 rounded-xl shadow-lg border transition-all duration-300 ${
+      className={`w-full max-w-full lg:w-1/3 p-4 sm:p-6 rounded-xl shadow-lg border transition-all duration-300 ${
         theme === "dark"
           ? "bg-slate-900 border-gray-800 hover:border-teal-500"
           : "bg-white border-gray-200 hover:border-teal-400"
@@ -143,7 +142,7 @@ const TradeForm = ({ theme, tradeType, setTradeType, assets }) => {
           </select>
         </FormField>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FormField theme={theme} label="Take Profit" id="take-profit">
             <input
               id="take-profit"
@@ -245,7 +244,7 @@ const RecentTrades = ({ theme }) => {
 
   return (
     <div
-      className={`rounded-xl p-5 my-6 border transition-all duration-300 ${
+      className={`rounded-xl p-4 sm:p-5 my-6 border transition-all duration-300 ${
         theme === "dark"
           ? "bg-slate-900 border-gray-800 hover:border-teal-500"
           : "bg-white border-gray-200 hover:border-teal-400"
@@ -282,63 +281,65 @@ const RecentTrades = ({ theme }) => {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-max">
-          <thead>
-            <tr
-              className={`border-b ${
-                theme === "dark" ? "border-gray-800" : "border-gray-200"
-              }`}
-            >
-              {columns.map((col, index) => (
-                <th
-                  key={index}
-                  className={`p-3 text-left text-xs font-medium ${
-                    theme === "dark" ? "text-gray-500" : "text-gray-600"
-                  }`}
-                >
-                  {col}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colSpan={12} className="py-16 text-center">
-                <div className="flex flex-col items-center justify-center">
-                  <svg
-                    className={`w-16 h-16 mb-4 ${
-                      theme === "dark" ? "text-gray-700" : "text-gray-300"
-                    }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                    />
-                  </svg>
-                  <h3
-                    className={`text-lg font-medium ${
-                      theme === "dark" ? "text-gray-600" : "text-gray-400"
+        <div className="min-w-[800px]">
+          <table className="w-full">
+            <thead>
+              <tr
+                className={`border-b ${
+                  theme === "dark" ? "border-gray-800" : "border-gray-200"
+                }`}
+              >
+                {columns.map((col, index) => (
+                  <th
+                    key={index}
+                    className={`p-3 text-left text-xs font-medium ${
+                      theme === "dark" ? "text-gray-500" : "text-gray-600"
                     }`}
                   >
-                    No trades yet
-                  </h3>
-                  <p
-                    className={`mt-1 text-sm ${
-                      theme === "dark" ? "text-gray-700" : "text-gray-500"
-                    }`}
-                  >
-                    Your trade history will appear here
-                  </p>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                    {col}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colSpan={12} className="py-16 text-center">
+                  <div className="flex flex-col items-center justify-center">
+                    <svg
+                      className={`w-16 h-16 mb-4 ${
+                        theme === "dark" ? "text-gray-700" : "text-gray-300"
+                      }`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                      />
+                    </svg>
+                    <h3
+                      className={`text-lg font-medium ${
+                        theme === "dark" ? "text-gray-600" : "text-gray-400"
+                      }`}
+                    >
+                      No trades yet
+                    </h3>
+                    <p
+                      className={`mt-1 text-sm ${
+                        theme === "dark" ? "text-gray-700" : "text-gray-500"
+                      }`}
+                    >
+                      Your trade history will appear here
+                    </p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
@@ -350,78 +351,76 @@ export default function PlaceTradePage() {
   const [tradeType, setTradeType] = useState("Choose Trade Type");
 
   return (
-    <>
-      <section
-        className={`px-10 py-14 min-h-screen ${
-          theme === "dark" ? "bg-slate-950" : "bg-gray-50"
-        }`}
-      >
-        <div className="flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto">
-          {/* Chart Section */}
-          <div className="w-full lg:w-2/3">
-            <div
-              className={`rounded-xl p-4 mb-6 ${
-                theme === "dark" ? "bg-slate-900" : "bg-white"
-              } shadow-lg`}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h2
-                  className={`font-bold ${
-                    theme === "dark" ? "text-gray-300" : "text-gray-800"
+    <section
+      className={`px-4 sm:px-6 md:px-10 py-10 sm:py-14 min-h-screen w-full overflow-x-hidden ${
+        theme === "dark" ? "bg-slate-950" : "bg-gray-50"
+      }`}
+    >
+      <div className="flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto w-full">
+        {/* Chart Section */}
+        <div className="w-full max-w-full lg:w-2/3">
+          <div
+            className={`rounded-xl p-4 mb-6 ${
+              theme === "dark" ? "bg-slate-900" : "bg-white"
+            } shadow-lg`}
+          >
+            <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+              <h2
+                className={`font-bold ${
+                  theme === "dark" ? "text-gray-300" : "text-gray-800"
+                }`}
+              >
+                BTC/USD Chart
+              </h2>
+              <div className="flex space-x-2">
+                <button
+                  className={`px-3 py-1 rounded-lg text-sm ${
+                    theme === "dark"
+                      ? "bg-slate-800 text-gray-400"
+                      : "bg-gray-100 text-gray-600"
                   }`}
                 >
-                  BTC/USD Chart
-                </h2>
-                <div className="flex space-x-2">
-                  <button
-                    className={`px-3 py-1 rounded-lg text-sm ${
-                      theme === "dark"
-                        ? "bg-slate-800 text-gray-400"
-                        : "bg-gray-100 text-gray-600"
-                    }`}
-                  >
-                    1H
-                  </button>
-                  <button
-                    className={`px-3 py-1 rounded-lg text-sm ${
-                      theme === "dark"
-                        ? "bg-teal-900/50 text-teal-400"
-                        : "bg-teal-100 text-teal-700"
-                    }`}
-                  >
-                    4H
-                  </button>
-                  <button
-                    className={`px-3 py-1 rounded-lg text-sm ${
-                      theme === "dark"
-                        ? "bg-slate-800 text-gray-400"
-                        : "bg-gray-100 text-gray-600"
-                    }`}
-                  >
-                    1D
-                  </button>
-                </div>
+                  1H
+                </button>
+                <button
+                  className={`px-3 py-1 rounded-lg text-sm ${
+                    theme === "dark"
+                      ? "bg-teal-900/50 text-teal-400"
+                      : "bg-teal-100 text-teal-700"
+                  }`}
+                >
+                  4H
+                </button>
+                <button
+                  className={`px-3 py-1 rounded-lg text-sm ${
+                    theme === "dark"
+                      ? "bg-slate-800 text-gray-400"
+                      : "bg-gray-100 text-gray-600"
+                  }`}
+                >
+                  1D
+                </button>
               </div>
-              <TradingViewChart
-                symbol="BTC/USD"
-                interval="60"
-                width="100%"
-                height={500}
-              />
             </div>
+            <TradingViewChart
+              symbol="BTC/USD"
+              interval="60"
+              width="100%"
+              height={500}
+            />
           </div>
-
-          {/* Trade Form */}
-          <TradeForm
-            theme={theme}
-            tradeType={tradeType}
-            setTradeType={setTradeType}
-          />
         </div>
 
-        {/* Recent Trades */}
-        <RecentTrades theme={theme} />
-      </section>
-    </>
+        {/* Trade Form */}
+        <TradeForm
+          theme={theme}
+          tradeType={tradeType}
+          setTradeType={setTradeType}
+        />
+      </div>
+
+      {/* Recent Trades */}
+      <RecentTrades theme={theme} />
+    </section>
   );
 }

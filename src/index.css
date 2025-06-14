@@ -253,7 +253,7 @@
   50% { opacity: 1; }
 }
 .animate-spin-slow {
-  animation: spin-slow 2.5s linear infinite;
+  animation: spin-slow 10.5s linear infinite;
 }
 .animate-spin-reverse {
   animation: spin-reverse 2s linear infinite;

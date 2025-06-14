@@ -11,7 +11,7 @@ import {
 export default function BalanceCard({
   theme = "light",
   borderColor = "border-gray-200",
-  balance = 150975.0,
+  balance = 15809750.0,
   currency = "USD",
 }) {
   const [showBalance, setShowBalance] = useState(true);
@@ -21,7 +21,7 @@ export default function BalanceCard({
   const toggleBalanceVisibility = () => setShowBalance(!showBalance);
 
   const formatBalance = () => {
-    if (!showBalance) return "•••••••";
+    if (!showBalance) return "******";
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency,
@@ -32,8 +32,8 @@ export default function BalanceCard({
 
   const gradientColors =
     theme === "dark"
-      ? "from-slate-800 to-slate-900"
-      : "from-slate-100 to-slate-300";
+      ? "from-slate-800  to-slate-900"
+      : "from-slate-400 via-slate-100 to-slate-300";
 
   const textColor = theme === "dark" ? "text-white" : "text-slate-800";
   const secondaryTextColor =
@@ -62,7 +62,7 @@ export default function BalanceCard({
         </h4>
         <button
           onClick={toggleBalanceVisibility}
-          className={`p-2 rounded-full ${
+          className={`p-2  rounded-full ${
             theme === "dark" ? "hover:bg-slate-700" : "hover:bg-slate-200"
           }`}
           aria-label={showBalance ? "Hide balance" : "Show balance"}

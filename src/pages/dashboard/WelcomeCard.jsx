@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBitcoin } from "@fortawesome/free-brands-svg-icons";
+import { Link } from "react-router-dom";
 
 export default function WelcomeCard({
   user,
@@ -32,8 +33,9 @@ export default function WelcomeCard({
             : "bg-white hover:bg-teal-600 text-teal-700"
         } px-4 py-2 rounded-full flex items-center gap-2 transition duration-300 text-sm lg:text-base`}
       >
-        <FontAwesomeIcon icon={faBitcoin} />
-        Crypto Update
+        <Link to="/Assets">
+          <FontAwesomeIcon icon={faBitcoin} /> Crypto Update
+        </Link>
       </button>
     </div>
   );

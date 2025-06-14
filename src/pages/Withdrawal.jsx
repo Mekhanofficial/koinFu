@@ -337,7 +337,7 @@ export default function WithdrawalPage() {
   return (
     <>
       <section
-        className={`flex flex-col lg:flex-row justify-between min-h-screen p-4 ${
+        className={`flex flex-col lg:flex-row justify-between min-h-screen px-4 py-14 ${
           theme === "dark" ? "bg-slate-950" : "bg-gray-100"
         }`}
       >

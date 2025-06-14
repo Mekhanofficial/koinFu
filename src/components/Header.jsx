@@ -146,7 +146,7 @@ export default function HeaderPage({ isSidebarOpen, setIsSidebarOpen }) {
       <div className="flex items-center">
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="md:hidden p-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+          className="md:hidden p-2 rounded-full  transition"
           aria-label="Toggle sidebar"
         >
           <FontAwesomeIcon
@@ -165,12 +165,12 @@ export default function HeaderPage({ isSidebarOpen, setIsSidebarOpen }) {
         {/* Theme Toggle */}
         <button
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+          className="p-2 rounded-full transition"
           aria-label="Toggle theme"
         >
           <FontAwesomeIcon
             icon={theme === "dark" ? faLightbulb : faMoon}
-            className="h-5 w-5 text-teal-600 dark:text-teal-400"
+            className="h-5 w-5 text-teal-700  hover:text-teal-400 dark:hover:text-teal-900 dark:text-teal-400"
           />
         </button>
 
@@ -181,15 +181,15 @@ export default function HeaderPage({ isSidebarOpen, setIsSidebarOpen }) {
               setIsNotificationMenuOpen(!isNotificationMenuOpen);
               setIsUserMenuOpen(false);
             }}
-            className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition relative"
+            className="p-2 rounded-full transition relative"
             aria-label="Notifications"
           >
             <FontAwesomeIcon
               icon={faBell}
-              className="h-5 w-5 text-slate-700 dark:text-slate-300"
+              className="h-5 w-5 text-slate-700 hover:text-teal-400 dark:text-slate-300 dark:hover:text-slate-800"
             />
             {unreadCount > 0 && (
-              <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md">
+              <span className="absolute top-1 right-1 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md">
                 {unreadCount}
               </span>
             )}

@@ -76,7 +76,7 @@ export default function AccountPage() {
   if (!user) {
     return (
       <div
-        className={`min-h-screen pt-10 min-h-screen flex items-center justify-center ${
+        className={` pt-10 min-h-screen flex items-center justify-center ${
           theme === "dark"
             ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white"
             : "bg-gradient-to-b from-gray-100 to-gray-200 text-gray-800"

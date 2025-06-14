@@ -17,14 +17,16 @@ export default function StatsGrid({ theme, borderColor, secondaryText }) {
      
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full p-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full ">
         {stats.map((stat, index) => {
           const isLive = stat.label.includes("Live");
           const baseColor = stat.color || "teal";
 
           // Fixed color classes
           const textColor =
-            baseColor === "green" ? "text-green-300" : "text-teal-300";
+            baseColor === "green"
+              ? "text-green-500 dark:text-green-700"
+              : "text-teal-500  dark:text-teal-700";
           const borderHover =
             baseColor === "green"
               ? "hover:border-green-400"
@@ -82,8 +84,8 @@ export default function StatsGrid({ theme, borderColor, secondaryText }) {
                   >
                     {isLive && (
                       <span className="relative inline-flex mr-2">
-                        <span className="absolute inline-flex h-2.5 w-2.5 bg-green-400 rounded-full opacity-75 animate-ping"></span>
-                        <span className="relative inline-flex h-2.5 w-2.5 bg-green-900 rounded-full"></span>
+                        <span className="absolute inline-flex h-2.5 w-2.5 bg-green-900 dark:bg-green-300    rounded-full opacity-75 animate-ping"></span>
+                        <span className="relative inline-flex h-2.5 w-2.5 bg-green-300 dark:bg-green-800 rounded-full"></span>
                       </span>
                     )}
                     {stat.label}
