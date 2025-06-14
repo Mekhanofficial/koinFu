@@ -1,7 +1,19 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage, connectStorageEmulator } from "firebase/storage";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+} from "firebase/firestore";
+import {
+  getStorage,
+  connectStorageEmulator,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
+import { updateDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -17,11 +29,21 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// For debugging during development only:
+// Use emulator in development
 if (window.location.hostname === "localhost") {
   connectStorageEmulator(storage, "localhost", 9199);
   console.log("Using Firebase Storage emulator");
 }
 
-export { auth, db, storage };
-export { doc, setDoc, getDoc } from "firebase/firestore";
+export {
+  auth,
+  db,
+  storage,
+  doc,
+  setDoc,
+   updateDoc ,
+  getDoc,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+};
