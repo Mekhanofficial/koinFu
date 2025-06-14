@@ -65,11 +65,7 @@ export default function HomeHeaderPage() {
 
         {/* Logo */}
         <div className="flex items-center lg:ml-4">
-          <img
-            src={koinfu}
-            alt="Company Logo"
-            className="h-8 w-auto md:h-10"
-          />
+          <img src={koinfu} alt="Company Logo" className="h-8 w-auto md:h-10" />
         </div>
 
         {/* Desktop Navigation */}

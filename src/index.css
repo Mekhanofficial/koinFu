@@ -4,15 +4,17 @@
 
 /* Add to your global CSS */
 @keyframes skillBarFill {
-  from { width: 0%; }
-  to { width: var(--target-width); }
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--target-width);
+  }
 }
 
 .bg-teal-500 {
   animation: skillBarFill 1.5s ease-out forwards;
 }
-
-
 
 @keyframes infinite-scroll {
   from {
@@ -28,8 +30,12 @@
 }
 
 @keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .animate-spin-slow {
@@ -72,24 +78,26 @@
   scrollbar-color: #1e293b #0f172a; /* slate-800 slate-900 */
 }
 
-
 @keyframes glow {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
-    box-shadow: 0 0 5px rgba(72, 207, 173, 0.8), 0 0 10px rgba(72, 207, 173, 0.8);
+    box-shadow: 0 0 5px rgba(72, 207, 173, 0.8),
+      0 0 10px rgba(72, 207, 173, 0.8);
   }
   50% {
     opacity: 0.7;
-    box-shadow: 0 0 10px rgba(72, 207, 173, 0.8), 0 0 20px rgba(72, 207, 173, 0.8);
+    box-shadow: 0 0 10px rgba(72, 207, 173, 0.8),
+      0 0 20px rgba(72, 207, 173, 0.8);
   }
 }
 
-.glowup{
+.glowup {
   animation: glow 1.5s infinite;
 }
 
 .glow {
-  box-shadow: 0 0 10px 2px rgba(16, 185, 129, 0.7); /* Teal glow */
+  box-shadow: 0 0 10px 2px rgba(16, 185, 129, 0.7); /* teal glow */
 }
 
 @keyframes rotateSlowly {
@@ -115,8 +123,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 .buy-crypto-container {
   max-width: 1200px;
@@ -132,7 +144,7 @@
   font-size: 2rem;
   margin-bottom: 1.5rem;
   color: #333;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .buy-crypto-iframe {
@@ -150,8 +162,6 @@
   color: #666;
   margin-bottom: 1rem;
 }
-
-
 
 @layer base {
   :root {
@@ -209,8 +219,6 @@
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border;
@@ -220,12 +228,36 @@
   }
 }
 
-
-  @keyframes progress {
-    from { width: 100%; }
-    to { width: 0%; }
+@keyframes progress {
+  from {
+    width: 100%;
   }
-  .animate-progress {
-    animation: progress linear 1 forwards;
+  to {
+    width: 0%;
   }
+}
+.animate-progress {
+  animation: progress linear 1 forwards;
+}
 
+@keyframes spin-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes spin-reverse {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+@keyframes fade-in-out {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.animate-spin-slow {
+  animation: spin-slow 10.5s linear infinite;
+}
+.animate-spin-reverse {
+  animation: spin-reverse 2s linear infinite;
+}
+.animate-fade-in-out {
+  animation: fade-in-out 1.5s ease-in-out infinite;
+}

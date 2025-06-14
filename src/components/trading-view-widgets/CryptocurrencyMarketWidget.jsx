@@ -36,7 +36,7 @@ const CryptocurrencyMarketWidget = () => {
       <div
         id="tradingview-widget-container"
         className="h-[500px] w-full max-w-6xl mx-auto rounded-lg shadow-lg overflow-hidden"
-        style={{ backgroundColor: "#0d9488" }} // Teal-600 background
+        style={{ backgroundColor: "#0d9488" }} // teal-600 background
       ></div>
     </section>
   );

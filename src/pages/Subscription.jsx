@@ -117,10 +117,10 @@ export default function SubscriptionPage() {
       roiValue: 5,
       features: ["Manual Trading", "Basic Support", "Market Overview"],
       icon: faCoins,
-      color: "from-amber-500 to-orange-500",
-      darkColor: "from-amber-600 to-orange-600",
+      color: "from-teal-500 to-orange-500",
+      darkColor: "from-teal-600 to-orange-600",
       buttonColor:
-        "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600",
+        "bg-gradient-to-r from-teal-500 to-orange-500 hover:from-teal-600 hover:to-orange-600",
     },
   ];
 

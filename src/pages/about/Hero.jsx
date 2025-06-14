@@ -15,8 +15,6 @@ import brand4 from "../../../public/brand.png";
 import FooterPage from "../../components/Footer";
 import { useState, useEffect } from "react";
 import SkillsSection from "./Skill";
-import RandomAlert from "../../constants/RandomAlert";
-import ChatBot from "../../components/ChatBot";
 
 const features = [
   {
@@ -43,94 +41,94 @@ const features = [
 ];
 
 export default function AboutPage() {
-    const stats = [
-      {
-        id: "digital-products",
-        label: "Digital Products",
-        value: 58745,
-        suffix: "M+",
-        prefix: "$",
-      },
-      {
-        id: "active-users",
-        label: "Happy Active Users",
-        value: 680000,
-        suffix: "+",
-      },
-      {
-        id: "transactions",
-        label: "Transactions Done",
-        value: 600547000,
-        prefix: "$",
-        suffix: "+",
-      },
-      {
-        id: "community-btc",
-        label: "Community BTC",
-        value: 445875,
-        suffix: "+",
-      },
-    ];
+  const stats = [
+    {
+      id: "digital-products",
+      label: "Digital Products",
+      value: 58745,
+      suffix: "M+",
+      prefix: "$",
+    },
+    {
+      id: "active-users",
+      label: "Happy Active Users",
+      value: 680000,
+      suffix: "+",
+    },
+    {
+      id: "transactions",
+      label: "Transactions Done",
+      value: 600547000,
+      prefix: "$",
+      suffix: "+",
+    },
+    {
+      id: "community-btc",
+      label: "Community BTC",
+      value: 445875,
+      suffix: "+",
+    },
+  ];
 
-    const [hasAnimated, setHasAnimated] = useState(false);
-    const [animatedValues, setAnimatedValues] = useState(
-      stats.reduce((acc, stat) => ({ ...acc, [stat.id]: 0 }), {})
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const [animatedValues, setAnimatedValues] = useState(
+    stats.reduce((acc, stat) => ({ ...acc, [stat.id]: 0 }), {})
+  );
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+          startCounting();
+        }
+      },
+      { threshold: 0.25 }
     );
 
-    useEffect(() => {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting && !hasAnimated) {
-            setHasAnimated(true);
-            startCounting();
-          }
-        },
-        { threshold: 0.25 }
-      );
+    const statsSection = document.getElementById("stats-section");
+    if (statsSection) observer.observe(statsSection);
 
-      const statsSection = document.getElementById("stats-section");
-      if (statsSection) observer.observe(statsSection);
+    return () => observer.disconnect();
+  }, [hasAnimated]);
 
-      return () => observer.disconnect();
-    }, [hasAnimated]);
+  const formatNumber = (num) => {
+    if (num >= 1000000000) {
+      return (num / 1000000000).toFixed(1) + "B";
+    }
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1) + "M";
+    }
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1) + "K";
+    }
+    return num.toLocaleString();
+  };
 
-    const formatNumber = (num) => {
-      if (num >= 1000000000) {
-        return (num / 1000000000).toFixed(1) + "B";
+  const animateValue = (id, start, end, duration) => {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const currentValue = Math.floor(progress * (end - start) + start);
+
+      setAnimatedValues((prev) => ({
+        ...prev,
+        [id]: currentValue,
+      }));
+
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
       }
-      if (num >= 1000000) {
-        return (num / 1000000).toFixed(1) + "M";
-      }
-      if (num >= 1000) {
-        return (num / 1000).toFixed(1) + "K";
-      }
-      return num.toLocaleString();
     };
+    window.requestAnimationFrame(step);
+  };
 
-    const animateValue = (id, start, end, duration) => {
-      let startTimestamp = null;
-      const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        const currentValue = Math.floor(progress * (end - start) + start);
-
-        setAnimatedValues((prev) => ({
-          ...prev,
-          [id]: currentValue,
-        }));
-
-        if (progress < 1) {
-          window.requestAnimationFrame(step);
-        }
-      };
-      window.requestAnimationFrame(step);
-    };
-
-    const startCounting = () => {
-      stats.forEach((stat) => {
-        animateValue(stat.id, 0, stat.value, 2000);
-      });
-    };
+  const startCounting = () => {
+    stats.forEach((stat) => {
+      animateValue(stat.id, 0, stat.value, 2000);
+    });
+  };
   return (
     <>
       <HomeHeaderPage />
@@ -360,7 +358,7 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <SkillsSection/>
+      <SkillsSection />
 
       <div
         id="stats-section"
@@ -386,8 +384,7 @@ export default function AboutPage() {
           ))}
         </div>
       </div>
-      <RandomAlert/>
-      <ChatBot/>
+
       <FooterPage />
     </>
   );

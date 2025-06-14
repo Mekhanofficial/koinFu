@@ -3,24 +3,22 @@ import { useTheme } from "next-themes";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-// Helper functions
+// Helper: Volume formatting
 const abbreviateVolume = (volume) => {
-  if (volume >= 1_000_000_000) {
+  if (volume >= 1_000_000_000)
     return `$${(volume / 1_000_000_000).toFixed(1)}B`;
-  } else if (volume >= 1_000_000) {
-    return `$${(volume / 1_000_000).toFixed(1)}M`;
-  } else if (volume >= 1_000) {
-    return `$${(volume / 1_000).toFixed(1)}K`;
-  }
+  if (volume >= 1_000_000) return `$${(volume / 1_000_000).toFixed(1)}M`;
+  if (volume >= 1_000) return `$${(volume / 1_000).toFixed(1)}K`;
   return `$${volume.toLocaleString()}`;
 };
 
+// Individual Crypto Card
 const CryptoCard = ({ crypto }) => {
   const { theme } = useTheme();
 
   return (
     <div
-      className={`bg-gradient-to-r rounded-lg p-4 shadow-md hover:shadow-lg transition-all duration-300 border hover:border-teal-500 hover:shadow-teal-500/50 hover:scale-[1.02] flex items-center ${
+      className={`bg-gradient-to-r rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-300 border hover:border-teal-500 hover:shadow-teal-500/50 hover:scale-[1.02] flex items-center ${
         theme === "dark"
           ? "from-slate-900 to-slate-800 border-slate-600"
           : "from-slate-100 to-slate-200 border-gray-300"
@@ -65,6 +63,7 @@ const CryptoCard = ({ crypto }) => {
   );
 };
 
+// News Card
 const NewsCard = ({ article }) => {
   const { theme } = useTheme();
 
@@ -102,17 +101,12 @@ const NewsCard = ({ article }) => {
   );
 };
 
+// Main Component
 export default function AssetPage() {
   const [cryptoData, setCryptoData] = useState([]);
   const [news, setNews] = useState([]);
-  const [loading, setLoading] = useState({
-    crypto: true,
-    news: true,
-  });
-  const [error, setError] = useState({
-    crypto: null,
-    news: null,
-  });
+  const [loading, setLoading] = useState({ crypto: true, news: true });
+  const [error, setError] = useState({ crypto: null, news: null });
   const { theme } = useTheme();
   const { symbol } = useParams();
 
@@ -158,21 +152,15 @@ export default function AssetPage() {
     const fetchNews = async () => {
       try {
         const response = await axios.get("https://newsapi.org/v2/everything", {
-          params: {
-            q: "crypto",
-            apiKey: "cd73ac3d48314b67b9b116b14a37fcdb",
-          },
-          headers: {
-            Accept: "application/json",
-          },
+          params: { q: "crypto", apiKey: "cd73ac3d48314b67b9b116b14a37fcdb" },
+          headers: { Accept: "application/json" },
         });
 
-        if (response.data.articles) {
-          const filteredNews = response.data.articles
-            .filter((article) => article.urlToImage)
-            .slice(0, 4);
-          setNews(filteredNews);
-        }
+        const filteredNews = response.data.articles
+          .filter((article) => article.urlToImage)
+          .slice(0, 4);
+
+        setNews(filteredNews);
       } catch (err) {
         console.error("Error fetching news:", err);
         setError((prev) => ({ ...prev, news: err.message }));
@@ -186,13 +174,13 @@ export default function AssetPage() {
 
   return (
     <section
-      className={`overflow-x-hidden min-h-screen p-6 ${
+      className={`min-h-screen w-full px-4 py-14 lg:px-10  ${
         theme === "dark" ? "bg-gray-900" : "bg-slate-50"
       }`}
     >
-      <div className="flex flex-col lg:flex-row justify-between items-start gap-8 p-4 md:p-6">
+      <div className="flex flex-col lg:flex-row gap-6">
         {/* Crypto Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 flex-1">
+        <div className="w-full lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {loading.crypto ? (
             Array.from({ length: 6 }).map((_, index) => (
               <div
@@ -242,17 +230,17 @@ export default function AssetPage() {
                   />
                   <div className="flex-1 space-y-2">
                     <div
-                      className={`h-4 rounded w-3/4 ${
+                      className={`h-4 w-3/4 rounded ${
                         theme === "dark" ? "bg-slate-700" : "bg-slate-200"
                       }`}
                     />
                     <div
-                      className={`h-3 rounded w-full ${
+                      className={`h-3 w-full rounded ${
                         theme === "dark" ? "bg-slate-700" : "bg-slate-200"
                       }`}
                     />
                     <div
-                      className={`h-3 rounded w-5/6 ${
+                      className={`h-3 w-5/6 rounded ${
                         theme === "dark" ? "bg-slate-700" : "bg-slate-200"
                       }`}
                     />
@@ -277,7 +265,7 @@ export default function AssetPage() {
               href="https://www.example.com/crypto-news"
               target="_blank"
               rel="noopener noreferrer"
-              className={`mt-6 inline-block w-full text-center font-semibold py-2 px-4 rounded-lg transition-colors ${
+              className={`mt-6 block w-full text-center font-semibold py-2 px-4 rounded-lg transition-colors ${
                 theme === "dark"
                   ? "bg-teal-600 hover:bg-teal-700 text-white"
                   : "bg-teal-500 hover:bg-teal-600 text-white"

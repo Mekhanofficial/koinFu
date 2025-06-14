@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTheme } from "next-themes";
 import {
   LineChart,
@@ -106,8 +106,8 @@ const SIGNAL_PLANS = [
     dailySignals: 5,
     description: "Premium signals for serious traders",
     icon: faCrown,
-    color: "from-amber-500 to-orange-500",
-    darkColor: "from-amber-600 to-orange-600",
+    color: "from-teal-500 to-orange-500",
+    darkColor: "from-teal-600 to-orange-600",
     features: [
       "90% Win Rate",
       "5 Daily Signals",
@@ -157,38 +157,49 @@ export default function DailySignalPage() {
   const { theme } = useTheme();
   const [activeSignal, setActiveSignal] = useState(null);
   const [showSignalManager, setShowSignalManager] = useState(false);
-  const [signalAmount, setSignalAmount] = useState("");
+  const [planAmounts, setPlanAmounts] = useState({});
   const [plans, setPlans] = useState(SIGNAL_PLANS);
   const [activeTab, setActiveTab] = useState("performance");
+  const [errors, setErrors] = useState({});
+  const [touchedInputs, setTouchedInputs] = useState({});
 
-  // Load active signal from localStorage
-  useEffect(() => {
-    const storedSignal = localStorage.getItem("activeSignal");
-    if (storedSignal) {
-      setActiveSignal(JSON.parse(storedSignal));
-    }
-  }, []);
-
-  // Save active signal to localStorage
-  useEffect(() => {
-    if (activeSignal) {
-      localStorage.setItem("activeSignal", JSON.stringify(activeSignal));
-    }
-  }, [activeSignal]);
-
-  // Handle signal purchase
+  // Handle signal purchase with amount validation
   const handlePurchase = (planId) => {
     const selectedPlan = plans.find((plan) => plan.id === planId);
     if (!selectedPlan) return;
 
-    const amount = signalAmount || selectedPlan.price;
+    const amount = planAmounts[planId] || "";
+    const parsedAmount = parseFloat(amount);
+
+    // Clear any previous errors
+    setErrors((prev) => ({ ...prev, [planId]: null }));
+
+    // Validate that the amount has been entered
+    if (!amount) {
+      setErrors((prev) => ({
+        ...prev,
+        [planId]: "Please enter the subscription amount",
+      }));
+      return;
+    }
+
+    // Validate that the amount matches the plan price
+    if (parsedAmount !== selectedPlan.price) {
+      setErrors((prev) => ({
+        ...prev,
+        [planId]: `Amount must be exactly ${formatCurrency(
+          selectedPlan.price
+        )}`,
+      }));
+      return;
+    }
 
     // Update active signal
     const newActiveSignal = {
       ...selectedPlan,
       active: true,
       purchaseDate: new Date().toISOString(),
-      amountPaid: parseFloat(amount),
+      amountPaid: parsedAmount,
     };
 
     setActiveSignal(newActiveSignal);
@@ -201,8 +212,14 @@ export default function DailySignalPage() {
       }))
     );
 
-    setSignalAmount("");
+    // Clear the amount for this plan
+    setPlanAmounts((prev) => ({ ...prev, [planId]: "" }));
+
+    // Save to localStorage
+    localStorage.setItem("activeSignal", JSON.stringify(newActiveSignal));
   };
+
+
 
   // Handle signal cancellation
   const cancelSignal = () => {
@@ -228,6 +245,20 @@ export default function DailySignalPage() {
   // Toggle signal manager visibility
   const toggleSignalManager = () => {
     setShowSignalManager(!showSignalManager);
+  };
+
+  // Handle amount change for a specific plan
+  const handleAmountChange = (planId, value) => {
+    setPlanAmounts((prev) => ({
+      ...prev,
+      [planId]: value,
+    }));
+    setErrors((prev) => ({ ...prev, [planId]: null }));
+  };
+
+  // Mark input as touched
+  const handleInputBlur = (planId) => {
+    setTouchedInputs((prev) => ({ ...prev, [planId]: true }));
   };
 
   // Custom tooltip for performance chart
@@ -294,105 +325,167 @@ export default function DailySignalPage() {
                     theme === "dark" ? "border-slate-700" : "border-slate-200"
                   }`}
                 >
-                  <div className="flex items-center mb-6">
-                    <div
-                      className={`p-3 rounded-lg ${
-                        theme === "dark" ? "bg-blue-900/50" : "bg-blue-100"
-                      } mr-4`}
-                    >
-                      <FontAwesomeIcon
-                        icon={faSignal}
-                        className={`h-6 ${
-                          theme === "dark" ? "text-blue-400" : "text-blue-600"
-                        }`}
-                      />
-                    </div>
-                    <div>
-                      <p
-                        className={`text-sm ${
-                          theme === "dark" ? "text-gray-400" : "text-gray-500"
-                        }`}
-                      >
-                        Current Signal
-                      </p>
-                      <h2 className="text-2xl font-bold">
-                        <span
-                          className={
-                            activeSignal ? "text-blue-500" : "text-gray-400"
-                          }
-                        >
-                          {activeSignal
-                            ? activeSignal.name
-                            : "No Active Signal"}
-                        </span>
-                      </h2>
-                    </div>
-                  </div>
-
                   {activeSignal ? (
-                    <div className="grid grid-cols-2 gap-4 mb-6">
+                    <>
+                      <div className="flex items-center mb-6">
+                        <div
+                          className={`p-3 rounded-lg ${
+                            theme === "dark" ? "bg-blue-900/50" : "bg-blue-100"
+                          } mr-4`}
+                        >
+                          <FontAwesomeIcon
+                            icon={activeSignal.icon}
+                            className={`h-6 ${
+                              theme === "dark"
+                                ? "text-blue-400"
+                                : "text-blue-600"
+                            }`}
+                          />
+                        </div>
+                        <div>
+                          <p
+                            className={`text-sm ${
+                              theme === "dark"
+                                ? "text-gray-400"
+                                : "text-gray-500"
+                            }`}
+                          >
+                            Current Signal
+                          </p>
+                          <h2 className="text-2xl font-bold">
+                            {activeSignal.name}
+                            <span className="ml-2 text-green-500 text-sm">
+                              (Active)
+                            </span>
+                          </h2>
+                        </div>
+                      </div>
+
                       <div
-                        className={`p-3 rounded-xl ${
-                          theme === "dark" ? "bg-slate-700" : "bg-slate-100"
+                        className={`p-5 rounded-xl mb-6 ${
+                          theme === "dark" ? "bg-slate-800" : "bg-slate-100"
                         }`}
                       >
-                        <p className="font-semibold text-sm mb-1">Win Rate</p>
-                        <p className="text-2xl font-bold text-green-500">
-                          {activeSignal.winRate}
-                        </p>
+                        <div className="grid grid-cols-2 gap-4 mb-4">
+                          <div>
+                            <p
+                              className={`text-sm ${
+                                theme === "dark"
+                                  ? "text-gray-400"
+                                  : "text-gray-600"
+                              }`}
+                            >
+                              Win Rate
+                            </p>
+                            <p className="text-xl font-bold text-green-500">
+                              {activeSignal.winRate}
+                            </p>
+                          </div>
+                          <div>
+                            <p
+                              className={`text-sm ${
+                                theme === "dark"
+                                  ? "text-gray-400"
+                                  : "text-gray-600"
+                              }`}
+                            >
+                              Daily Signals
+                            </p>
+                            <p className="text-xl font-bold text-teal-500">
+                              {activeSignal.dailySignals}
+                            </p>
+                          </div>
+                          <div>
+                            <p
+                              className={`text-sm ${
+                                theme === "dark"
+                                  ? "text-gray-400"
+                                  : "text-gray-600"
+                              }`}
+                            >
+                              Price
+                            </p>
+                            <p className="text-xl font-bold">
+                              {formatCurrency(activeSignal.amountPaid)}
+                            </p>
+                          </div>
+                          <div>
+                            <p
+                              className={`text-sm ${
+                                theme === "dark"
+                                  ? "text-gray-400"
+                                  : "text-gray-600"
+                              }`}
+                            >
+                              Status
+                            </p>
+                            <p className="text-xl font-bold text-blue-500">
+                              Active
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={cancelSignal}
+                          className={`w-full py-2 rounded-lg font-medium text-sm ${
+                            theme === "dark"
+                              ? "bg-red-600 hover:bg-red-700 text-white"
+                              : "bg-red-500 hover:bg-red-600 text-white"
+                          }`}
+                        >
+                          Cancel Subscription
+                        </button>
                       </div>
-                      <div
-                        className={`p-3 rounded-xl ${
-                          theme === "dark" ? "bg-slate-700" : "bg-slate-100"
-                        }`}
-                      >
-                        <p className="font-semibold text-sm mb-1">
-                          Daily Signals
-                        </p>
-                        <p className="text-2xl font-bold text-amber-500">
-                          {activeSignal.dailySignals}
-                        </p>
-                      </div>
-                      <div
-                        className={`p-3 rounded-xl ${
-                          theme === "dark" ? "bg-slate-700" : "bg-slate-100"
-                        }`}
-                      >
-                        <p className="font-semibold text-sm mb-1">
-                          Amount Paid
-                        </p>
-                        <p className="text-xl font-semibold">
-                          {formatCurrency(activeSignal.amountPaid)}
-                        </p>
-                      </div>
-                      <div
-                        className={`p-3 rounded-xl ${
-                          theme === "dark" ? "bg-slate-700" : "bg-slate-100"
-                        }`}
-                      >
-                        <p className="font-semibold text-sm mb-1">Purchased</p>
-                        <p className="text-sm">
-                          {new Date(
-                            activeSignal.purchaseDate
-                          ).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
+                    </>
                   ) : (
-                    <div
-                      className={`p-5 rounded-xl text-center mb-6 ${
-                        theme === "dark" ? "bg-slate-800" : "bg-slate-100"
-                      }`}
-                    >
-                      <p
-                        className={`mb-4 ${
-                          theme === "dark" ? "text-gray-400" : "text-gray-600"
+                    <>
+                      <div className="flex items-center mb-6">
+                        <div
+                          className={`p-3 rounded-lg ${
+                            theme === "dark" ? "bg-blue-900/50" : "bg-blue-100"
+                          } mr-4`}
+                        >
+                          <FontAwesomeIcon
+                            icon={faSignal}
+                            className={`h-6 ${
+                              theme === "dark"
+                                ? "text-blue-400"
+                                : "text-blue-600"
+                            }`}
+                          />
+                        </div>
+                        <div>
+                          <p
+                            className={`text-sm ${
+                              theme === "dark"
+                                ? "text-gray-400"
+                                : "text-gray-500"
+                            }`}
+                          >
+                            Current Signal
+                          </p>
+                          <h2 className="text-2xl font-bold">
+                            <span className="text-gray-400">
+                              No Active Signal
+                            </span>
+                          </h2>
+                        </div>
+                      </div>
+
+                      <div
+                        className={`p-5 rounded-xl text-center mb-6 ${
+                          theme === "dark" ? "bg-slate-800" : "bg-slate-100"
                         }`}
                       >
-                        You don't have an active signal service. Subscribe to
-                        one of our premium plans below to get started.
-                      </p>
-                    </div>
+                        <p
+                          className={`mb-4 ${
+                            theme === "dark" ? "text-gray-400" : "text-gray-600"
+                          }`}
+                        >
+                          You don't have an active signal service. Subscribe to
+                          one of our premium plans below to get started.
+                        </p>
+                      </div>
+                    </>
                   )}
 
                   <button
@@ -405,7 +498,9 @@ export default function DailySignalPage() {
                   >
                     {showSignalManager
                       ? "Hide Signal Manager"
-                      : "Manage Signal Service"}
+                      : activeSignal
+                      ? "Manage Subscription"
+                      : "Subscribe to Signal Service"}
                   </button>
                 </div>
               </div>
@@ -430,7 +525,7 @@ export default function DailySignalPage() {
                       theme === "dark" ? "text-white" : "text-gray-900"
                     }`}
                   >
-                    Signal Performance
+                    Signal Performance Preview
                   </h3>
                 </div>
 
@@ -565,7 +660,7 @@ export default function DailySignalPage() {
                     theme === "dark" ? "text-white" : "text-gray-900"
                   }`}
                 >
-                  Signal Service Management
+                  Signal Service {activeSignal ? "Management" : "Subscription"}
                 </h2>
                 <button
                   onClick={toggleSignalManager}
@@ -580,92 +675,165 @@ export default function DailySignalPage() {
               </div>
 
               {activeSignal ? (
-                <div className="space-y-6">
-                  <div
-                    className={`p-5 rounded-xl ${
-                      theme === "dark" ? "bg-slate-800" : "bg-gray-100"
-                    }`}
-                  >
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <div>
-                        <h3 className="text-lg font-semibold mb-2">
-                          Service Details
-                        </h3>
-                        <p className="font-medium">{activeSignal.name}</p>
+                <div
+                  className={`p-6 rounded-xl ${
+                    theme === "dark" ? "bg-slate-800" : "bg-gray-100"
+                  }`}
+                >
+                  <div className="flex flex-col md:flex-row gap-6">
+                    <div className="flex-1">
+                      <div className="w-16 h-16 rounded-full bg-gradient-to-r from-teal-500 to-blue-600 flex items-center justify-center mb-4">
+                        <FontAwesomeIcon
+                          icon={activeSignal.icon}
+                          className="h-8 text-white"
+                        />
+                      </div>
+                      <h3
+                        className={`text-xl font-bold mb-2 ${
+                          theme === "dark" ? "text-white" : "text-gray-900"
+                        }`}
+                      >
+                        {activeSignal.name}
+                      </h3>
+                      <p
+                        className={`mb-4 ${
+                          theme === "dark" ? "text-gray-400" : "text-gray-600"
+                        }`}
+                      >
+                        {activeSignal.description}
+                      </p>
+                      <div className="grid grid-cols-2 gap-4 mb-6">
+                        <div>
+                          <p
+                            className={`text-sm ${
+                              theme === "dark"
+                                ? "text-gray-400"
+                                : "text-gray-600"
+                            }`}
+                          >
+                            Win Rate
+                          </p>
+                          <p className="text-xl font-bold text-green-500">
+                            {activeSignal.winRate}
+                          </p>
+                        </div>
+                        <div>
+                          <p
+                            className={`text-sm ${
+                              theme === "dark"
+                                ? "text-gray-400"
+                                : "text-gray-600"
+                            }`}
+                          >
+                            Daily Signals
+                          </p>
+                          <p className="text-xl font-bold text-teal-500">
+                            {activeSignal.dailySignals}
+                          </p>
+                        </div>
+                        <div>
+                          <p
+                            className={`text-sm ${
+                              theme === "dark"
+                                ? "text-gray-400"
+                                : "text-gray-600"
+                            }`}
+                          >
+                            Price
+                          </p>
+                          <p className="text-xl font-bold">
+                            {formatCurrency(activeSignal.amountPaid)}
+                          </p>
+                        </div>
+                        <div>
+                          <p
+                            className={`text-sm ${
+                              theme === "dark"
+                                ? "text-gray-400"
+                                : "text-gray-600"
+                            }`}
+                          >
+                            Status
+                          </p>
+                          <p className="text-xl font-bold text-blue-500">
+                            Active
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={cancelSignal}
+                        className={`w-full py-3 rounded-xl font-bold text-white transition-all ${
+                          theme === "dark"
+                            ? "bg-red-600 hover:bg-red-700"
+                            : "bg-red-500 hover:bg-red-600"
+                        }`}
+                      >
+                        Cancel Subscription
+                      </button>
+                    </div>
+                    <div className="flex-1">
+                      <h4
+                        className={`text-lg font-bold mb-4 ${
+                          theme === "dark" ? "text-white" : "text-gray-900"
+                        }`}
+                      >
+                        Subscription Details
+                      </h4>
+                      <div
+                        className={`p-4 rounded-lg mb-4 ${
+                          theme === "dark" ? "bg-slate-700" : "bg-white"
+                        }`}
+                      >
                         <p
-                          className={`${
+                          className={`text-sm ${
                             theme === "dark" ? "text-gray-400" : "text-gray-600"
                           }`}
                         >
-                          {activeSignal.description}
+                          Purchased On
                         </p>
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-semibold mb-2">
-                          Performance
-                        </h3>
-                        <div className="flex items-center space-x-4">
-                          <div>
-                            <p className="text-sm">Win Rate</p>
-                            <p className="text-xl font-bold text-green-500">
-                              {activeSignal.winRate}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-sm">Daily Signals</p>
-                            <p className="text-xl font-bold text-amber-500">
-                              {activeSignal.dailySignals}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-semibold mb-2">
-                          Subscription
-                        </h3>
-                        <p className="text-sm">Amount Paid</p>
-                        <p className="text-xl font-bold">
-                          {formatCurrency(activeSignal.amountPaid)}
-                        </p>
-                        <p className="text-sm mt-1">
-                          Purchased On:{" "}
+                        <p className="font-medium">
                           {new Date(
                             activeSignal.purchaseDate
                           ).toLocaleDateString()}
                         </p>
                       </div>
+                      <div
+                        className={`p-4 rounded-lg mb-4 ${
+                          theme === "dark" ? "bg-slate-700" : "bg-white"
+                        }`}
+                      >
+                        <p
+                          className={`text-sm ${
+                            theme === "dark" ? "text-gray-400" : "text-gray-600"
+                          }`}
+                        >
+                          Features
+                        </p>
+                        <ul className="mt-2 space-y-2">
+                          {activeSignal.features.map((feature, i) => (
+                            <li key={i} className="flex items-start">
+                              <FontAwesomeIcon
+                                icon={faCheckCircle}
+                                className={`mt-1 mr-2 h-4 ${
+                                  theme === "dark"
+                                    ? "text-blue-400"
+                                    : "text-blue-600"
+                                }`}
+                              />
+                              <span
+                                className={`${
+                                  theme === "dark"
+                                    ? "text-gray-300"
+                                    : "text-gray-700"
+                                }`}
+                              >
+                                {feature}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
-                  </div>
-
-                  <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-                    <button
-                      onClick={cancelSignal}
-                      className={`flex-1 py-3 rounded-xl font-medium ${
-                        theme === "dark"
-                          ? "bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white"
-                          : "bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white"
-                      }`}
-                    >
-                      Cancel Subscription
-                    </button>
-                    <button
-                      className={`flex-1 py-3 rounded-xl font-medium ${
-                        theme === "dark"
-                          ? "bg-slate-700 hover:bg-slate-600 text-white"
-                          : "bg-gray-200 hover:bg-gray-300 text-gray-800"
-                      }`}
-                    >
-                      Renew Subscription
-                    </button>
-                    <button
-                      className={`flex-1 py-3 rounded-xl font-medium ${
-                        theme === "dark"
-                          ? "bg-slate-700 hover:bg-slate-600 text-white"
-                          : "bg-gray-200 hover:bg-gray-300 text-gray-800"
-                      }`}
-                    >
-                      Download Reports
-                    </button>
                   </div>
                 </div>
               ) : (
@@ -695,16 +863,6 @@ export default function DailySignalPage() {
                     You don't have an active signal service. Subscribe to one of
                     our premium plans to start receiving trading signals.
                   </p>
-                  <button
-                    onClick={toggleSignalManager}
-                    className={`px-6 py-3 rounded-xl font-medium ${
-                      theme === "dark"
-                        ? "bg-gradient-to-r from-teal-600 to-blue-700 hover:from-teal-700 hover:to-blue-800 text-white"
-                        : "bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700 text-white"
-                    }`}
-                  >
-                    View Signal Plans
-                  </button>
                 </div>
               )}
             </div>
@@ -798,7 +956,7 @@ export default function DailySignalPage() {
                         >
                           Signals/Day
                         </span>
-                        <p className="text-xl font-bold text-amber-500">
+                        <p className="text-xl font-bold text-teal-500">
                           {plan.dailySignals}
                         </p>
                       </div>
@@ -836,61 +994,58 @@ export default function DailySignalPage() {
                     </ul>
                   </div>
 
-                  <div className="pt-4">
-                    <label
-                      className={`block text-sm font-semibold mb-2 ${
-                        theme === "dark" ? "text-gray-300" : "text-gray-700"
-                      }`}
-                    >
-                      Custom Investment (USD)
-                    </label>
-                    <div className="relative mb-4">
-                      <span
-                        className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
-                          theme === "dark" ? "text-gray-400" : "text-gray-500"
-                        }`}
-                      >
-                        $
-                      </span>
-                      <input
-                        type="number"
-                        value={signalAmount}
-                        onChange={(e) => setSignalAmount(e.target.value)}
-                        placeholder={plan.price.toString()}
-                        className={`w-full rounded-xl px-8 py-3 focus:outline-none focus:ring-2 ${
-                          theme === "dark"
-                            ? "bg-slate-800 text-white focus:ring-teal-500"
-                            : "bg-slate-100 text-gray-900 focus:ring-teal-400"
-                        }`}
-                      />
-                    </div>
+                 <div className="pt-4">
+  <label className={`block text-sm font-semibold mb-2 ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+    Amount to Pay (USD)
+  </label>
+  <div className="relative mb-1">
+    <span className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
+      $
+    </span>
+    <input
+      type="number"
+      value={planAmounts[plan.id] || ""}
+      onChange={(e) => handleAmountChange(plan.id, e.target.value)}
+      onBlur={() => handleInputBlur(plan.id)}
+      placeholder={plan.price.toString()}
+      className={`w-full rounded-xl px-8 py-3 focus:outline-none focus:ring-2 ${
+        theme === "dark"
+          ? "bg-slate-800 text-white focus:ring-teal-500"
+          : "bg-slate-100 text-gray-900 focus:ring-teal-400"
+      }`}
+    />
+  </div>
+  {errors[plan.id] && (
+    <p className="text-red-500 text-sm mb-3">
+      {errors[plan.id]}
+    </p>
+  )}
 
-                    <button
-                      onClick={() => handlePurchase(plan.id)}
-                      disabled={plan.active}
-                      className={`w-full py-3 rounded-xl font-bold text-white transition-all duration-300 shadow-lg ${
-                        plan.active
-                          ? "bg-gradient-to-r from-gray-500 to-gray-600 cursor-not-allowed"
-                          : theme === "dark"
-                          ? "bg-gradient-to-r from-teal-600 to-blue-700 hover:from-teal-700 hover:to-blue-800"
-                          : "bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700"
-                      }`}
-                    >
-                      {plan.active ? "Active Plan" : "Subscribe Now"}
-                    </button>
+  <button
+    onClick={() => handlePurchase(plan.id)}
+    disabled={plan.active || !planAmounts[plan.id]}
+    className={`w-full py-3 rounded-xl font-bold text-white transition-all duration-300 shadow-lg ${
+      plan.active
+        ? "bg-gradient-to-r from-gray-500 to-gray-600 cursor-not-allowed"
+        : !planAmounts[plan.id]
+        ? "bg-gradient-to-r from-gray-400 to-gray-500 cursor-not-allowed"
+        : theme === "dark"
+        ? "bg-gradient-to-r from-teal-600 to-blue-700 hover:from-teal-700 hover:to-blue-800"
+        : "bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700"
+    }`}
+  >
+    {plan.active ? "Active Plan" : "Subscribe Now"}
+  </button>
 
-                    {plan.active && (
-                      <div className="mt-3 text-center">
-                        <span
-                          className={`text-sm font-medium ${
-                            theme === "dark" ? "text-blue-400" : "text-blue-600"
-                          }`}
-                        >
-                          ✓ Your active signal service
-                        </span>
-                      </div>
-                    )}
-                  </div>
+  {plan.active && (
+    <div className="mt-3 text-center">
+      <span className={`text-sm font-medium ${theme === "dark" ? "text-blue-400" : "text-blue-600"}`}>
+        ✓ Your active signal service
+      </span>
+    </div>
+  )}
+</div>
+                  
                 </div>
               </div>
             ))}

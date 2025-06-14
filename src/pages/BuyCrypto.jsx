@@ -1,38 +1,45 @@
 import React from "react";
 import { useTheme } from "next-themes";
+import by1 from "../pictures/by1.png"
+import by2 from "../pictures/by2.png";
+import by3 from "../pictures/by3.png";
+import by4 from "../pictures/by4.png";
+import by5 from "../pictures/by5.png"
+import by6 from "../pictures/by6.jpg";
 
 const exchanges = [
   {
     name: "Binance",
     url: "https://www.binance.com/en/buy-sell-crypto",
-    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Binance_Logo.svg/2560px-Binance_Logo.svg.png",
+    img: by1,
   },
   {
     name: "Bitcoin.com",
     url: "https://www.bitcoin.com/buy/",
-    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png",
+    img: by2,
   },
   {
     name: "Coinbase",
     url: "https://www.coinbase.com/buy",
-    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Coinbase.svg/1200px-Coinbase.svg.png",
+    img: by3,
   },
   {
     name: "Crypto.com",
     url: "https://crypto.com/app",
-    img: "https://upload.wikimedia.org/wikipedia/commons/6/6c/Crypto.com_logo.png",
+    img: by4,
   },
   {
     name: "Gemini",
     url: "https://www.gemini.com/buy",
-    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Gemini.svg/1280px-Gemini.svg.png",
+    img: by5,
   },
   {
     name: "Kraken",
     url: "https://www.kraken.com/prices",
-    img: "https://upload.wikimedia.org/wikipedia/en/thumb/5/5a/Kraken_logo.svg/1200px-Kraken_logo.svg.png",
+    img: by6,
   },
 ];
+
 
 const BuyCrypto = () => {
   const { theme } = useTheme();

@@ -235,13 +235,13 @@ export default function ReferralsPage() {
             <div className="flex items-center">
               <div
                 className={`p-3 rounded-full mr-4 ${
-                  theme === "dark" ? "bg-amber-900/50" : "bg-amber-100"
+                  theme === "dark" ? "bg-teal-900/50" : "bg-teal-100"
                 }`}
               >
                 <FontAwesomeIcon
                   icon={faCoins}
                   className={`h-6 ${
-                    theme === "dark" ? "text-amber-400" : "text-amber-600"
+                    theme === "dark" ? "text-teal-400" : "text-teal-600"
                   }`}
                 />
               </div>
@@ -335,7 +335,7 @@ export default function ReferralsPage() {
                         theme === "dark" ? "bg-slate-800/50" : "bg-slate-200"
                       }`}
                     >
-                      <div className="text-3xl font-bold text-amber-500">
+                      <div className="text-3xl font-bold text-teal-500">
                         $25
                       </div>
                       <p className="text-sm">Per referral</p>

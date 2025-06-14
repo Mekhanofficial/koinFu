@@ -12,7 +12,7 @@ import {
   faChartLine,
   faWallet,
   faBell,
-  faQuestionCircle
+  faQuestionCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -52,9 +52,9 @@ export default function AccountPage() {
   useEffect(() => {
     if (!user) {
       const interval = setInterval(() => {
-        setDots(prev => (prev < 3 ? prev + 1 : 0));
+        setDots((prev) => (prev < 3 ? prev + 1 : 0));
       }, 500);
-      
+
       return () => clearInterval(interval);
     }
   }, [user]);
@@ -75,22 +75,23 @@ export default function AccountPage() {
   // Enhanced loading screen component
   if (!user) {
     return (
-       <div 
-  className={`min-h-screen pt-10 min-h-screen flex items-center justify-center ${
-    theme === "dark"
-      ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white"
-      : "bg-gradient-to-b from-gray-100 to-gray-200 text-gray-800"
-  }`}>
+      <div
+        className={` pt-10 min-h-screen flex items-center justify-center ${
+          theme === "dark"
+            ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white"
+            : "bg-gradient-to-b from-gray-100 to-gray-200 text-gray-800"
+        }`}
+      >
         <div className="relative w-full max-w-md px-4">
           {/* Animated background elements */}
           <div className="absolute top-1/4 left-1/4 w-20 h-20 bg-teal-500/20 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-emerald-500/15 rounded-full blur-3xl animate-ping-slow"></div>
-          
+
           {/* Main loading card */}
           <div className="relative bg-slate-800/30 backdrop-blur-lg rounded-2xl border border-slate-700/50 p-8 shadow-2xl overflow-hidden">
             {/* Shimmer effect */}
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-teal-500/10 to-transparent animate-shimmer"></div>
-            
+
             {/* Animated logo */}
             <div className="flex justify-center mb-8">
               <div className="relative">
@@ -102,28 +103,30 @@ export default function AccountPage() {
                 <div className="absolute -inset-2 border-2 border-teal-500/30 rounded-full animate-ping-slow"></div>
               </div>
             </div>
-            
+
             {/* Loading text */}
             <div className="text-center">
               <h2 className="text-2xl font-bold text-white mb-2 flex justify-center items-center">
                 Loading your account
                 <span className="w-8 ml-1">
-                  {Array(dots + 1).fill('.').join('')}
+                  {Array(dots + 1)
+                    .fill(".")
+                    .join("")}
                 </span>
               </h2>
               <p className="text-slate-400 mb-8">Securely fetching your data</p>
-              
+
               {/* Animated progress */}
               <div className="relative h-2 bg-slate-700 rounded-full overflow-hidden mx-auto w-3/4">
                 <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full w-3/4 animate-loading-bar"></div>
               </div>
             </div>
-            
+
             {/* Decorative particles */}
             <div className="absolute -top-4 -right-4 w-8 h-8 bg-teal-400 rounded-full opacity-30 animate-pulse"></div>
             <div className="absolute -bottom-4 -left-4 w-10 h-10 bg-emerald-400 rounded-full opacity-20 animate-ping-slow"></div>
           </div>
-          
+
           {/* Footer */}
           <div className="mt-8 text-center text-slate-500 text-sm">
             <p>Secured with end-to-end encryption</p>
@@ -134,13 +137,13 @@ export default function AccountPage() {
   }
 
   return (
- <div 
-  className={`min-h-screen pt-10 ${
-    theme === "dark"
-      ? "bg-gradient-to-br from-slate-950 to-slate-900 text-white"
-      : "bg-gradient-to-b from-gray-100 to-gray-200 text-gray-800"
-  }`}
->
+    <div
+      className={`min-h-screen pt-10 ${
+        theme === "dark"
+          ? "bg-gradient-to-br from-slate-950 to-slate-900 text-white"
+          : "bg-gradient-to-b from-gray-100 to-gray-200 text-gray-800"
+      }`}
+    >
       {/* Profile Card */}
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700 overflow-hidden shadow-2xl">
@@ -162,53 +165,59 @@ export default function AccountPage() {
               )}
             </div>
           </div>
-          
+
           <div className="pt-20 px-8 pb-8">
             <div className="flex flex-col md:flex-row md:justify-between md:items-center">
               <div>
                 <h2 className="text-3xl font-bold">{user.name}</h2>
                 <p className="text-slate-400 mt-1">{user.email}</p>
-                
+
                 <div className="flex mt-4 space-x-3">
                   <div className="bg-slate-700 px-3 py-1 rounded-full text-sm flex items-center">
-                    <FontAwesomeIcon icon={faShield} className="text-teal-400 mr-2" />
+                    <FontAwesomeIcon
+                      icon={faShield}
+                      className="text-teal-400 mr-2"
+                    />
                     <span>Verified Account</span>
                   </div>
                   <div className="bg-slate-700 px-3 py-1 rounded-full text-sm flex items-center">
-                    <FontAwesomeIcon icon={faChartLine} className="text-emerald-400 mr-2" />
+                    <FontAwesomeIcon
+                      icon={faChartLine}
+                      className="text-emerald-400 mr-2"
+                    />
                     <span>Premium Member</span>
                   </div>
                 </div>
               </div>
-              
-              <button 
+
+              <button
                 onClick={() => navigate("/updatephotopage")}
                 className="mt-4 md:mt-0 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 px-6 py-3 rounded-lg font-medium shadow-lg transition-all transform hover:-translate-y-0.5"
               >
                 Edit Profile
               </button>
             </div>
-            
+
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-              <StatCard 
+              <StatCard
                 icon={faWallet}
                 title="Balance"
                 value="0"
                 color="text-teal-400"
               />
-              <StatCard 
+              <StatCard
                 icon={faStar}
                 title="Portfolio"
                 value="0"
                 color="text-emerald-400"
               />
-              <StatCard 
+              <StatCard
                 icon={faMoneyBill}
                 title="Withdrawn"
                 value="0"
-                color="text-amber-400"
+                color="text-teal-400"
               />
-              <StatCard 
+              <StatCard
                 icon={faUserFriends}
                 title="Referrals"
                 value="0"
@@ -217,9 +226,7 @@ export default function AccountPage() {
             </div>
           </div>
         </div>
-      
-       
-        
+
         {/* Quick Actions Grid */}
         <div className="max-w-4xl mx-auto mt-8 mb-20">
           <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
@@ -233,7 +240,7 @@ export default function AccountPage() {
             <ActionButton
               icon={faStar}
               text="Watch List"
-              iconColor="text-amber-400"
+              iconColor="text-teal-400"
               onClick={() => navigate("/watchlist")}
             />
             <ActionButton
@@ -287,12 +294,11 @@ export default function AccountPage() {
                   className="text-red-500 text-xl"
                 />
               </div>
-              <h3 className="text-xl font-bold text-white">
-                Confirm Logout
-              </h3>
+              <h3 className="text-xl font-bold text-white">Confirm Logout</h3>
             </div>
             <p className="text-slate-300 mb-6">
-              You'll need to sign in again to access your account. Are you sure you want to logout?
+              You'll need to sign in again to access your account. Are you sure
+              you want to logout?
             </p>
 
             <div className="flex gap-3 justify-end">
@@ -353,7 +359,9 @@ function ActionButton({ icon, text, iconColor, onClick }) {
       onClick={onClick}
       className="flex flex-col items-center p-5 bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl text-center shadow-md transition-all hover:border-teal-500 hover:bg-slate-800 hover:shadow-xl transform hover:-translate-y-1 duration-300 group"
     >
-      <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-4 bg-slate-700 group-hover:bg-gradient-to-r from-teal-700 to-emerald-700 ${iconColor}`}>
+      <div
+        className={`w-14 h-14 rounded-full flex items-center justify-center mb-4 bg-slate-700 group-hover:bg-gradient-to-r from-teal-700 to-emerald-700 ${iconColor}`}
+      >
         <FontAwesomeIcon icon={icon} className="text-2xl" />
       </div>
       <span className="font-medium text-sm">{text}</span>
@@ -365,7 +373,9 @@ function StatCard({ icon, title, value, color }) {
   return (
     <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-700 rounded-xl p-4 hover:border-teal-500 transition-colors">
       <div className="flex items-center">
-        <div className={`w-10 h-10 rounded-full flex items-center justify-center bg-slate-700 ${color}`}>
+        <div
+          className={`w-10 h-10 rounded-full flex items-center justify-center bg-slate-700 ${color}`}
+        >
           <FontAwesomeIcon icon={icon} />
         </div>
         <div className="ml-3">

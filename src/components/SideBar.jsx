@@ -52,14 +52,12 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }) {
               } h-16 mx-2 mt-2 rounded-lg`}
             >
               {showFullSidebar ? (
-                <h1 className="text-xl font-bold text-amber-500 dark:text-amber-600 whitespace-nowrap ml-3">
+                <h1 className="text-xl font-bold text-teal-500 dark:text-teal-600 whitespace-nowrap ml-3">
                   KOIN-
-                  <span className="text-amber-400 dark:text-amber-500">
-                    FU
-                  </span>
+                  <span className="text-teal-400 dark:text-teal-500">FU</span>
                 </h1>
               ) : (
-                <span className="text-xl font-bold text-amber-500 dark:text-amber-600">
+                <span className="text-xl font-bold text-teal-500 dark:text-teal-600">
                   KF
                 </span>
               )}

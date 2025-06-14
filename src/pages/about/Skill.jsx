@@ -42,10 +42,13 @@ const SkillsSection = () => {
               KoinFu Expertise
             </h3>
             <p className="text-gray-300 text-lg leading-relaxed">
-          At KoinFu, we pride ourselves on our team of skilled and experienced professionals 
-          who are dedicated to providing our users with the best possible investment experience. Our team 
-          includes experts in cryptocurrency, blockchain technology, mining operations, and security, all 
-          of whom are committed to staying up-to-date on the latest industry developments and trends.</p>
+              At KoinFu, we pride ourselves on our team of skilled and
+              experienced professionals who are dedicated to providing our users
+              with the best possible investment experience. Our team includes
+              experts in cryptocurrency, blockchain technology, mining
+              operations, and security, all of whom are committed to staying
+              up-to-date on the latest industry developments and trends.
+            </p>
           </div>
 
           {/* Skills Column */}

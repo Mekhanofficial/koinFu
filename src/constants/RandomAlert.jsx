@@ -120,7 +120,6 @@ const USERS = [
   { name: "Saida Mahamoud", country: "Djibouti" },
 ];
 
-
 const ACTIONS = [
   // Trading signals
   {

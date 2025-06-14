@@ -9,14 +9,13 @@ import ContactUs from "./components/ContactIndex.jsx";
 import TradingViewChart from "./components/Tradingview.jsx";
 import CryptocurrencyMarketWidget from "./components/trading-view-widgets/CryptocurrencyMarketWidget.jsx";
 import LoginPage from "./app/(auth)/login/LoginPage.jsx";
-import DashPage from "./pages/Dashboard.jsx";
 import SignUpPage from "./components/auth/sign-up/Form.jsx";
 import TransactionPage from "./pages/Transactions.jsx";
 import PaymentProofPage from "./pages/PaymentProof.jsx";
 import WithdrawalPage from "./pages/Withdrawal.jsx";
 import MiningPage from "./pages/Mining.jsx";
 import DepositPage from "./pages/Deposits.jsx";
-import MyTraderPage from "./pages/MyTraders.jsx";
+import MyTraderPage from "./components/MyTraders.jsx";
 import BuyCrypto from "./pages/BuyCrypto.jsx";
 import TradesRoiPage from "./pages/TradesRoi.jsx";
 import BuyBotPage from "./pages/BuyBots.jsx";
@@ -31,13 +30,13 @@ import ReferralsPage from "./pages/Referrals.jsx";
 import DailySignalPage from "./pages/DailySignal.jsx";
 import RealestPage from "./pages/RealEstate.jsx";
 import Modal from "./pages/Modal.jsx";
-import ProjectDetail from "./pages/RealEstatedetails.jsx";
+import ProjectDetail from "./components/RealEstatedetails.jsx";
 import PlaceTradePage from "./pages/PlaceTrade.jsx";
 import AssetPage from "./pages/Assets.jsx";
 import { PrivateRoute } from "./PrivateRoute.jsx";
 import Layout from "./components/Layout.jsx";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AdminDashboard from "./app/admin/AdminDashboard.jsx";
 import AdminSignup from "./app/admin/AdminSignup.jsx";
 import AdminLogin from "./app/admin/AdminLogin.jsx";
@@ -47,8 +46,9 @@ import AboutPage from "./pages/about/Hero";
 import ServicePage from "./pages/services/Hero";
 import ContactPage from "./pages/contact/Hero";
 import HomePage from "./pages/home/Home";
-import PasswordUpdate from './pages/PasswordUpdate.jsx'
+import PasswordUpdate from "./pages/PasswordUpdate.jsx";
 import { MyCopyTradersPage } from "./pages/MyCopytraders";
+import DashPage from "./pages/dashboard/Hero";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -313,12 +313,9 @@ const proRouter = createBrowserRouter([
   },
 ]);
 
-
-  root.render(
-    <React.StrictMode>
-      <RouterProvider router={proRouter} />
-      <ToastContainer /> {/* This enables react-toastify globally */}
-    </React.StrictMode>
-  );
-  
-
+root.render(
+  <React.StrictMode>
+    <RouterProvider router={proRouter} />
+    <ToastContainer /> {/* This enables react-toastify globally */}
+  </React.StrictMode>
+);

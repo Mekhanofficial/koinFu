@@ -5,21 +5,23 @@ import HeaderPage from "../components/Header";
 // Custom Alert Component with theme support
 const CustomAlert = ({ message, onClose }) => {
   const { theme } = useTheme();
-  
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ">
-      <div className={`p-6 rounded-lg shadow-lg border max-w-md w-full ${
-        theme === 'dark' 
-          ? 'bg-slate-900 border-slate-700 text-gray-200' 
-          : 'bg-white border-gray-200 text-gray-800'
-      }`}>
+      <div
+        className={`p-6 rounded-lg shadow-lg border max-w-md w-full ${
+          theme === "dark"
+            ? "bg-slate-900 border-slate-700 text-gray-200"
+            : "bg-white border-gray-200 text-gray-800"
+        }`}
+      >
         <p>{message}</p>
         <button
           onClick={onClose}
           className={`mt-4 w-full p-2 rounded-md transition ${
-            theme === 'dark'
-              ? 'bg-teal-700 hover:bg-teal-600 text-white'
-              : 'bg-teal-600 hover:bg-teal-500 text-white'
+            theme === "dark"
+              ? "bg-teal-700 hover:bg-teal-600 text-white"
+              : "bg-teal-600 hover:bg-teal-500 text-white"
           }`}
         >
           Close
@@ -65,13 +67,17 @@ export default function WithdrawalPage() {
     switch (selectedPaymentMethod) {
       case "Crypto":
         if (!formData.cryptoAsset || !formData.amount || !formData.btcAddress) {
-          setAlertMessage("Please fill in all required fields for crypto withdrawal.");
+          setAlertMessage(
+            "Please fill in all required fields for crypto withdrawal."
+          );
           return;
         }
         break;
       case "Bank Transfer":
         if (!formData.bankAccountNumber || !formData.bankName) {
-          setAlertMessage("Please fill in all required fields for bank transfer.");
+          setAlertMessage(
+            "Please fill in all required fields for bank transfer."
+          );
           return;
         }
         break;
@@ -97,18 +103,20 @@ export default function WithdrawalPage() {
         break;
     }
 
-    setAlertMessage(`Withdrawal request for $${formData.amount} via ${selectedPaymentMethod} submitted.`);
+    setAlertMessage(
+      `Withdrawal request for $${formData.amount} via ${selectedPaymentMethod} submitted.`
+    );
   };
 
   const renderFormFields = () => {
     const inputClasses = `w-full p-2 rounded-md border ${
-      theme === 'dark'
-        ? 'bg-slate-800 border-slate-700 text-gray-200'
-        : 'bg-white border-gray-300 text-gray-900'
+      theme === "dark"
+        ? "bg-slate-800 border-slate-700 text-gray-200"
+        : "bg-white border-gray-300 text-gray-900"
     }`;
 
     const labelClasses = `block ${
-      theme === 'dark' ? 'text-gray-400' : 'text-gray-700'
+      theme === "dark" ? "text-gray-400" : "text-gray-700"
     }`;
 
     switch (selectedPaymentMethod) {
@@ -140,9 +148,11 @@ export default function WithdrawalPage() {
                 onChange={handleInputChange}
                 className={inputClasses}
               />
-              <p className={`text-sm mt-1 ${
-                theme === 'dark' ? 'text-gray-500' : 'text-gray-600'
-              }`}>
+              <p
+                className={`text-sm mt-1 ${
+                  theme === "dark" ? "text-gray-500" : "text-gray-600"
+                }`}
+              >
                 Balance: ${balance}
               </p>
             </div>
@@ -207,9 +217,11 @@ export default function WithdrawalPage() {
                 onChange={handleInputChange}
                 className={inputClasses}
               />
-              <p className={`text-sm mt-1 ${
-                theme === 'dark' ? 'text-gray-500' : 'text-gray-600'
-              }`}>
+              <p
+                className={`text-sm mt-1 ${
+                  theme === "dark" ? "text-gray-500" : "text-gray-600"
+                }`}
+              >
                 Balance: ${balance}
               </p>
             </div>
@@ -239,9 +251,11 @@ export default function WithdrawalPage() {
                 onChange={handleInputChange}
                 className={inputClasses}
               />
-              <p className={`text-sm mt-1 ${
-                theme === 'dark' ? 'text-gray-500' : 'text-gray-600'
-              }`}>
+              <p
+                className={`text-sm mt-1 ${
+                  theme === "dark" ? "text-gray-500" : "text-gray-600"
+                }`}
+              >
                 Balance: ${balance}
               </p>
             </div>
@@ -271,9 +285,11 @@ export default function WithdrawalPage() {
                 onChange={handleInputChange}
                 className={inputClasses}
               />
-              <p className={`text-sm mt-1 ${
-                theme === 'dark' ? 'text-gray-500' : 'text-gray-600'
-              }`}>
+              <p
+                className={`text-sm mt-1 ${
+                  theme === "dark" ? "text-gray-500" : "text-gray-600"
+                }`}
+              >
                 Balance: ${balance}
               </p>
             </div>
@@ -303,9 +319,11 @@ export default function WithdrawalPage() {
                 onChange={handleInputChange}
                 className={inputClasses}
               />
-              <p className={`text-sm mt-1 ${
-                theme === 'dark' ? 'text-gray-500' : 'text-gray-600'
-              }`}>
+              <p
+                className={`text-sm mt-1 ${
+                  theme === "dark" ? "text-gray-500" : "text-gray-600"
+                }`}
+              >
                 Balance: ${balance}
               </p>
             </div>
@@ -318,53 +336,71 @@ export default function WithdrawalPage() {
 
   return (
     <>
-      <section className={`flex flex-col lg:flex-row justify-between min-h-screen p-4 ${
-        theme === 'dark' ? 'bg-slate-950' : 'bg-gray-100'
-      }`}>
+      <section
+        className={`flex flex-col lg:flex-row justify-between min-h-screen px-4 py-14 ${
+          theme === "dark" ? "bg-slate-950" : "bg-gray-100"
+        }`}
+      >
         {/* Payment Method Section */}
-        <div className={`rounded-lg p-6 w-full lg:w-2/3 mb-6 lg:mb-0 lg:mr-4 ${
-          theme === 'dark' ? 'bg-slate-900' : 'bg-white shadow'
-        }`}>
-          <h1 className={`text-2xl font-bold mb-4 ${
-            theme === 'dark' ? 'text-teal-500' : 'text-teal-600'
-          }`}>
+        <div
+          className={`rounded-lg p-6 w-full lg:w-2/3 mb-6 lg:mb-0 lg:mr-4 ${
+            theme === "dark" ? "bg-slate-900" : "bg-white shadow"
+          }`}
+        >
+          <h1
+            className={`text-2xl font-bold mb-4 ${
+              theme === "dark" ? "text-teal-500" : "text-teal-600"
+            }`}
+          >
             Withdrawal Page
           </h1>
-          <p className={`mb-6 ${
-            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-          }`}>
+          <p
+            className={`mb-6 ${
+              theme === "dark" ? "text-gray-400" : "text-gray-600"
+            }`}
+          >
             Choose a withdrawal method.
           </p>
 
           <button
             onClick={() => setShowPaymentOptions(!showPaymentOptions)}
             className={`w-full p-2 rounded-md transition ${
-              theme === 'dark'
-                ? 'bg-teal-700 hover:bg-teal-600 text-white'
-                : 'bg-teal-600 hover:bg-teal-500 text-white'
+              theme === "dark"
+                ? "bg-teal-700 hover:bg-teal-600 text-white"
+                : "bg-teal-600 hover:bg-teal-500 text-white"
             }`}
           >
             {selectedPaymentMethod || "Select Payment Method"}
           </button>
 
           {showPaymentOptions && (
-            <div className={`mt-6 p-4 rounded-lg ${
-              theme === 'dark' ? 'bg-slate-800' : 'bg-gray-100'
-            }`}>
-              <h2 className={`text-xl font-bold mb-3 ${
-                theme === 'dark' ? 'text-gray-200' : 'text-gray-800'
-              }`}>
+            <div
+              className={`mt-6 p-4 rounded-lg ${
+                theme === "dark" ? "bg-slate-800" : "bg-gray-100"
+              }`}
+            >
+              <h2
+                className={`text-xl font-bold mb-3 ${
+                  theme === "dark" ? "text-gray-200" : "text-gray-800"
+                }`}
+              >
                 Select Payment Method
               </h2>
               <ul className="space-y-2">
-                {["Bank Transfer", "Crypto", "Cash App", "PayPal", "Skrill"].map((method) => (
+                {[
+                  "Bank Transfer",
+                  "Crypto",
+                  "Cash App",
+                  "PayPal",
+                  "Skrill",
+                ].map((method) => (
                   <li
                     key={method}
                     onClick={() => handlePaymentMethodSelect(method)}
                     className={`p-2 rounded cursor-pointer transition ${
-                      theme === 'dark'
-                        ? 'bg-slate-700 text-gray-200 hover:bg-slate-600'
-                        : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                      theme === "dark"
+                        ? "bg-slate-700 text-gray-200 hover:bg-slate-600"
+                        : "bg-gray-200 text-gray-800 hover:bg-gray-300"
                     }`}
                   >
                     {method}
@@ -376,9 +412,11 @@ export default function WithdrawalPage() {
 
           {selectedPaymentMethod && (
             <div className="mt-6 space-y-4">
-              <h2 className={`text-xl font-bold ${
-                theme === 'dark' ? 'text-gray-200' : 'text-gray-800'
-              }`}>
+              <h2
+                className={`text-xl font-bold ${
+                  theme === "dark" ? "text-gray-200" : "text-gray-800"
+                }`}
+              >
                 {selectedPaymentMethod} Withdrawal
               </h2>
               {renderFormFields()}
@@ -387,17 +425,23 @@ export default function WithdrawalPage() {
         </div>
 
         {/* Summary Section */}
-        <div className={`rounded-lg p-6 w-full lg:w-1/3 ${
-          theme === 'dark' ? 'bg-slate-900' : 'bg-white shadow'
-        }`}>
-          <h2 className={`text-xl font-bold mb-4 ${
-            theme === 'dark' ? 'text-teal-500' : 'text-teal-600'
-          }`}>
+        <div
+          className={`rounded-lg p-6 w-full lg:w-1/3 ${
+            theme === "dark" ? "bg-slate-900" : "bg-white shadow"
+          }`}
+        >
+          <h2
+            className={`text-xl font-bold mb-4 ${
+              theme === "dark" ? "text-teal-500" : "text-teal-600"
+            }`}
+          >
             Withdrawal Summary
           </h2>
-          <div className={`space-y-3 ${
-            theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-          }`}>
+          <div
+            className={`space-y-3 ${
+              theme === "dark" ? "text-gray-400" : "text-gray-600"
+            }`}
+          >
             <p>
               <span className="font-semibold">Payment Method:</span>{" "}
               {selectedPaymentMethod || "Not selected"}
@@ -459,9 +503,9 @@ export default function WithdrawalPage() {
             <button
               onClick={handleWithdrawal}
               className={`w-full p-2 rounded-md transition ${
-                theme === 'dark'
-                  ? 'bg-teal-700 hover:bg-teal-600 text-white'
-                  : 'bg-teal-600 hover:bg-teal-500 text-white'
+                theme === "dark"
+                  ? "bg-teal-700 hover:bg-teal-600 text-white"
+                  : "bg-teal-600 hover:bg-teal-500 text-white"
               }`}
             >
               Confirm Withdrawal

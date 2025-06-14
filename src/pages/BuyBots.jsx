@@ -1,8 +1,15 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
-import bt1 from "../pictures/bt1.jpeg";
-import { FaBolt, FaChartLine, FaCrown, FaCoins, FaRobot } from "react-icons/fa";
+import bt1 from "../pictures/bt9.avif";
+import bt2 from "../pictures/bt10.avif";
+import bt3 from "../pictures/bt3.jpg";
+import bt4 from "../pictures/bt4.jpg";
+import bt5 from "../pictures/bt5.png";
+import bt6 from "../pictures/bt6.png";
+import bt7 from "../pictures/bt2.jpg";
+import bt8 from "../pictures/bt8.avif";
 
+import { FaBolt, FaChartLine, FaCrown, FaCoins, FaRobot } from "react-icons/fa";
 
 const bots = [
   {
@@ -17,7 +24,7 @@ const bots = [
   {
     id: 2,
     name: "CRYPTOHOPPER",
-    image: bt1,
+    image: bt2,
     profitRate: "30%",
     amount: "$1000",
     botLevel: "30",
@@ -26,7 +33,7 @@ const bots = [
   {
     id: 3,
     name: "TRADINGVIEW",
-    image: bt1,
+    image: bt3,
     profitRate: "22%",
     amount: "$600",
     botLevel: "20",
@@ -35,7 +42,7 @@ const bots = [
   {
     id: 4,
     name: "ZIGNALY",
-    image: bt1,
+    image: bt4,
     profitRate: "28%",
     amount: "$900",
     botLevel: "28",
@@ -44,7 +51,7 @@ const bots = [
   {
     id: 5,
     name: "SHRIMMPY",
-    image: bt1,
+    image: bt5,
     profitRate: "35%",
     amount: "$1200",
     botLevel: "35",
@@ -53,7 +60,7 @@ const bots = [
   {
     id: 6,
     name: "COINRULE",
-    image: bt1,
+    image: bt6,
     profitRate: "20%",
     amount: "$500",
     botLevel: "18",
@@ -62,7 +69,7 @@ const bots = [
   {
     id: 7,
     name: "TRADEBOT",
-    image: bt1,
+    image: bt7,
     profitRate: "27%",
     amount: "$850",
     botLevel: "25",
@@ -71,7 +78,7 @@ const bots = [
   {
     id: 8,
     name: "BITUNIVERSE",
-    image: bt1,
+    image: bt8,
     profitRate: "33%",
     amount: "$1100",
     botLevel: "32",
@@ -251,81 +258,97 @@ export default function BuyBotPage() {
 
         {/* Main Bot Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-  {bots.map((bot) => {
-    const isPurchased = purchasedBots.includes(bot.id);
-    return (
-      <div
-        key={bot.id}
-        className={`relative rounded-3xl overflow-hidden transition duration-500 shadow-lg hover:shadow-2xl border-2
-          ${theme === "dark" ? "bg-slate-900 border-teal-700 hover:border-teal-500" : "bg-white border-slate-200 hover:border-slate-400"}
+          {bots.map((bot) => {
+            const isPurchased = purchasedBots.includes(bot.id);
+            return (
+              <div
+                key={bot.id}
+                className={`relative rounded-3xl overflow-hidden transition duration-500 shadow-lg hover:shadow-2xl border-2
+          ${
+            theme === "dark"
+              ? "bg-slate-900 border-teal-700 hover:border-teal-500"
+              : "bg-white border-slate-200 hover:border-slate-400"
+          }
         `}
-        onMouseEnter={() => setHoveredBot(bot.id)}
-        onMouseLeave={() => setHoveredBot(null)}
-      >
-        {isPurchased && (
-          <div className="absolute top-4 right-4 z-10">
-            <div className="bg-teal-600 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-md">
-              <FaBolt className="text-yellow-300" />
-              <span>ACTIVE</span>
-            </div>
-          </div>
-        )}
+                onMouseEnter={() => setHoveredBot(bot.id)}
+                onMouseLeave={() => setHoveredBot(null)}
+              >
+                {isPurchased && (
+                  <div className="absolute top-4 right-4 z-10">
+                    <div className="bg-teal-600 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-md">
+                      <FaBolt className="text-yellow-300" />
+                      <span>ACTIVE</span>
+                    </div>
+                  </div>
+                )}
 
-        {/* Top Banner with bot info */}
-        <div
-          className={`h-36 relative bg-gradient-to-r 
-            ${theme === "dark" ? "from-teal-900 via-slate-800 to-slate-900" : "from-teal-100 via-slate-50 to-white"}`}
-        >
-          <img
-            src={bot.image}
-            alt={bot.name}
-            className="absolute top-4 left-4 w-14 h-14 object-cover rounded-xl border-2 border-white/30"
-          />
-          <div className="absolute bottom-4 left-4">
-            <h2 className="text-lg font-bold text-white drop-shadow-md">{bot.name}</h2>
-            <div className="text-sm text-teal-300 flex items-center gap-2">
-              <FaChartLine />
-              {bot.profitRate} Profit
-            </div>
-          </div>
-        </div>
+                {/* Top Banner with bot info */}
+                <div
+                  className={`h-36 relative bg-gradient-to-r 
+            ${
+              theme === "dark"
+                ? "from-teal-900 via-slate-800 to-slate-900"
+                : "from-teal-100 via-slate-50 to-white"
+            }`}
+                >
+                  <img
+                    src={bot.image}
+                    alt={bot.name}
+                    className="absolute top-4 left-4 w-14 h-14 object-cover rounded-xl border-2 border-white/30"
+                  />
+                  <div className="absolute bottom-4 left-4">
+                    <h2 className="text-lg font-bold text-white drop-shadow-md">
+                      {bot.name}
+                    </h2>
+                    <div className="text-sm text-teal-300 flex items-center gap-2">
+                      <FaChartLine />
+                      {bot.profitRate} Profit
+                    </div>
+                  </div>
+                </div>
 
-        {/* Details */}
-        <div className="p-5">
-          <div className="flex justify-between text-sm text-slate-400 mb-2">
-            <span>Investment</span>
-            <span className="text-slate-200 font-semibold">{bot.amount}</span>
-          </div>
-          <div className="flex justify-between text-sm text-slate-400 mb-2">
-            <span>Level</span>
-            <span className="text-slate-200 font-semibold">{bot.botLevel}</span>
-          </div>
-          <div className="flex justify-between text-sm text-slate-400 mb-4">
-            <span>Win Rate</span>
-            <span className="text-green-400 font-semibold">{bot.winRate}</span>
-          </div>
+                {/* Details */}
+                <div className="p-5">
+                  <div className="flex justify-between text-sm text-slate-400 mb-2">
+                    <span>Investment</span>
+                    <span className="text-slate-200 font-semibold">
+                      {bot.amount}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm text-slate-400 mb-2">
+                    <span>Level</span>
+                    <span className="text-slate-200 font-semibold">
+                      {bot.botLevel}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm text-slate-400 mb-4">
+                    <span>Win Rate</span>
+                    <span className="text-green-400 font-semibold">
+                      {bot.winRate}
+                    </span>
+                  </div>
 
-          {!isPurchased ? (
-            <button
-              onClick={() => handlePurchase(bot.id)}
-              className="w-full py-2 rounded-xl bg-gradient-to-r from-teal-600 to-slate-700 text-white hover:from-teal-500 hover:to-slate-600 transition-all"
-            >
-              Purchase
-            </button>
-          ) : (
-            <button
-              onClick={() => handleUnsubscribe(bot.id)}
-              className="w-full py-2 rounded-xl bg-slate-600 text-white hover:bg-slate-700 transition-all"
-            >
-              Deactivate
-            </button>
-          )}
+                  {!isPurchased ? (
+                    <button
+                      onClick={() => handlePurchase(bot.id)}
+                      className="w-full py-2 rounded-xl bg-gradient-to-r from-teal-600 to-slate-700 text-white hover:from-teal-500 hover:to-slate-600 transition-all"
+                    >
+                      Purchase
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleUnsubscribe(bot.id)}
+                      className="w-full py-2 rounded-xl bg-slate-600 text-white hover:bg-slate-700 transition-all"
+                    >
+                      Deactivate
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
-    );
-  })}
-</div>
-</div>
     </section>
   );
 }

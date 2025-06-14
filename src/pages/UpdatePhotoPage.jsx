@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { FaUser, FaCheck, FaUpload, FaArrowLeft, FaSpinner } from "react-icons/fa";
+import {
+  FaUser,
+  FaCheck,
+  FaUpload,
+  FaArrowLeft,
+  FaSpinner,
+} from "react-icons/fa";
 import { auth } from "../../firebase";
 import { updateProfile } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -83,7 +89,7 @@ export default function updateProfilePage() {
           storage,
           `user_avatars/${user.uid}/${Date.now()}.${fileExt}`
         );
-        
+
         await uploadBytes(fileRef, customImageFile);
         photoURL = await getDownloadURL(fileRef);
       } else if (selectedAvatar) {
@@ -95,10 +101,10 @@ export default function updateProfilePage() {
       }
 
       await updateProfile(user, { photoURL });
-      
+
       setMessage("Profile photo updated successfully!");
       setIsSuccess(true);
-      
+
       setTimeout(() => {
         navigate("/account");
       }, 2000);
@@ -114,7 +120,7 @@ export default function updateProfilePage() {
       <div className="w-full max-w-2xl bg-slate-800/50 backdrop-blur-lg rounded-2xl border border-slate-700 shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-teal-600 to-emerald-700 p-6 relative">
-          <button 
+          <button
             onClick={() => navigate(-1)}
             className="absolute top-6 left-6 bg-white/20 hover:bg-white/30 p-2 rounded-full transition-colors"
           >
@@ -129,7 +135,7 @@ export default function updateProfilePage() {
             {isSuccess ? "Photo Updated!" : "Update Profile Photo"}
           </h1>
         </div>
-        
+
         <div className="p-6">
           {isSuccess ? (
             <div className="text-center py-8">
@@ -169,7 +175,7 @@ export default function updateProfilePage() {
                 </h2>
                 <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
                   {defaultAvatars.map((src, idx) => (
-                    <div 
+                    <div
                       key={idx}
                       onClick={() => handleAvatarSelect(src)}
                       className={`relative rounded-full cursor-pointer transition-all transform hover:scale-105 ${
@@ -226,8 +232,8 @@ export default function updateProfilePage() {
                   onClick={handleSave}
                   disabled={loading || (!customImageFile && !selectedAvatar)}
                   className={`px-8 py-3 rounded-lg font-medium text-white shadow-lg transition-all ${
-                    loading 
-                      ? "bg-teal-500 cursor-not-allowed" 
+                    loading
+                      ? "bg-teal-500 cursor-not-allowed"
                       : "bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 hover:shadow-xl transform hover:-translate-y-0.5"
                   }`}
                 >
@@ -236,7 +242,9 @@ export default function updateProfilePage() {
                       <FaSpinner className="animate-spin mr-2" />
                       Saving...
                     </div>
-                  ) : "Save Profile Photo"}
+                  ) : (
+                    "Save Profile Photo"
+                  )}
                 </button>
               </div>
 
@@ -244,8 +252,8 @@ export default function updateProfilePage() {
               {message && (
                 <p
                   className={`text-center mt-4 p-3 rounded-lg ${
-                    message.includes("Error") 
-                      ? "bg-red-900/30 text-red-400" 
+                    message.includes("Error")
+                      ? "bg-red-900/30 text-red-400"
                       : "bg-teal-900/30 text-teal-400"
                   }`}
                 >
@@ -256,7 +264,7 @@ export default function updateProfilePage() {
           )}
         </div>
       </div>
-      
+
       <div className="mt-8 text-center text-slate-500 text-sm">
         <p>Your profile photo is visible to other users</p>
       </div>
