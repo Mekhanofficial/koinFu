@@ -174,7 +174,7 @@ export default function AssetPage() {
 
   return (
     <section
-      className={`min-h-screen w-full px-4 py-14 ${
+      className={`min-h-screen w-full px-4 py-14 lg:px-10  ${
         theme === "dark" ? "bg-gray-900" : "bg-slate-50"
       }`}
     >
