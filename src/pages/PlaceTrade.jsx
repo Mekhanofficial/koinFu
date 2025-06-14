@@ -1,9 +1,17 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useTheme } from "next-themes";
+import HeaderPage from "../components/Header";
 import TradingViewChart from "../components/Tradingview";
 
-// Trade form component
-const TradeForm = ({ theme, tradeType, setTradeType, assets }) => {
+export default function PlaceTradePage() {
+  const { theme } = useTheme();
+  const [tradeType, setTradeType] = useState("");
+  const [assets, setAssets] = useState([]);
+  const [activeTab, setActiveTab] = useState("buy");
+  const [amount, setAmount] = useState("");
+  const [takeProfit, setTakeProfit] = useState("");
+  const [stopLoss, setStopLoss] = useState("");
+
   const tradeAssets = {
     "VIP Trades": ["VIP Asset 1", "VIP Asset 2", "VIP Asset 3"],
     Crypto: ["BTC/USD", "ETH/USD", "ETM/USD"],
@@ -13,414 +21,400 @@ const TradeForm = ({ theme, tradeType, setTradeType, assets }) => {
   const handleTradeTypeChange = (e) => {
     const selectedTradeType = e.target.value;
     setTradeType(selectedTradeType);
+    setAssets(tradeAssets[selectedTradeType] || []);
   };
 
-  const currentAssets = useMemo(
-    () => tradeAssets[tradeType] || [],
-    [tradeType]
-  );
+  // Format currency input
+  const formatCurrency = (value) => {
+    return value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
 
   return (
-    <div
-      className={`w-full max-w-full lg:w-1/3 p-4 sm:p-6 rounded-xl shadow-lg border transition-all duration-300 ${
-        theme === "dark"
-          ? "bg-slate-900 border-gray-800 hover:border-teal-500"
-          : "bg-white border-gray-200 hover:border-teal-400"
-      }`}
-    >
-      <div className="flex items-center justify-between mb-6">
-        <h2
-          className={`text-xl font-bold ${
-            theme === "dark" ? "text-teal-400" : "text-teal-600"
-          }`}
-        >
-          PLACE TRADE
-        </h2>
-        <div className="flex space-x-2">
-          <span
-            className={`px-2 py-1 text-xs rounded ${
-              theme === "dark"
-                ? "bg-slate-800 text-gray-400"
-                : "bg-gray-100 text-gray-600"
-            }`}
-          >
-            LIVE
-          </span>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3 mb-5">
-        <button
-          className={`py-3 rounded-xl font-medium transition-all ${
-            theme === "dark"
-              ? "bg-emerald-700 hover:bg-emerald-600 text-white"
-              : "bg-emerald-500 hover:bg-emerald-400 text-white"
-          } shadow-md hover:shadow-lg`}
-        >
-          BUY
-        </button>
-        <button
-          className={`py-3 rounded-xl font-medium transition-all ${
-            theme === "dark"
-              ? "bg-rose-700 hover:bg-rose-600 text-white"
-              : "bg-rose-500 hover:bg-rose-400 text-white"
-          } shadow-md hover:shadow-lg`}
-        >
-          SELL
-        </button>
-      </div>
-
-      <div className="space-y-4">
-        <FormField theme={theme} label="Type" id="trade-type">
-          <select
-            id="trade-type"
-            className={`w-full p-3 rounded-lg ${
-              theme === "dark"
-                ? "bg-slate-800 text-white border-gray-700 focus:border-teal-500"
-                : "bg-gray-50 text-gray-900 border-gray-200 focus:border-teal-400"
-            } border focus:ring-2 focus:ring-teal-500/30`}
-            value={tradeType}
-            onChange={handleTradeTypeChange}
-          >
-            <option>Choose Trade Type</option>
-            <option>VIP Trades</option>
-            <option>Crypto</option>
-            <option>Forex</option>
-          </select>
-        </FormField>
-
-        <FormField theme={theme} label="Assets" id="assets">
-          <select
-            id="assets"
-            className={`w-full p-3 rounded-lg ${
-              theme === "dark"
-                ? "bg-slate-800 text-white border-gray-700 focus:border-teal-500"
-                : "bg-gray-50 text-gray-900 border-gray-200 focus:border-teal-400"
-            } border focus:ring-2 focus:ring-teal-500/30`}
-          >
-            {currentAssets.length > 0 ? (
-              currentAssets.map((asset, index) => (
-                <option key={index} value={asset}>
-                  {asset}
-                </option>
-              ))
-            ) : (
-              <option>Select a trade type first</option>
-            )}
-          </select>
-        </FormField>
-
-        <FormField theme={theme} label="Amount" id="amount">
-          <div className="relative">
-            <input
-              id="amount"
-              type="number"
-              className={`w-full p-3 rounded-lg ${
-                theme === "dark"
-                  ? "bg-slate-800 text-white border-gray-700 focus:border-teal-500"
-                  : "bg-gray-50 text-gray-900 border-gray-200 focus:border-teal-400"
-              } border focus:ring-2 focus:ring-teal-500/30`}
-              placeholder="500"
-            />
-            <span className="absolute right-3 top-3 text-gray-500">USD</span>
-          </div>
-        </FormField>
-
-        <FormField theme={theme} label="Lot Size" id="lot-size">
-          <select
-            id="lot-size"
-            className={`w-full p-3 rounded-lg ${
-              theme === "dark"
-                ? "bg-slate-800 text-white border-gray-700 focus:border-teal-500"
-                : "bg-gray-50 text-gray-900 border-gray-200 focus:border-teal-400"
-            } border focus:ring-2 focus:ring-teal-500/30`}
-          >
-            <option>2 LS</option>
-            <option>5 LS</option>
-            <option>10 LS</option>
-            <option>15 LS</option>
-          </select>
-        </FormField>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <FormField theme={theme} label="Take Profit" id="take-profit">
-            <input
-              id="take-profit"
-              type="text"
-              className={`w-full p-3 rounded-lg ${
-                theme === "dark"
-                  ? "bg-slate-800 text-white border-gray-700 focus:border-teal-500"
-                  : "bg-gray-50 text-gray-900 border-gray-200 focus:border-teal-400"
-              } border focus:ring-2 focus:ring-teal-500/30`}
-              placeholder="1.0013"
-            />
-          </FormField>
-
-          <FormField theme={theme} label="Stop Loss" id="stop-loss">
-            <input
-              id="stop-loss"
-              type="text"
-              className={`w-full p-3 rounded-lg ${
-                theme === "dark"
-                  ? "bg-slate-800 text-white border-gray-700 focus:border-teal-500"
-                  : "bg-gray-50 text-gray-900 border-gray-200 focus:border-teal-400"
-              } border focus:ring-2 focus:ring-teal-500/30`}
-              placeholder="1.0013"
-            />
-          </FormField>
-        </div>
-
-        <FormField theme={theme} label="Duration" id="duration">
-          <select
-            id="duration"
-            className={`w-full p-3 rounded-lg ${
-              theme === "dark"
-                ? "bg-slate-800 text-white border-gray-700 focus:border-teal-500"
-                : "bg-gray-50 text-gray-900 border-gray-200 focus:border-teal-400"
-            } border focus:ring-2 focus:ring-teal-500/30`}
-          >
-            <option>5 Minutes</option>
-            <option>10 Minutes</option>
-            <option>15 Minutes</option>
-            <option>30 Minutes</option>
-          </select>
-        </FormField>
-      </div>
-
-      <div
-        className={`mt-6 mb-4 rounded-lg p-3 text-center text-sm ${
-          theme === "dark"
-            ? "bg-amber-900/30 text-amber-200"
-            : "bg-amber-100 text-amber-800"
+    <>
+      <section
+        className={`min-h-screen px-4 sm:px-6 lg:px-8 py-6 ${
+          theme === "dark" ? "bg-gray-900" : "bg-gray-50"
         }`}
       >
-        Your trade will auto close if SL or TP does not hit
-      </div>
-
-      <button
-        className={`w-full py-3.5 rounded-xl font-bold transition-all shadow-lg ${
-          theme === "dark"
-            ? "bg-gradient-to-r from-teal-600 to-cyan-700 hover:from-teal-500 hover:to-cyan-600"
-            : "bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500"
-        } text-white hover:shadow-xl`}
-      >
-        PLACE ORDER
-      </button>
-    </div>
-  );
-};
-
-// Reusable form field component
-const FormField = ({ theme, label, id, children }) => (
-  <div>
-    <label
-      htmlFor={id}
-      className={`block mb-2 text-sm font-medium ${
-        theme === "dark" ? "text-gray-400" : "text-gray-600"
-      }`}
-    >
-      {label}
-    </label>
-    {children}
-  </div>
-);
-
-// Recent trades component
-const RecentTrades = ({ theme }) => {
-  const columns = [
-    "ID",
-    "Type",
-    "Trade Time",
-    "Amount",
-    "Pair",
-    "Action",
-    "Entry",
-    "SL",
-    "TP",
-    "Time in Force",
-    "Result",
-    "Details",
-  ];
-
-  return (
-    <div
-      className={`rounded-xl p-4 sm:p-5 my-6 border transition-all duration-300 ${
-        theme === "dark"
-          ? "bg-slate-900 border-gray-800 hover:border-teal-500"
-          : "bg-white border-gray-200 hover:border-teal-400"
-      }`}
-    >
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-        <h1
-          className={`text-xl font-bold ${
-            theme === "dark" ? "text-white" : "text-gray-800"
-          }`}
-        >
-          Recent Trades
-        </h1>
-        <div className="flex space-x-3 mt-2 md:mt-0">
-          <button
-            className={`px-4 py-2 rounded-lg text-sm ${
-              theme === "dark"
-                ? "bg-slate-800 hover:bg-slate-700 text-gray-300"
-                : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-            }`}
-          >
-            History
-          </button>
-          <button
-            className={`px-4 py-2 rounded-lg text-sm ${
-              theme === "dark"
-                ? "bg-slate-800 hover:bg-slate-700 text-gray-300"
-                : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-            }`}
-          >
-            Export
-          </button>
-        </div>
-      </div>
-
-      <div className="overflow-x-auto">
-        <div className="min-w-[800px]">
-          <table className="w-full">
-            <thead>
-              <tr
-                className={`border-b ${
-                  theme === "dark" ? "border-gray-800" : "border-gray-200"
-                }`}
-              >
-                {columns.map((col, index) => (
-                  <th
-                    key={index}
-                    className={`p-3 text-left text-xs font-medium ${
-                      theme === "dark" ? "text-gray-500" : "text-gray-600"
-                    }`}
-                  >
-                    {col}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colSpan={12} className="py-16 text-center">
-                  <div className="flex flex-col items-center justify-center">
-                    <svg
-                      className={`w-16 h-16 mb-4 ${
-                        theme === "dark" ? "text-gray-700" : "text-gray-300"
-                      }`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                      />
-                    </svg>
-                    <h3
-                      className={`text-lg font-medium ${
-                        theme === "dark" ? "text-gray-600" : "text-gray-400"
-                      }`}
-                    >
-                      No trades yet
-                    </h3>
-                    <p
-                      className={`mt-1 text-sm ${
-                        theme === "dark" ? "text-gray-700" : "text-gray-500"
-                      }`}
-                    >
-                      Your trade history will appear here
-                    </p>
+        <div className="max-w-7xl mx-auto">
+          <h1 className={`text-2xl font-bold mb-6 ${
+            theme === "dark" ? "text-white" : "text-gray-900"
+          }`}>
+            Trading Dashboard
+          </h1>
+          
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Main Chart Area - 70% width on large screens */}
+            <div className="w-full lg:w-[70%]">
+              <div className={`rounded-xl shadow-sm p-4 ${
+                theme === "dark" ? "bg-gray-800" : "bg-white"
+              }`}>
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center space-x-2">
+                    <span className={`text-lg font-semibold ${
+                      theme === "dark" ? "text-white" : "text-gray-900"
+                    }`}>BTC/USD</span>
+                    <span className={`px-2 py-1 text-xs rounded ${
+                      theme === "dark" ? "bg-green-900 text-green-300" : "bg-green-100 text-green-800"
+                    }`}>+2.4%</span>
                   </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Main page component
-export default function PlaceTradePage() {
-  const { theme } = useTheme();
-  const [tradeType, setTradeType] = useState("Choose Trade Type");
-
-  return (
-    <section
-      className={`px-4 sm:px-6 md:px-10 py-10 sm:py-14 min-h-screen w-full overflow-x-hidden ${
-        theme === "dark" ? "bg-slate-950" : "bg-gray-50"
-      }`}
-    >
-      <div className="flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto w-full">
-        {/* Chart Section */}
-        <div className="w-full max-w-full lg:w-2/3">
-          <div
-            className={`rounded-xl p-4 mb-6 ${
-              theme === "dark" ? "bg-slate-900" : "bg-white"
-            } shadow-lg`}
-          >
-            <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-              <h2
-                className={`font-bold ${
-                  theme === "dark" ? "text-gray-300" : "text-gray-800"
-                }`}
-              >
-                BTC/USD Chart
-              </h2>
-              <div className="flex space-x-2">
-                <button
-                  className={`px-3 py-1 rounded-lg text-sm ${
-                    theme === "dark"
-                      ? "bg-slate-800 text-gray-400"
-                      : "bg-gray-100 text-gray-600"
-                  }`}
-                >
-                  1H
-                </button>
-                <button
-                  className={`px-3 py-1 rounded-lg text-sm ${
-                    theme === "dark"
-                      ? "bg-teal-900/50 text-teal-400"
-                      : "bg-teal-100 text-teal-700"
-                  }`}
-                >
-                  4H
-                </button>
-                <button
-                  className={`px-3 py-1 rounded-lg text-sm ${
-                    theme === "dark"
-                      ? "bg-slate-800 text-gray-400"
-                      : "bg-gray-100 text-gray-600"
-                  }`}
-                >
-                  1D
-                </button>
+                  <div className="flex space-x-2">
+                    <button className={`px-3 py-1 text-sm rounded-lg ${
+                      theme === "dark" ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-100 hover:bg-gray-200"
+                    }`}>1H</button>
+                    <button className={`px-3 py-1 text-sm rounded-lg ${
+                      theme === "dark" ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-100 hover:bg-gray-200"
+                    }`}>4H</button>
+                    <button className={`px-3 py-1 text-sm rounded-lg ${
+                      theme === "dark" ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-100 hover:bg-gray-200"
+                    }`}>1D</button>
+                    <button className={`px-3 py-1 text-sm rounded-lg ${
+                      theme === "dark" ? "bg-blue-600 hover:bg-blue-500" : "bg-blue-500 hover:bg-blue-400"
+                    } text-white`}>1W</button>
+                  </div>
+                </div>
+                <TradingViewChart
+                  symbol="BTC/USD"
+                  interval="60"
+                  width="100%"
+                  height={500}
+                />
+              </div>
+              
+              {/* Market Data Section */}
+              <div className={`mt-6 rounded-xl shadow-sm p-4 ${
+                theme === "dark" ? "bg-gray-800" : "bg-white"
+              }`}>
+                <h3 className={`text-lg font-semibold mb-4 ${
+                  theme === "dark" ? "text-white" : "text-gray-900"
+                }`}>Market Overview</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {['BTC/USD', 'ETH/USD', 'EUR/USD', 'XAU/USD'].map((pair) => (
+                    <div key={pair} className={`p-3 rounded-lg ${
+                      theme === "dark" ? "bg-gray-700" : "bg-gray-50"
+                    }`}>
+                      <div className="flex justify-between items-center">
+                        <span className={`font-medium ${
+                          theme === "dark" ? "text-gray-300" : "text-gray-700"
+                        }`}>{pair}</span>
+                        <span className={`text-sm ${
+                          pair.includes('BTC') ? 
+                            (theme === "dark" ? "text-green-400" : "text-green-600") : 
+                            (theme === "dark" ? "text-red-400" : "text-red-600")
+                        }`}>
+                          {pair.includes('BTC') ? '+2.4%' : '-0.8%'}
+                        </span>
+                      </div>
+                      <div className={`text-xl font-bold mt-1 ${
+                        theme === "dark" ? "text-white" : "text-gray-900"
+                      }`}>
+                        {pair.includes('BTC') ? '$42,850.30' : pair.includes('ETH') ? '$2,350.10' : pair.includes('EUR') ? '1.0854' : '1,987.50'}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-            <TradingViewChart
-              symbol="BTC/USD"
-              interval="60"
-              width="100%"
-              height={500}
-            />
+            
+            {/* Trade Panel - 30% width on large screens */}
+            <div className="w-full lg:w-[30%]">
+              <div className={`rounded-xl shadow-sm overflow-hidden ${
+                theme === "dark" ? "bg-gray-800" : "bg-white"
+              }`}>
+                {/* Buy/Sell Tabs */}
+                <div className={`flex border-b ${
+                  theme === "dark" ? "border-gray-700" : "border-gray-200"
+                }`}>
+                  <button
+                    onClick={() => setActiveTab("buy")}
+                    className={`flex-1 py-3 font-medium text-center ${
+                      activeTab === "buy" ? 
+                        (theme === "dark" ? "bg-blue-600 text-white" : "bg-blue-500 text-white") : 
+                        (theme === "dark" ? "text-gray-300 hover:bg-gray-700" : "text-gray-600 hover:bg-gray-100")
+                    }`}
+                  >
+                    Buy
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("sell")}
+                    className={`flex-1 py-3 font-medium text-center ${
+                      activeTab === "sell" ? 
+                        (theme === "dark" ? "bg-red-600 text-white" : "bg-red-500 text-white") : 
+                        (theme === "dark" ? "text-gray-300 hover:bg-gray-700" : "text-gray-600 hover:bg-gray-100")
+                    }`}
+                  >
+                    Sell
+                  </button>
+                </div>
+                
+                <div className="p-4">
+                  <h3 className={`text-lg font-semibold mb-4 ${
+                    theme === "dark" ? "text-white" : "text-gray-900"
+                  }`}>Place Order</h3>
+                  
+                  {/* Trade Form */}
+                  <div className="space-y-4">
+                    {/* Trade Type */}
+                    <div>
+                      <label className={`block text-sm font-medium mb-1 ${
+                        theme === "dark" ? "text-gray-300" : "text-gray-700"
+                      }`}>
+                        Trade Type
+                      </label>
+                      <select
+                        className={`w-full p-3 rounded-lg text-sm ${
+                          theme === "dark" ? 
+                            "bg-gray-700 text-white border-gray-600 focus:border-blue-500 focus:ring-blue-500" : 
+                            "bg-white text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                        } border`}
+                        value={tradeType}
+                        onChange={handleTradeTypeChange}
+                      >
+                        <option value="">Select trade type</option>
+                        <option>VIP Trades</option>
+                        <option>Crypto</option>
+                        <option>Forex</option>
+                      </select>
+                    </div>
+                    
+                    {/* Asset */}
+                    <div>
+                      <label className={`block text-sm font-medium mb-1 ${
+                        theme === "dark" ? "text-gray-300" : "text-gray-700"
+                      }`}>
+                        Asset
+                      </label>
+                      <select
+                        className={`w-full p-3 rounded-lg text-sm ${
+                          theme === "dark" ? 
+                            "bg-gray-700 text-white border-gray-600 focus:border-blue-500 focus:ring-blue-500" : 
+                            "bg-white text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                        } border`}
+                        disabled={!tradeType}
+                      >
+                        {assets.length > 0 ? (
+                          assets.map((asset, index) => (
+                            <option key={index} value={asset}>
+                              {asset}
+                            </option>
+                          ))
+                        ) : (
+                          <option>Select trade type first</option>
+                        )}
+                      </select>
+                    </div>
+                    
+                    {/* Amount */}
+                    <div>
+                      <div className="flex justify-between items-center mb-1">
+                        <label className={`block text-sm font-medium ${
+                          theme === "dark" ? "text-gray-300" : "text-gray-700"
+                        }`}>
+                          Amount
+                        </label>
+                        <span className={`text-xs ${
+                          theme === "dark" ? "text-gray-400" : "text-gray-500"
+                        }`}>Balance: $5,430.00</span>
+                      </div>
+                      <div className="relative">
+                        <span className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
+                          theme === "dark" ? "text-gray-400" : "text-gray-500"
+                        }`}>$</span>
+                        <input
+                          type="text"
+                          value={amount}
+                          onChange={(e) => setAmount(formatCurrency(e.target.value))}
+                          className={`w-full p-3 pl-8 rounded-lg text-sm ${
+                            theme === "dark" ? 
+                              "bg-gray-700 text-white border-gray-600 focus:border-blue-500 focus:ring-blue-500" : 
+                              "bg-white text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                          } border`}
+                          placeholder="0.00"
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Lot Size */}
+                    <div>
+                      <label className={`block text-sm font-medium mb-1 ${
+                        theme === "dark" ? "text-gray-300" : "text-gray-700"
+                      }`}>
+                        Lot Size
+                      </label>
+                      <div className="grid grid-cols-4 gap-2">
+                        {[2, 5, 10, 15].map((size) => (
+                          <button
+                            key={size}
+                            className={`py-2 rounded-lg text-sm ${
+                              theme === "dark" ? 
+                                "bg-gray-700 hover:bg-gray-600 text-white" : 
+                                "bg-gray-100 hover:bg-gray-200 text-gray-800"
+                            }`}
+                          >
+                            {size} LS
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Take Profit & Stop Loss */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className={`block text-sm font-medium mb-1 ${
+                          theme === "dark" ? "text-gray-300" : "text-gray-700"
+                        }`}>
+                          Take Profit
+                        </label>
+                        <input
+                          type="text"
+                          value={takeProfit}
+                          onChange={(e) => setTakeProfit(e.target.value)}
+                          className={`w-full p-3 rounded-lg text-sm ${
+                            theme === "dark" ? 
+                              "bg-gray-700 text-white border-gray-600 focus:border-blue-500 focus:ring-blue-500" : 
+                              "bg-white text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                          } border`}
+                          placeholder="0.00"
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-sm font-medium mb-1 ${
+                          theme === "dark" ? "text-gray-300" : "text-gray-700"
+                        }`}>
+                          Stop Loss
+                        </label>
+                        <input
+                          type="text"
+                          value={stopLoss}
+                          onChange={(e) => setStopLoss(e.target.value)}
+                          className={`w-full p-3 rounded-lg text-sm ${
+                            theme === "dark" ? 
+                              "bg-gray-700 text-white border-gray-600 focus:border-blue-500 focus:ring-blue-500" : 
+                              "bg-white text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                          } border`}
+                          placeholder="0.00"
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Duration */}
+                    <div>
+                      <label className={`block text-sm font-medium mb-1 ${
+                        theme === "dark" ? "text-gray-300" : "text-gray-700"
+                      }`}>
+                        Duration
+                      </label>
+                      <select
+                        className={`w-full p-3 rounded-lg text-sm ${
+                          theme === "dark" ? 
+                            "bg-gray-700 text-white border-gray-600 focus:border-blue-500 focus:ring-blue-500" : 
+                            "bg-white text-gray-900 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                        } border`}
+                      >
+                        <option>5 Minutes</option>
+                        <option>10 Minutes</option>
+                        <option>15 Minutes</option>
+                        <option>30 Minutes</option>
+                      </select>
+                    </div>
+                    
+                    {/* Summary */}
+                    <div className={`p-3 rounded-lg ${
+                      theme === "dark" ? "bg-gray-700" : "bg-gray-100"
+                    }`}>
+                      <div className="flex justify-between py-1">
+                        <span className={`text-sm ${
+                          theme === "dark" ? "text-gray-400" : "text-gray-600"
+                        }`}>Estimated Profit</span>
+                        <span className={`font-medium ${
+                          theme === "dark" ? "text-green-400" : "text-green-600"
+                        }`}>+$125.00</span>
+                      </div>
+                      <div className="flex justify-between py-1">
+                        <span className={`text-sm ${
+                          theme === "dark" ? "text-gray-400" : "text-gray-600"
+                        }`}>Potential Loss</span>
+                        <span className={`font-medium ${
+                          theme === "dark" ? "text-red-400" : "text-red-600"
+                        }`}>-$75.00</span>
+                      </div>
+                      <div className="flex justify-between py-1">
+                        <span className={`text-sm ${
+                          theme === "dark" ? "text-gray-400" : "text-gray-600"
+                        }`}>Risk/Reward</span>
+                        <span className={`font-medium ${
+                          theme === "dark" ? "text-yellow-400" : "text-yellow-600"
+                        }`}>1:1.67</span>
+                      </div>
+                    </div>
+                    
+                    {/* Warning */}
+                    <div className={`p-3 rounded-lg text-sm ${
+                      theme === "dark" ? "bg-red-900/30 text-red-300" : "bg-red-100 text-red-800"
+                    }`}>
+                      Your trade will auto close if SL or TP does not hit.
+                    </div>
+                    
+                    {/* Submit Button */}
+                    <button
+                      className={`w-full py-3 rounded-lg font-semibold transition-colors ${
+                        activeTab === "buy" ? 
+                          (theme === "dark" ? 
+                            "bg-gradient-to-r from-green-600 to-green-800 hover:from-green-500 hover:to-green-700" : 
+                            "bg-gradient-to-r from-green-500 to-green-700 hover:from-green-400 hover:to-green-600") : 
+                          (theme === "dark" ? 
+                            "bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700" : 
+                            "bg-gradient-to-r from-red-500 to-red-700 hover:from-red-400 hover:to-red-600")
+                      } text-white`}
+                    >
+                      {activeTab === "buy" ? "Place Buy Order" : "Place Sell Order"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Recent Trades */}
+              <div className={`mt-6 rounded-xl shadow-sm p-4 ${
+                theme === "dark" ? "bg-gray-800" : "bg-white"
+              }`}>
+                <h3 className={`text-lg font-semibold mb-4 ${
+                  theme === "dark" ? "text-white" : "text-gray-900"
+                }`}>Recent Trades</h3>
+                
+                {/* Empty State */}
+                <div className={`p-6 text-center rounded-lg ${
+                  theme === "dark" ? "bg-gray-700/50" : "bg-gray-100"
+                }`}>
+                  <svg
+                    className={`mx-auto h-12 w-12 ${
+                      theme === "dark" ? "text-gray-600" : "text-gray-400"
+                    }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                  <h3 className={`mt-2 text-sm font-medium ${
+                    theme === "dark" ? "text-gray-300" : "text-gray-700"
+                  }`}>No recent trades</h3>
+                  <p className={`mt-1 text-sm ${
+                    theme === "dark" ? "text-gray-500" : "text-gray-400"
+                  }`}>
+                    Get started by placing your first trade.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* Trade Form */}
-        <TradeForm
-          theme={theme}
-          tradeType={tradeType}
-          setTradeType={setTradeType}
-        />
-      </div>
-
-      {/* Recent Trades */}
-      <RecentTrades theme={theme} />
-    </section>
+      </section>
+    </>
   );
 }

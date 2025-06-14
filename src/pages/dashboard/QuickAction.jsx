@@ -1,10 +1,46 @@
+import { useState } from "react";
 import depositIcon from "../../pictures/depositicon.png";
 import withdrawIcon from "../../pictures/withdrawicon.png";
 import tradeIcon from "../../pictures/tradeicon.png";
 import historyIcon from "../../pictures/historyicon.png";
 
-export default function QuickActions({ theme }) {
+export default function QuickActions({ theme, isKycVerified }) {
   const isDark = theme === "dark";
+  const [message, setMessage] = useState("");
+
+  // Example handlers for each action
+  const handleDeposit = () => {
+    if (!isKycVerified) {
+      setMessage("You must complete KYC before making a deposit.");
+      return;
+    }
+    setMessage(""); // Clear any previous message
+    // Implement your deposit logic or modal open here
+    alert("Deposit action initiated!");
+  };
+
+  const handleWithdraw = () => {
+    if (!isKycVerified) {
+      setMessage("You must complete KYC before making a withdrawal.");
+      return;
+    }
+    setMessage("");
+    alert("Withdraw action initiated!");
+  };
+
+  const handleTrade = () => {
+    if (!isKycVerified) {
+      setMessage("You must complete KYC before trading.");
+      return;
+    }
+    setMessage("");
+    alert("Trade action initiated!");
+  };
+
+  const handleHistory = () => {
+    setMessage("");
+    alert("Showing transaction history!");
+  };
 
   const actions = [
     {
@@ -12,24 +48,28 @@ export default function QuickActions({ theme }) {
       label: "DEPOSIT",
       color: "text-emerald-400",
       ring: "ring-emerald-500/40",
+      onClick: handleDeposit,
     },
     {
       icon: withdrawIcon,
       label: "WITHDRAW",
       color: "text-rose-400",
       ring: "ring-rose-500/40",
+      onClick: handleWithdraw,
     },
     {
       icon: tradeIcon,
       label: "TRADE",
       color: "text-sky-400",
       ring: "ring-sky-500/40",
+      onClick: handleTrade,
     },
     {
       icon: historyIcon,
       label: "HISTORY",
       color: "text-amber-400",
       ring: "ring-amber-500/40",
+      onClick: handleHistory,
     },
   ];
 
@@ -55,6 +95,7 @@ export default function QuickActions({ theme }) {
           <div
             key={index}
             className="flex flex-col items-center group cursor-pointer"
+            onClick={action.onClick}
           >
             <div
               className={`relative w-16 h-16 flex items-center justify-center rounded-full shadow-md transition-all duration-300
@@ -91,6 +132,16 @@ export default function QuickActions({ theme }) {
           </div>
         ))}
       </div>
+
+      {message && (
+        <div
+          className={`mt-4 text-center text-sm font-semibold text-rose-600 ${
+            isDark ? "bg-rose-100 p-2 rounded" : "bg-rose-200 p-2 rounded"
+          }`}
+        >
+          {message}
+        </div>
+      )}
     </div>
   );
 }

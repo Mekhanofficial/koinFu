@@ -13,6 +13,7 @@ export default function BalanceCard({
   borderColor = "border-gray-200",
   balance = 15809750.0,
   currency = "USD",
+  isKycVerified = false, // NEW: pass KYC status here
 }) {
   const [showBalance, setShowBalance] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
@@ -32,7 +33,7 @@ export default function BalanceCard({
 
   const gradientColors =
     theme === "dark"
-      ? "from-slate-800  to-slate-900"
+      ? "from-slate-800 to-slate-900"
       : "from-slate-400 via-slate-100 to-slate-300";
 
   const textColor = theme === "dark" ? "text-white" : "text-slate-800";
@@ -44,25 +45,32 @@ export default function BalanceCard({
   };
 
   const handleAddFunds = () => {
+    if (!isKycVerified) {
+      // If not verified, redirect to KYC page or alert user
+      alert(
+        "You must complete KYC verification before you can add funds. Redirecting to verification page."
+      );
+      navigate("/kyc-verification");
+      return;
+    }
     navigate("/deposits");
   };
 
   return (
     <div
-      className={`bg-gradient-to-r ${gradientColors} rounded-xl p-5 lg:p-7 mb-6 shadow-lg transition-all duration-300 border ${borderColor} 
-        ${isHovered ? "border-teal-500 shadow-teal-500/20 scale-[1.02]" : ""}`}
+      className={`bg-gradient-to-r ${gradientColors} rounded-xl p-5 lg:p-7 mb-6 shadow-lg transition-all duration-300 border ${borderColor} ${
+        isHovered ? "border-teal-500 shadow-teal-500/20 scale-[1.02]" : ""
+      }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="flex justify-between items-center mb-5">
-        <h4
-          className={`text-sm lg:text-base font-medium ${secondaryTextColor}`}
-        >
+        <h4 className={`text-sm lg:text-base font-medium ${secondaryTextColor}`}>
           Available Balance
         </h4>
         <button
           onClick={toggleBalanceVisibility}
-          className={`p-2  rounded-full ${
+          className={`p-2 rounded-full ${
             theme === "dark" ? "hover:bg-slate-700" : "hover:bg-slate-200"
           }`}
           aria-label={showBalance ? "Hide balance" : "Show balance"}
@@ -75,9 +83,7 @@ export default function BalanceCard({
       </div>
 
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 w-full">
-        <h1
-          className={`text-3xl lg:text-4xl font-bold ${textColor} tracking-tight`}
-        >
+        <h1 className={`text-3xl lg:text-4xl font-bold ${textColor} tracking-tight`}>
           {formatBalance()}
         </h1>
 
@@ -99,7 +105,17 @@ export default function BalanceCard({
 
           <button
             onClick={handleAddFunds}
-            className="bg-teal-500 hover:bg-teal-600 text-white px-5 py-2.5 rounded-full flex items-center gap-2 transition-all duration-300 font-medium shadow-md hover:shadow-teal-500/30 text-sm lg:text-base w-full sm:w-auto justify-center"
+            disabled={!isKycVerified}
+            title={
+              !isKycVerified
+                ? "Complete KYC verification to add funds"
+                : undefined
+            }
+            className={`${
+              isKycVerified
+                ? "bg-teal-500 hover:bg-teal-600 shadow-md hover:shadow-teal-500/30 cursor-pointer"
+                : "bg-gray-400 cursor-not-allowed"
+            } text-white px-5 py-2.5 rounded-full flex items-center gap-2 transition-all duration-300 font-medium text-sm lg:text-base w-full sm:w-auto justify-center`}
           >
             <FontAwesomeIcon icon={faPlus} />
             Add Funds

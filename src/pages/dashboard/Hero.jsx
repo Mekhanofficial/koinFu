@@ -24,19 +24,23 @@ const abbreviateVolume = (volume) => {
   }
 };
 
+   
 export default function DashPage() {
   const { theme } = useTheme();
   const [cryptoData, setCryptoData] = useState([]);
-  const [user, setUser] = useState({ name: "" });
+  const [user, setUser] = useState({ name: "", isKycVerified: false });
+  const [userBalance, setUserBalance] = useState(0); // Initial zero balance
 
   useEffect(() => {
     const currentUser = auth.currentUser;
     if (currentUser) {
       setUser({
         name: currentUser.displayName || "User",
+         isKycVerified: currentUser.isKycVerified || false, // Adjust according to your auth data
       });
     }
   }, []);
+
 
   useEffect(() => {
     const fetchCryptoData = async () => {
@@ -92,9 +96,24 @@ export default function DashPage() {
             secondaryText={secondaryText}
           />
 
-          <BalanceCard theme={theme} borderColor={borderColor} />
+      <BalanceCard
+            balance={userBalance}
+            currency="USD"
+            isKycVerified={user.isKycVerified}
+            theme={theme}
+            borderColor={borderColor}
+          />
 
-          <QuickActions theme={theme} />
+ {/* Show deposit button or message only if KYC verified */}
+          {user.isKycVerified ? (
+            <QuickActions theme={theme} />
+          ) : (
+            <div className="p-4 my-4 border border-yellow-400 bg-yellow-100 rounded text-yellow-800">
+              Please complete your KYC to enable deposits.
+            </div>
+          )}
+
+        <QuickActions theme={theme} isKycVerified={user.isKycVerified} />
 
           <StatsGrid
             theme={theme}
@@ -110,10 +129,13 @@ export default function DashPage() {
           />
         </div>
 
+
+
         <div className="w-full lg:w-1/2 lg:pl-4">
           <TradeProgress theme={theme} borderColor={borderColor} />
 
-          <VerifyAccount theme={theme} />
+       <VerifyAccount theme={theme} isKycVerified={user.isKycVerified} />
+
 
           <CryptoTiles
             cryptoData={cryptoData}

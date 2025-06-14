@@ -1,64 +1,178 @@
-import { useState } from "react";
-import {
-  auth,
-  storage,
-  db,
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  doc,
-  updateDoc
-} from "../../firebase";
+import React, { useState } from "react";
+import { auth, db } from "../../firebase";
+import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
-export default function KYCVerification() {
-  const [file, setFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
-  const [status, setStatus] = useState("");
+export default function KycVerification() {
+  const navigate = useNavigate();
+  const [idFile, setIdFile] = useState(null);
+  const [selfieFile, setSelfieFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+  const handleFileChange = (e, setter) => {
+    const file = e.target.files[0];
+    setSuccess("");
+    setError("");
 
-  const handleUpload = async () => {
-    if (!file) {
-      setStatus("Please select a file.");
+    if (!file) return;
+ 
+    if (!["image/jpeg", "image/png"].includes(file.type)) {
+      setError("Only JPEG and PNG image files are allowed.");
       return;
     }
 
-    setUploading(true);
-    try {
-      const uid = auth.currentUser.uid;
-      const storageRef = ref(storage, `kyc_documents/${uid}/${file.name}`);
-      await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(storageRef);
+    if (file.size > 5 * 1024 * 1024) {
+      setError("File size should be less than 5MB.");
+      return;
+    }
 
-      const userDocRef = doc(db, "users", uid);
-      await updateDoc(userDocRef, {
+    setter(file);
+  };
+
+  const uploadToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "KYCverification");
+    formData.append("cloud_name", "drvgkgzcg");
+
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/drvgkgzcg/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      return data.secure_url;
+    } catch (error) {
+      console.error("Cloudinary upload error:", error);
+      throw new Error("Failed to upload file to Cloudinary");
+    }
+  };
+
+  const handleSubmit = async () => {
+    setError("");
+    setSuccess("");
+
+    const user = auth.currentUser;
+    if (!user) {
+      setError("You must be logged in to submit KYC.");
+      return;
+    }
+    if (!idFile || !selfieFile) {
+      setError("Please upload both your government ID and a selfie.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const [idUrl, selfieUrl] = await Promise.all([
+        uploadToCloudinary(idFile),
+        uploadToCloudinary(selfieFile),
+      ]);
+
+      const userRef = doc(db, "users", user.uid);
+      await updateDoc(userRef, {
+        kycDocuments: {
+          governmentId: idUrl,
+          selfie: selfieUrl,
+        },
+        isKycVerified: false,
         kycStatus: "pending",
-        kycDocURL: downloadURL,
+        kycSubmittedAt: serverTimestamp(),
       });
 
-      setStatus("KYC document uploaded successfully. Awaiting approval.");
-      setFile(null);
-    } catch (err) {
-      console.error(err);
-      setStatus("Upload failed. Please try again.");
+      setSuccess("✅ KYC documents submitted successfully! Verification is pending.");
+      setIdFile(null);
+      setSelfieFile(null);
+
+      setTimeout(() => navigate("/Dashboard"), 2000);
+    } catch (uploadError) {
+      setError("❌ Failed to upload documents: " + uploadError.message);
+    } finally {
+      setLoading(false);
     }
-    setUploading(false);
   };
 
   return (
-    <div className="border p-4 rounded-lg shadow-lg bg-white dark:bg-gray-900">
-      <h2 className="text-lg font-semibold mb-4">KYC Verification</h2>
-      <input type="file" accept=".png,.jpg,.jpeg,.pdf" onChange={handleFileChange} />
+    <div className="max-w-md mx-auto mt-20 p-6 bg-white dark:bg-slate-900 rounded-lg shadow-md text-center">
+      <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
+        Submit KYC Documents
+      </h2>
+
+      {error && (
+        <div className="mb-4 text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900 p-2 rounded">
+          {error}
+        </div>
+      )}
+      {success && (
+        <div className="mb-4 text-green-700 bg-green-100 dark:text-green-400 dark:bg-green-900 p-2 rounded">
+          {success}
+        </div>
+      )}
+
+      <div className="mb-4 text-left">
+        <label className="block mb-2 font-medium text-gray-700 dark:text-gray-300">
+          Government-issued ID (JPEG, PNG, max 5MB):
+        </label>
+        <input
+          type="file"
+          accept="image/jpeg,image/png"
+          onChange={(e) => handleFileChange(e, setIdFile)}
+          disabled={loading}
+          className="w-full"
+        />
+        {idFile && (
+          <img
+            src={URL.createObjectURL(idFile)}
+            alt="Preview ID"
+            className="w-24 h-24 object-cover mx-auto mt-2 rounded-md border"
+          />
+        )}
+      </div>
+
+      <div className="mb-4 text-left">
+        <label className="block mb-2 font-medium text-gray-700 dark:text-gray-300">
+          Selfie with ID (JPEG, PNG, max 5MB):
+        </label>
+        <input
+          type="file"
+          accept="image/jpeg,image/png"
+          onChange={(e) => handleFileChange(e, setSelfieFile)}
+          disabled={loading}
+          className="w-full"
+        />
+        {selfieFile && (
+          <img
+            src={URL.createObjectURL(selfieFile)}
+            alt="Preview Selfie"
+            className="w-24 h-24 object-cover mx-auto mt-2 rounded-md border"
+          />
+        )}
+      </div>
+
+      {loading && (
+        <p className="mb-4 text-gray-700 dark:text-gray-300">
+          Uploading...
+        </p>
+      )}
+
       <button
-        onClick={handleUpload}
-        disabled={uploading}
-        className="mt-4 bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700"
+        onClick={handleSubmit}
+        disabled={loading}
+        className="bg-teal-600 hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-md transition"
       >
-        {uploading ? "Uploading..." : "Submit KYC"}
+        {loading ? "Submitting..." : "Submit KYC"}
       </button>
-      {status && <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{status}</p>}
     </div>
   );
 }

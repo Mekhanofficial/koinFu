@@ -49,6 +49,7 @@ import HomePage from "./pages/home/Home";
 import PasswordUpdate from "./pages/PasswordUpdate.jsx";
 import { MyCopyTradersPage } from "./pages/MyCopytraders";
 import DashPage from "./pages/dashboard/Hero";
+import KycVerification from "./components/KYCVerification";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -190,6 +191,14 @@ const proRouter = createBrowserRouter([
         element: (
           <Layout>
             <PaymentProofPage />
+          </Layout>
+        ),
+      },
+      {
+        path: "/kyc-verification",
+        element: (
+          <Layout>
+           <KycVerification />
           </Layout>
         ),
       },

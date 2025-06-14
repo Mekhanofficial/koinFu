@@ -29,11 +29,6 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// Use emulator in development
-if (window.location.hostname === "localhost") {
-  connectStorageEmulator(storage, "localhost", 9199);
-  console.log("Using Firebase Storage emulator");
-}
 
 export {
   auth,
