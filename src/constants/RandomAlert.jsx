@@ -307,30 +307,45 @@ const RandomAlert = () => {
     };
   };
 
-  const showNewAlert = () => {
-    const newAlert = generateRandomAlert();
-    setCurrentAlert(newAlert);
-    setIsVisible(true);
+  useEffect(() => {
+    let initialDelayTimer;
+    let hideTimeout;
 
-    // Only play sound if user has interacted with the page
-    if (hasUserInteracted) {
-      try {
-        playSound();
-      } catch (error) {
-        console.error("Error playing sound:", error);
+    const showNewAlert = () => {
+      const newAlert = generateRandomAlert();
+      setCurrentAlert(newAlert);
+      setIsVisible(true);
+
+      // Only play sound if user has interacted with the page and component is still mounted
+      if (hasUserInteracted) {
+        try {
+          playSound();
+        } catch (error) {
+          console.error("Error playing sound:", error);
+        }
       }
-    }
 
-    const hideTimeout = setTimeout(() => {
-      setIsVisible(false);
+      hideTimeout = setTimeout(() => {
+        setIsVisible(false);
 
-      setTimeout(() => {
-        showNewAlert();
-      }, TRANSITION_DURATION);
-    }, DISPLAY_DURATION);
+        const nextAlertTimer = setTimeout(() => {
+          showNewAlert();
+        }, TRANSITION_DURATION);
 
-    return () => clearTimeout(hideTimeout);
-  };
+        // Cleanup for the next alert timer
+        return () => clearTimeout(nextAlertTimer);
+      }, DISPLAY_DURATION);
+    };
+
+    initialDelayTimer = setTimeout(() => {
+      showNewAlert();
+    }, INITIAL_DELAY);
+
+    return () => {
+      clearTimeout(initialDelayTimer);
+      clearTimeout(hideTimeout);
+    };
+  }, [hasUserInteracted, playSound]); // Added playSound to dependencies
 
   useEffect(() => {
     const initialDelay = setTimeout(() => {

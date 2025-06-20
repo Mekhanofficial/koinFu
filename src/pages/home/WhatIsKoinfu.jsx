@@ -2,6 +2,7 @@ import px5 from "../../pictures/px5.png";
 import { faBitcoin } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+
 export default function WhatIsKoinfuPage() {
   return (
     <>
@@ -17,8 +18,14 @@ export default function WhatIsKoinfuPage() {
 
         {/* Text Content Section */}
         <div className="max-w-2xl text-center md:text-left">
-          <h2 className="text-teal-600 font-semibold text-lg mb-3">
-            What is KoinFu?
+          <h2 className="text-2xl flex gap-2 font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-800">
+            <h2> What </h2>
+            <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-cyan-700">
+              is Ko
+              <span className=" bg-clip-text text-transparent bg-gradient-to-r from-teal-800 to-cyan-900">
+                inFu?
+              </span>
+            </span>
           </h2>
           <h4 className="text-white text-2xl font-bold mb-6">
             Leading Cryptocurrency Investment Platform

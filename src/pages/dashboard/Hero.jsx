@@ -24,23 +24,21 @@ const abbreviateVolume = (volume) => {
   }
 };
 
-   
 export default function DashPage() {
   const { theme } = useTheme();
   const [cryptoData, setCryptoData] = useState([]);
   const [user, setUser] = useState({ name: "", isKycVerified: false });
-  const [userBalance, setUserBalance] = useState(0); // Initial zero balance
+  const [userBalance, setUserBalance] = useState(0);
 
   useEffect(() => {
     const currentUser = auth.currentUser;
     if (currentUser) {
       setUser({
         name: currentUser.displayName || "User",
-         isKycVerified: currentUser.isKycVerified || false, // Adjust according to your auth data
+        isKycVerified: currentUser.isKycVerified || false,
       });
     }
   }, []);
-
 
   useEffect(() => {
     const fetchCryptoData = async () => {
@@ -82,12 +80,17 @@ export default function DashPage() {
   const borderColor = theme === "dark" ? "border-slate-700" : "border-gray-200";
   const textColor = theme === "dark" ? "text-white" : "text-gray-900";
   const secondaryText = theme === "dark" ? "text-gray-300" : "text-gray-600";
+  const kycBg =
+    theme === "dark"
+      ? "bg-teal-900 border-teal-700 text-teal-100"
+      : "bg-teal-50 border-teal-300 text-teal-800";
 
   return (
     <Layout user={user}>
       <section
-        className={`flex flex-col px-5 py-10 lg:flex-row min-h-screen bg-gray-100 dark:bg-zinc-950 text-gray-900 dark:text-white  overflow-x-hidden`}
+        className={`flex flex-col px-5 py-10 lg:flex-row min-h-screen ${bgColor} ${textColor} overflow-x-hidden`}
       >
+        {/* Left Column */}
         <div className="w-full lg:w-1/2 lg:pr-4">
           <WelcomeCard
             user={user}
@@ -96,7 +99,7 @@ export default function DashPage() {
             secondaryText={secondaryText}
           />
 
-      <BalanceCard
+          <BalanceCard
             balance={userBalance}
             currency="USD"
             isKycVerified={user.isKycVerified}
@@ -104,16 +107,18 @@ export default function DashPage() {
             borderColor={borderColor}
           />
 
- {/* Show deposit button or message only if KYC verified */}
-          {user.isKycVerified ? (
-            <QuickActions theme={theme} />
-          ) : (
-            <div className="p-4 my-4 border border-yellow-400 bg-yellow-100 rounded text-yellow-800">
-              Please complete your KYC to enable deposits.
+          {/* KYC Notice */}
+          {!user.isKycVerified && (
+            <div className={`p-4 my-4 rounded-lg border ${kycBg} shadow-md`}>
+              <p className="font-semibold text-sm">
+                Please complete your{" "}
+                <span className="underline">KYC verification</span> to enable
+                deposits and trading.
+              </p>
             </div>
           )}
 
-        <QuickActions theme={theme} isKycVerified={user.isKycVerified} />
+          <QuickActions theme={theme} isKycVerified={user.isKycVerified} />
 
           <StatsGrid
             theme={theme}
@@ -129,13 +134,11 @@ export default function DashPage() {
           />
         </div>
 
-
-
+        {/* Right Column */}
         <div className="w-full lg:w-1/2 lg:pl-4">
           <TradeProgress theme={theme} borderColor={borderColor} />
 
-       <VerifyAccount theme={theme} isKycVerified={user.isKycVerified} />
-
+          <VerifyAccount theme={theme} isKycVerified={user.isKycVerified} />
 
           <CryptoTiles
             cryptoData={cryptoData}

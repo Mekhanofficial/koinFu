@@ -47,7 +47,7 @@ const BuyCrypto = () => {
   return (
     <>
       <div
-        className={`min-h-screen flex flex-col items-center px-10 py-14 ${
+        className={`min-h-screen flex flex-col items-center py-14 px-2  ${
           theme === "dark" ? "bg-slate-950" : "bg-gray-100"
         }`}
       >
@@ -67,7 +67,7 @@ const BuyCrypto = () => {
           and start your crypto journey today.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-5xl px-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-5xl px-4">
           {exchanges.map((exchange, index) => (
             <a
               key={index}

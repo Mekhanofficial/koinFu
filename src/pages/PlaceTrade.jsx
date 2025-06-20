@@ -32,7 +32,7 @@ export default function PlaceTradePage() {
   return (
     <>
       <section
-        className={`min-h-screen px-4 sm:px-6 lg:px-8 py-6 ${
+        className={`min-h-screen px-4 sm:px-10 lg:px-10 py-14 ${
           theme === "dark" ? "bg-gray-900" : "bg-gray-50"
         }`}
       >

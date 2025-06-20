@@ -6,30 +6,34 @@ import px4 from "../../pictures/px4.png";
 import backgroundImage from "../../pictures/backgroundImage.jpg";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faEye } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faEye,
+  faArrowRight,
+} from "@fortawesome/free-solid-svg-icons";
 import { faBitcoin } from "@fortawesome/free-brands-svg-icons";
 
 export default function HeroPage() {
-  // Slower animation variants
+  // Modern animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.5, // Increased from 0.2
-        delayChildren: 0.8, // Increased from 0.3
+        staggerChildren: 0.3,
+        delayChildren: 0.4,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+    hidden: { y: 30, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        duration: 1.2, // Increased from 0.5
-        ease: "easeOut",
+        duration: 0.8,
+        ease: [0.16, 1, 0.3, 1],
       },
     },
   };
@@ -38,7 +42,7 @@ export default function HeroPage() {
     float1: {
       y: [0, -20, 0],
       transition: {
-        duration: 8, // Increased from 4
+        duration: 8,
         repeat: Infinity,
         ease: "easeInOut",
       },
@@ -46,7 +50,7 @@ export default function HeroPage() {
     float2: {
       y: [0, -25, 0],
       transition: {
-        duration: 10, // Increased from 5
+        duration: 10,
         repeat: Infinity,
         ease: "easeInOut",
       },
@@ -54,7 +58,7 @@ export default function HeroPage() {
     float3: {
       y: [0, -15, 0],
       transition: {
-        duration: 7, // Increased from 3.5
+        duration: 7,
         repeat: Infinity,
         ease: "easeInOut",
       },
@@ -63,59 +67,65 @@ export default function HeroPage() {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
-      {/* Background with gradient overlay */}
+      {/* Modern gradient background */}
       <div
         className="absolute inset-0 z-10"
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(${backgroundImage})`,
+          background: `linear-gradient(135deg, rgba(10,15,35,0.95) 0%, rgba(5,12,28,0.98) 100%), url(${backgroundImage})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
+          backgroundBlendMode: "soft-light",
         }}
       />
 
+      {/* Subtle animated grid overlay */}
+      <div className="absolute inset-0 z-20 opacity-10">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCI+CiAgPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSJub25lIi8+CiAgPHBhdGggZD0iTTAgMEw1MCA1ME01MCAwTDAgNTAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIwLjUiLz4KPC9zdmc+')]"></div>
+      </div>
+
       {/* Foreground Content */}
       <motion.div
-        className="flex flex-col relative z-50 md:flex-row items-center gap-32 justify-between p-8 min-h-screen"
+        className="flex flex-col relative z-50 md:flex-row items-center gap-8 md:gap-16 justify-between px-6 py-16 md:px-16 min-h-screen"
         initial="hidden"
         animate="visible"
         variants={containerVariants}
       >
         {/* Left Content */}
         <motion.div
-          className="text-center md:text-left md:left-10 md:w-1/2 relative"
+          className="text-center md:text-left md:w-1/2 relative"
           variants={itemVariants}
         >
-          <div
-            className="absolute -left-4 md:-left-8"
-            style={{
-              width: "4px",
-              height: "500px",
-              background:
-                "linear-gradient(to bottom, teal 0%, rgba(0, 128, 128, 0) 100%)",
-            }}
-          ></div>
+          {/* Modern accent element */}
+          <div className="absolute -left-2 md:-left-4 top-0 h-full w-1 bg-gradient-to-b from-teal-400 via-purple-900 to-cyan-900 rounded-full"></div>
 
           <motion.div
-            className="flex items-center justify-center md:justify-start mb-4"
+            className="flex items-center justify-center md:justify-start mb-6"
             variants={itemVariants}
           >
-            <div className="rounded-full bg-teal-500 bg-opacity-60 text-white flex items-center justify-center p-2 w-8 h-10 relative left-3">
-              <FontAwesomeIcon className="h-6" icon={faEye} />
+            <div className="relative">
+              <div className="absolute -inset-1 bg-teal-500 rounded-full blur opacity-30"></div>
+              <button className="relative bg-gray-800 bg-opacity-60 backdrop-blur-sm border border-teal-400/30 text-teal-300 px-5 py-2.5 rounded-full flex items-center gap-2 group transition-all hover:border-teal-400/60">
+                <FontAwesomeIcon
+                  className="h-4 text-teal-400 group-hover:text-cyan-300 transition-colors"
+                  icon={faEye}
+                />
+                <span>AI Auto Trading Assistant</span>
+              </button>
             </div>
-            <button className="bg-gray-600 bg-opacity-20 border-teal-300 text-white px-4 py-2 rounded-full">
-              AI Auto Trading Assistant
-            </button>
           </motion.div>
 
           <motion.h1
-            className="text-3xl md:text-5xl text-white font-bold mb-6"
+            className="text-4xl md:text-5xl lg:text-6xl text-white font-bold mb-6 leading-tight"
             variants={itemVariants}
           >
-            Next Generation Invest in the future of cryptocurrency with KoinFu
+            <span className="bg-gradient-to-r from-cyan-400 via-teal-300 to-teal-500 bg-clip-text text-transparent">
+              Next Generation
+            </span>{" "}
+            Invest in the future of cryptocurrency with KoinFu
           </motion.h1>
 
           <motion.h4
-            className="text-base md:text-lg text-gray-400 mb-8"
+            className="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl leading-relaxed"
             variants={itemVariants}
           >
             Our cutting-edge technology and expert team make it easy for anyone
@@ -123,40 +133,70 @@ export default function HeroPage() {
             start growing your wealth.
           </motion.h4>
 
-          <motion.div variants={itemVariants}>
+          <motion.div
+            className="flex flex-col sm:flex-row gap-4 mb-10"
+            variants={itemVariants}
+          >
             <Link to="/Dashboard">
-              <button className="bg-teal-600 font-semibold bg-opacity-20 border-opacity-70 border border-teal-800 text-white px-6 py-3 rounded-full mb-6 flex items-center justify-center md:justify-start gap-2 mx-auto md:mx-0 hover:bg-teal-300 hover:text-slate-900 hover:shadow-teal-300 hover:shadow-lg transition duration-300">
+              <button className="relative group bg-gradient-to-r from-cyan-500 to-teal-600 text-gray-900 font-bold px-8 py-4 rounded-xl flex items-center gap-3 transition-all hover:shadow-lg hover:shadow-cyan-500/30">
                 <FontAwesomeIcon
-                  className="h-4 bg-teal-600 p-1 rounded-full"
+                  className="h-5 transition-transform group-hover:scale-110"
                   icon={faBitcoin}
                 />
-                Start Trading
+                <span>Start Trading</span>
+                <FontAwesomeIcon
+                  className="h-4 ml-1 transition-transform group-hover:translate-x-1"
+                  icon={faArrowRight}
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-cyan-600 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
+              </button>
+            </Link>
+
+            <Link to="/about">
+              {" "}
+              <button className="px-8 py-4 rounded-xl border border-gray-700 text-gray-300 hover:bg-gray-800/30 hover:text-white transition-colors">
+                Learn More
               </button>
             </Link>
           </motion.div>
 
-          <motion.h3
-            className="text-xl md:text-xl text-white flex items-center justify-center md:justify-start"
+          <motion.div
+            className="flex items-center justify-center md:justify-start gap-3 text-gray-400"
             variants={itemVariants}
           >
-            <FontAwesomeIcon
-              className="text-white bg-teal-400 rounded-full p-1 w-4 h-4 flex-shrink-0 mr-1"
-              icon={faCheck}
-              style={{ lineHeight: 0 }}
-            />
-            Available on Android & iOS Mobile Apps
-          </motion.h3>
+            <div className="flex items-center gap-2 bg-gray-800/40 backdrop-blur-sm px-4 py-2.5 rounded-lg border border-gray-700">
+              <FontAwesomeIcon
+                className="text-white bg-teal-500 rounded-full p-1 w-4 h-4"
+                icon={faCheck}
+              />
+              <span className="text-sm md:text-base">Android & iOS Apps</span>
+            </div>
+
+            <div className="h-1 w-1 bg-gray-600 rounded-full"></div>
+
+            <div className="flex items-center">
+              <div className="flex -space-x-2">
+                {[1, 2, 3].map((item) => (
+                  <div
+                    key={item}
+                    className="h-8 w-8 rounded-full bg-gray-700 border-2 border-gray-800"
+                  ></div>
+                ))}
+              </div>
+              <span className="ml-3 text-sm">1M+ Active Traders</span>
+            </div>
+          </motion.div>
         </motion.div>
 
-        {/* Right Images */}
+        {/* Right Images - Kept exactly as original */}
         <motion.div
-          className="relative md:w-1/2 flex justify-center"
+          className="relative md:w-1/2 flex justify-center mt-12 md:mt-0"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{
-            duration: 1.5, // Increased from 0.8
+            duration: 1.5,
             ease: "easeOut",
-            delay: 0.5, // Added delay to sync with left content
+            delay: 0.5,
           }}
         >
           <img src={px2} alt="" className="max-w-md" />

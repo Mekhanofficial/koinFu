@@ -6,9 +6,12 @@ export default function () {
     <>
       <div className="bg-gray-950 text-white py-16 px-6 sm:px-12 md:px-20 lg:px-32 relative z-40">
         <div className="text-center mb-16">
-          <h1 className="text-teal-500 text-xl font-semibold mb-3">
-            Pricing Plan
-          </h1>
+        <div className="inline-block relative mb-5">
+            <span className="text-teal-400 text-sm font-semibold tracking-wider uppercase bg-teal-400/10 px-4 py-1.5 rounded-full">
+              Pricing Plan
+            </span>
+            <div className="absolute inset-0 bg-teal-400 rounded-full blur-lg opacity-20 -z-10 animate-pulse"></div>
+            </div>
           <h2 className="text-white text-5xl font-bold mb-5">
             Investment Plan
           </h2>

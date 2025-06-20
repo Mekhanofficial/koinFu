@@ -12,7 +12,7 @@ export function MyCopyTradersPage() {
 
   return (
     <section
-      className={`px-10 py-14 min-h-screen ${
+      className={`px-4 py-14 min-h-screen ${
         theme === "dark" ? "bg-slate-950" : "bg-gray-100"
       }`}
     >

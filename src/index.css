@@ -261,3 +261,23 @@
 .animate-fade-in-out {
   animation: fade-in-out 1.5s ease-in-out infinite;
 }
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0) translateX(0); 
+  }
+  25% { 
+    transform: translateY(-8px) translateX(4px); 
+  }
+  50% { 
+    transform: translateY(-12px) translateX(-4px); 
+  }
+  75% { 
+    transform: translateY(-6px) translateX(2px); 
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+

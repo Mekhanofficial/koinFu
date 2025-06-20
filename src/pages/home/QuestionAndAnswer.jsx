@@ -1,7 +1,12 @@
 import { useState } from "react";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlay,
+  faPlus,
+  faMinus,
+  faChevronDown,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function QuestionAndAnswer() {
   const Question = ({ question, answer }) => {
@@ -13,19 +18,39 @@ export default function QuestionAndAnswer() {
 
     return (
       <div
-        className="cursor-pointer border-b border-gray-200 bg-slate-900 opacity-80 rounded-md py-5"
+        className="cursor-pointer border-b border-gray-700 py-5 transition-all duration-300 hover:bg-gray-800/30 rounded-lg"
         onClick={toggleAnswer}
       >
-        <div className="flex items-center mx-4 text-white">
+        <div className="flex items-center justify-between px-5 text-white">
+          <div className="flex items-center">
+            <div
+              className={`w-8 h-8 flex items-center justify-center rounded-full mr-4 transition-all ${
+                isOpen ? "bg-teal-500" : "bg-gray-700"
+              }`}
+            >
+              <FontAwesomeIcon
+                className={`text-white transition-transform ${
+                  isOpen ? "rotate-180" : ""
+                }`}
+                icon={isOpen ? faMinus : faPlus}
+                size="xs"
+              />
+            </div>
+            <h3 className="font-medium text-lg lg:text-xl">{question}</h3>
+          </div>
           <FontAwesomeIcon
-            className={`text-white rounded-full p-1 h-3 bg-teal-300 mr-2 transition-transform ${
+            icon={faChevronDown}
+            className={`text-gray-400 ml-2 transform transition-transform duration-300 ${
               isOpen ? "rotate-180" : ""
             }`}
-            icon={isOpen ? faMinus : faPlus}
+            size="sm"
           />
-          <h3 className="font-medium text-lg">{question}</h3>
         </div>
-        {isOpen && <p className="mt-2 text-gray-200 p-5">{answer}</p>}
+        {isOpen && (
+          <p className="mt-4 text-gray-300 px-5 pl-16 pb-3 text-base lg:text-lg">
+            {answer}
+          </p>
+        )}
       </div>
     );
   };
@@ -207,64 +232,93 @@ export default function QuestionAndAnswer() {
       },
     ],
   };
+
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
   };
+
   return (
-    <>
-      <div className="bg-slate-950 shadow-md relative z-10 p-10">
-        <div className="text-center mb-12">
-          <h1 className="text-teal-500 text-lg font-semibold mb-3">FAQ</h1>
-          <h2 className="text-white text-5xl font-bold mb-4">
-            Question & Answer
+    <div className="bg-gradient-to-br from-slate-900 to-gray-900 min-h-screen py-16 px-4 sm:px-6 relative z-50">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <div className="inline-block relative mb-5">
+            <span className="text-teal-400 text-sm font-semibold tracking-wider uppercase bg-teal-400/10 px-4 py-1.5 rounded-full">
+              <FontAwesomeIcon
+                icon={faPlay}
+                className="text-teal-400 mr-2 h-3"
+              />
+              FAQ
+            </span>
+            <div className="absolute inset-0 bg-teal-400 rounded-full blur-lg opacity-20 -z-10 animate-pulse"></div>
+          </div>
+          <h2 className="text-white text-4xl md:text-5xl font-bold mb-5">
+            Frequently Asked <span className="text-teal-400">Questions</span>
           </h2>
-          <h4 className="text-gray-400 text-xl max-w-2xl mx-auto">
-            we pride ourselves on our team of skilled and experienced
-            professionals who are dedicated to providing our users with the best
-            possible investment experience.
-          </h4>
+          <p className="text-gray-400 text-lg max-w-3xl mx-auto">
+            Find answers to common questions about our platform, token sales,
+            and investment processes.
+          </p>
         </div>
 
-        <div className="flex flex-col md:flex-row">
-          {/* Left Side: KoinFuItems */}
-          <div className="w-full md:w-1/4 p-4 bg-slate-800 rounded-lg shadow-lg mb-4 md:mb-0">
-            <ul className="space-y-3">
-              {KoinFuItems.map((item, index) => (
-                <li
-                  key={index}
-                  className={`flex items-center p-3 rounded-lg text-lg transition-all duration-300 ${
-                    selectedCategory === item
-                      ? "text-teal-400 bg-slate-700 border-l-4 border-teal-400"
-                      : "text-gray-300 hover:bg-slate-700 hover:text-teal-400"
-                  } cursor-pointer`}
-                  onClick={() => handleCategoryClick(item)}
-                >
-                  <FontAwesomeIcon
-                    className={`text-white rounded-full p-1 h-4 bg-teal-400 mr-3 ${
-                      selectedCategory === item ? "opacity-100" : "opacity-80"
-                    }`}
-                    icon={faPlay}
-                  />
-                  {item}
-                </li>
-              ))}
-            </ul>
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Category Navigation */}
+          <div className="w-full lg:w-1/4">
+            <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-xl shadow-2xl shadow-gray-900/50 p-1">
+              <ul className="space-y-1">
+                {KoinFuItems.map((item, index) => (
+                  <li key={index}>
+                    <button
+                      className={`flex items-center w-full p-4 rounded-lg text-lg transition-all duration-300 ${
+                        selectedCategory === item
+                          ? "text-white bg-gray-800 shadow-lg shadow-teal-500/10"
+                          : "text-gray-400 hover:text-white hover:bg-gray-800/50"
+                      }`}
+                      onClick={() => handleCategoryClick(item)}
+                    >
+                      <FontAwesomeIcon
+                        className={`mr-3 transition-all ${
+                          selectedCategory === item
+                            ? "text-teal-400 transform scale-110"
+                            : "text-gray-500"
+                        }`}
+                        icon={faChevronRight}
+                        size="xs"
+                      />
+                      <span>{item}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
-          {/* Right Side: Questions and Answers */}
-          <div className="w-full md:w-3/4 p-4 md:p-6 bg-slate-900 rounded-lg shadow-lg md:ml-4">
-            <div className="max-w-2xl mx-auto">
-              {questionsData[selectedCategory]?.map((item, index) => (
-                <Question
-                  key={index}
-                  question={item.question}
-                  answer={item.answer}
-                />
-              ))}
+          {/* Questions Container */}
+          <div className="w-full lg:w-3/4">
+            <div className="bg-gradient-to-b from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-xl shadow-2xl shadow-gray-900/50 overflow-hidden">
+              <div className="p-1">
+                <div className="bg-gradient-to-r from-teal-500/10 to-purple-500/10 p-5">
+                  <h3 className="text-2xl font-bold text-white">
+                    {selectedCategory}
+                  </h3>
+                  <p className="text-gray-400 mt-1">
+                    {questionsData[selectedCategory]?.length} questions
+                  </p>
+                </div>
+
+                <div className="divide-y divide-gray-700">
+                  {questionsData[selectedCategory]?.map((item, index) => (
+                    <Question
+                      key={index}
+                      question={item.question}
+                      answer={item.answer}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -138,7 +138,7 @@ export default function MyTraderPage() {
 
   return (
     <div
-      className={`p-10 min-h-screen ${
+      className={`px-4 py-14 min-h-screen ${
         theme === "dark"
           ? "bg-gradient-to-r from-gray-800 to-black text-white"
           : "bg-gradient-to-r from-gray-100 to-gray-300 text-gray-800"
