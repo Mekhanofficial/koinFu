@@ -3,7 +3,7 @@ import { Range } from "react-range";
 
 const ExchangeRateContainer = ({ type, currency, rate, currency2, rate2 }) => {
   return (
-    <div className="bg-slate-800 backdrop-blur-lg p-6 rounded-xl border border-slate-700 hover:border-teal-500 transition-all duration-300 group">
+    <div className="bg-slate-800/70 backdrop-blur-lg p-6 rounded-xl border border-slate-700 hover:border-teal-500 transition-all duration-300 group">
       <h1 className="text-teal-400 text-lg font-semibold mb-3">{type}</h1>
       <div className="flex flex-col space-y-2">
         <div className="flex items-center justify-between">
@@ -198,7 +198,7 @@ export default function TokenSection() {
               ))}
             </div>
 
-            <div className="mt-8 bg-slate-800 backdrop-blur-lg rounded-2xl p-6 border border-slate-700">
+            <div className="mt-8 bg-slate-800/50 backdrop-blur-lg rounded-2xl p-6 border border-slate-700">
               <h3 className="text-xl font-bold text-white mb-6 flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -240,7 +240,7 @@ export default function TokenSection() {
           </div>
 
           <div className="lg:w-1/3">
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 backdrop-blur-lg rounded-2xl p-6 border border-slate-700 shadow-xl">
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900/50 backdrop-blur-lg rounded-2xl p-6 border border-slate-700 shadow-xl">
               <div className="flex mb-6 bg-slate-700 rounded-lg p-1">
                 <button
                   className={`flex-1 py-2 rounded-md text-center text-sm font-medium transition-colors ${
@@ -349,7 +349,7 @@ export default function TokenSection() {
                 </div>
               </div>
 
-              <div className="mb-6 bg-slate-800 rounded-xl p-4 border border-slate-700">
+              <div className="mb-6 bg-slate-800/50 rounded-xl p-4 border border-slate-700">
                 <div className="flex justify-between mb-2">
                   <span className="text-slate-400">Token Price:</span>
                   <span className="text-white">$0.25</span>
@@ -375,7 +375,7 @@ export default function TokenSection() {
               </div>
             </div>
 
-            <div className="mt-6 bg-slate-800 backdrop-blur-lg rounded-2xl p-6 border border-slate-700">
+            <div className="mt-6 bg-slate-800/50 backdrop-blur-lg rounded-2xl p-6 border border-slate-700">
               <h3 className="text-xl font-bold text-white mb-4 flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

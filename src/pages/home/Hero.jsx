@@ -65,6 +65,20 @@ export default function HeroPage() {
     },
   };
 
+
+  const gridVariants = {
+    pulse: {
+      opacity: [0.10, 0.15, 0.05],
+      transition: {
+        duration: 4,
+        repeat: Infinity,
+        repeatType: "loop",
+        ease: "easeInOut",
+      },
+    },
+  };
+
+
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       {/* Modern gradient background */}
@@ -79,9 +93,13 @@ export default function HeroPage() {
       />
 
       {/* Subtle animated grid overlay */}
-      <div className="absolute inset-0 z-20 opacity-10">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCI+CiAgPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSJub25lIi8+CiAgPHBhdGggZD0iTTAgMEw1MCA1ME01MCAwTDAgNTAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIwLjUiLz4KPC9zdmc+')]"></div>
-      </div>
+      <motion.div
+        className="absolute inset-0 z-20"
+        variants={gridVariants}
+        animate="pulse"
+      >
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCI+CiAgPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSJub25lIi8+CiAgPHBhdGggZD0iTTAgMEw1MCA1ME01MCAwTDAgNTAiIHN0cm9rZT0iIzEwZjBmMCIgc3Ryb2tlLXdpZHRoPSIwLjUiLz4KPC9zdmc+')]"></div>
+      </motion.div>
 
       {/* Foreground Content */}
       <motion.div

@@ -2,6 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes particle-float {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(calc(-3px * var(--x-modifier)), calc(-5px * var(--y-modifier)));
+  }
+  50% {
+    transform: translate(calc(5px * var(--x-modifier)), calc(3px * var(--y-modifier)));
+  }
+  75% {
+    transform: translate(calc(2px * var(--x-modifier)), calc(-4px * var(--y-modifier)));
+  }
+}
+
+@keyframes text-shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-particle-float {
+  --x-modifier: calc(0.5 - var(--i) / 100);
+  --y-modifier: calc(0.5 - var(--i) / 100);
+  animation: particle-float 15s infinite ease-in-out;
+  will-change: transform;
+}
+
+.animate-text-shimmer {
+  background-size: 200% auto;
+  animation: text-shimmer 3s linear infinite;
+}
+
 /* Add to your global CSS */
 @keyframes skillBarFill {
   from {

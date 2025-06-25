@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import moon1 from "../../pictures/bg16.avif";
 import { Link } from "react-router-dom";
+
 export default function ProfitCalculator() {
   const [plan, setPlan] = useState("basic");
   const [amount, setAmount] = useState("");
@@ -22,59 +23,51 @@ export default function ProfitCalculator() {
       name: "Standard Package",
       color: "from-emerald-500 to-orange-800",
     },
-    premium: {
-      name: "Premium Package",
-      color: "from-cyan-500 to-teal-500",
-    },
-    platinum: {
-      name: "Platinum Package",
-      color: "from-blue-500 to-cyan-900",
-    },
+    premium: { name: "Premium Package", color: "from-cyan-500 to-teal-500" },
+    platinum: { name: "Platinum Package", color: "from-blue-500 to-cyan-900" },
     elite: { name: "Elite Package", color: "from-purple-500 to-cyan-800" },
   };
 
-  const calculateProfit = (investAmount, planType) => {
-    if (!investAmount) return "0.00";
+  useEffect(() => {
+    if (!amount) {
+      setProfit("0.00");
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      const investAmount = parseFloat(amount);
+      if (!isNaN(investAmount)) {
+        const [minMultiplier, maxMultiplier] = profitMultipliers[plan];
+        const randomMultiplier =
+          Math.random() * (maxMultiplier - minMultiplier) + minMultiplier;
+        setProfit((investAmount * randomMultiplier).toFixed(2));
+      }
+      setIsCalculating(false);
+    }, 600); // brief delay for smoother UX
 
     setIsCalculating(true);
-    const [minMultiplier, maxMultiplier] = profitMultipliers[planType];
-    const randomMultiplier =
-      Math.random() * (maxMultiplier - minMultiplier) + minMultiplier;
-
-    return (investAmount * randomMultiplier).toFixed(2);
-  };
+    return () => clearTimeout(timer);
+  }, [amount, plan]);
 
   const handleAmountChange = (e) => {
-    const investAmount = parseFloat(e.target.value) || 0;
     setAmount(e.target.value);
-    setProfit(calculateProfit(investAmount, plan));
   };
 
-  const handlePlanChange = (e) => {
-    const newPlan = e.target.value;
-    setPlan(newPlan);
-    setProfit(calculateProfit(parseFloat(amount) || 0, newPlan));
+  const handlePlanChange = (key) => {
+    setPlan(key);
+    setAmount("");
+    setProfit("0.00");
+    setIsCalculating(false);
   };
-
-  useEffect(() => {
-    if (profit !== "0.00") {
-      const timer = setTimeout(() => setIsCalculating(false), 800);
-      return () => clearTimeout(timer);
-    }
-  }, [profit]);
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden text-white">
-      {/* Parallax Background */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${moon1})` }}
       />
-
-      {/* Animated Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-950/95 via-slate-900/90 to-black/95" />
 
-      {/* Floating Particles */}
       {[...Array(15)].map((_, i) => (
         <div
           key={i}
@@ -91,18 +84,17 @@ export default function ProfitCalculator() {
       ))}
 
       <div className="relative z-10 container mx-auto px-4 py-16 lg:py-24">
-        {/* Animated Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <div className="inline-block relative mb-5  text-lg uppercase">
-            <span className="text-teal-500 font-semibold tracking-wider  px-4 py-1.5 rounded-full  bg-gradient-to-r from-teal-700 to-cyan-900">
+          <div className="inline-block relative mb-5 text-lg uppercase">
+            <span className="text-teal-500 font-semibold tracking-wider px-4 py-1.5 rounded-full bg-gradient-to-r from-teal-700 to-cyan-900">
               Profit Calculator
             </span>
-            <div className="absolute inset-0 bg-teal-400 rounded-full blur-lg opacity-20 -z-10 animate-pulse"></div>
+            <div className="absolute inset-0 bg-teal-400 rounded-full blur-lg opacity-20 -z-10 animate-pulse" />
           </div>
 
           <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-300 font-light">
@@ -111,40 +103,33 @@ export default function ProfitCalculator() {
           </p>
         </motion.div>
 
-        {/* Calculator Card */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           className="max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-2xl"
         >
-          {/* Calculator Content */}
           <div className="relative bg-gradient-to-br from-gray-800/60 to-gray-900/90 backdrop-blur-xl p-6 sm:p-8 lg:p-10 border border-gray-700/50">
-            {/* Plan Selection */}
+            {/* Plan Selector */}
             <div className="mb-10">
               <h2 className="text-xl font-medium text-gray-300 mb-4">
                 Investment Plan
               </h2>
-
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                 {Object.entries(planInfo).map(([key, { name, color }]) => (
                   <button
                     key={key}
+                    onClick={() => handlePlanChange(key)}
                     className={`px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                       plan === key
                         ? `bg-gradient-to-r ${color} text-white shadow-lg`
                         : "bg-gray-800/60 text-gray-300 hover:bg-gray-700/50"
                     }`}
-                    onClick={() => {
-                      setPlan(key);
-                      setProfit(calculateProfit(parseFloat(amount) || 0, key));
-                    }}
                   >
                     {name.split(" ")[0]}
                   </button>
                 ))}
               </div>
-
               <div className="mt-4 text-center">
                 <span
                   className={`inline-block px-4 py-1.5 rounded-full text-sm font-semibold bg-gradient-to-r ${planInfo[plan].color} bg-opacity-20`}
@@ -154,7 +139,7 @@ export default function ProfitCalculator() {
               </div>
             </div>
 
-            {/* Investment Input */}
+            {/* Input Field */}
             <div className="mb-8">
               <label className="block text-lg font-medium mb-3 text-gray-300">
                 Investment Amount
@@ -173,7 +158,7 @@ export default function ProfitCalculator() {
               </div>
             </div>
 
-            {/* Profit Display */}
+            {/* Result Display */}
             <div className="mb-10">
               <label className="block text-lg font-medium mb-3 text-gray-300">
                 Estimated Return
@@ -217,20 +202,17 @@ export default function ProfitCalculator() {
               </div>
             </div>
 
-            {/* CTA Button */}
+            {/* CTA */}
             <motion.button
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
               className="w-full py-4 px-6 bg-gradient-to-r from-teal-600 to-cyan-700 rounded-xl text-white font-bold text-lg shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 transition-all"
             >
               <Link to="/LoginPage">
-                {" "}
-                Start Investing Now
-                <span className="ml-2">→</span>
+                Start Investing Now <span className="ml-2">→</span>
               </Link>
             </motion.button>
 
-            {/* Multiplier Info */}
             <div className="mt-6 text-center text-gray-400 text-sm">
               <p>
                 {planInfo[plan].name} offers {profitMultipliers[plan][0]}x -{" "}
@@ -241,7 +223,7 @@ export default function ProfitCalculator() {
         </motion.div>
       </div>
 
-      {/* Floating Elements */}
+      {/* Floating Glow Elements */}
       <motion.div
         className="absolute bottom-10 left-1/4 w-6 h-6 rounded-full bg-cyan-500/30 blur-xl"
         animate={{ y: [0, -20, 0] }}
