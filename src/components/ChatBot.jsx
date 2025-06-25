@@ -22,36 +22,91 @@ const ChatBot = () => {
   const [showOptions, setShowOptions] = useState(false);
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
+  const conversationContext = useRef({ lastTopic: null });
 
+  // Enhanced crypto API with more dynamic responses
   const cryptoApi = {
     getPrice: async (symbol) => {
       const prices = {
-        btc: { price: 62850, change: 2.4 },
-        eth: { price: 3450, change: -1.2 },
-        sol: { price: 150, change: 5.7 },
-        ada: { price: 0.48, change: 0.8 },
-        doge: { price: 0.15, change: -3.2 },
+        btc: {
+          price: 62850 + Math.random() * 500 - 250,
+          change: 2.4 + Math.random() * 3 - 1.5,
+        },
+        eth: {
+          price: 3450 + Math.random() * 100 - 50,
+          change: -1.2 + Math.random() * 2 - 1,
+        },
+        sol: {
+          price: 150 + Math.random() * 10 - 5,
+          change: 5.7 + Math.random() * 2 - 1,
+        },
+        ada: {
+          price: 0.48 + Math.random() * 0.1 - 0.05,
+          change: 0.8 + Math.random() * 1 - 0.5,
+        },
+        doge: {
+          price: 0.15 + Math.random() * 0.03 - 0.015,
+          change: -3.2 + Math.random() * 2 - 1,
+        },
       };
+
       const coin = symbol.toLowerCase();
       const data = prices[coin] || { price: "N/A", change: "N/A" };
-      return `Current ${symbol.toUpperCase()} price: $${data.price.toLocaleString()} (${
-        data.change > 0 ? "📈" : "📉"
-      } ${Math.abs(data.change)}%)`;
+
+      const emoji = data.change > 0 ? "🚀" : "🔻";
+      const sentiment =
+        data.change > 2
+          ? "Bullish momentum!"
+          : data.change < -2
+          ? "Caution advised."
+          : "Neutral trend.";
+
+      return `${symbol.toUpperCase()} is at $${data.price.toLocaleString()} (${emoji} ${Math.abs(
+        data.change
+      ).toFixed(2)}%)\n\n${sentiment} ${
+        conversationContext.current.lastTopic === "portfolio"
+          ? "Would you like to adjust your holdings?"
+          : "Need price alerts for this asset?"
+      }`;
     },
+
     getPortfolio: async () => {
-      return "Your portfolio: 0.5 BTC ($31,425), 3.2 ETH ($11,040), 50 SOL ($7,500). Total: $49,965 📊";
+      const total = 49965 + Math.random() * 5000 - 2500;
+      return `Your portfolio:\n\n• 0.5 BTC ($31,425)\n• 3.2 ETH ($11,040)\n• 50 SOL ($7,500)\n\nTotal: $${total.toLocaleString()} 📊\n\n${
+        total > 50000
+          ? "Great performance! 💪"
+          : "Consider rebalancing for better returns"
+      }`;
     },
+
     getNews: async () => {
       const headlines = [
         "Bitcoin ETF approval expected next month",
         "Ethereum completes major network upgrade",
         "Crypto market cap surpasses $2.5 trillion",
+        "Institutional crypto investments hit record high",
+        "CBDC developments accelerating globally",
       ];
-      return `Latest crypto news:\n${headlines
+
+      return `📰 Hot crypto news:\n${headlines
+        .slice(0, 3)
         .map((h, i) => `${i + 1}. ${h}`)
-        .join("\n")}`;
+        .join("\n")}\n\n${
+        conversationContext.current.lastTopic === "price"
+          ? "Want analysis on how this affects prices?"
+          : "Interested in deeper analysis?"
+      }`;
     },
   };
+
+  // Personality-enhanced responses
+  const personalityResponses = [
+    "Interesting perspective! Crypto moves fast these days...",
+    "Ah, good question! Let me think 🤔",
+    "Fascinating! I was just analyzing similar trends...",
+    "Great timing! The market's been volatile today...",
+    "Smart question! Let me check the latest data...",
+  ];
 
   // Show welcome message only once on page load
   useEffect(() => {
@@ -59,7 +114,9 @@ const ChatBot = () => {
       const timer = setTimeout(() => {
         setIsOpen(true);
         addBotMessage(
-          "Welcome to KoinFu! 👋\nHow can I assist you with crypto today?"
+          "👋 Welcome to KoinFu! I'm your crypto assistant.\n\n" +
+            "I can help with:\n• Real-time prices\n• Portfolio analysis\n• Market news\n• Trading strategies\n\n" +
+            "What crypto topic interests you today?"
         );
         setHasWelcomed(true);
       }, 3000);
@@ -71,43 +128,111 @@ const ChatBot = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (isTyping) {
-        console.warn("Resetting stuck typing indicator");
+  // Enhanced typing simulation
+  const simulateHumanTyping = (response, callback) => {
+    const words = response.split(" ");
+    let currentIndex = 0;
+
+    const typeNextChunk = () => {
+      if (currentIndex >= words.length) {
         setIsTyping(false);
-        addBotMessage("Sorry for the delay. Please try your question again.");
+        return;
       }
-    }, 10000);
-    return () => clearInterval(timer);
-  }, [isTyping]);
+
+      // Type 2-4 words at a time with variable delays
+      const chunkSize = 2 + Math.floor(Math.random() * 3);
+      const chunk = words
+        .slice(currentIndex, currentIndex + chunkSize)
+        .join(" ");
+
+      setMessages((prev) => {
+        const lastMsg = prev[prev.length - 1];
+        if (lastMsg.sender === "bot" && lastMsg.isTyping) {
+          return [
+            ...prev.slice(0, -1),
+            {
+              text: lastMsg.text + " " + chunk,
+              sender: "bot",
+              timestamp: new Date(),
+              isTyping: true,
+            },
+          ];
+        }
+        return prev;
+      });
+
+      currentIndex += chunkSize;
+
+      // Variable typing speed (50ms-250ms per word)
+      const delay = 50 + Math.random() * 200;
+      setTimeout(typeNextChunk, delay * chunkSize);
+    };
+
+    // Initial delay before starting to type
+    setTimeout(typeNextChunk, 400 + Math.random() * 600);
+  };
 
   const addBotMessage = (text) => {
     setMessages((prev) => [
       ...prev,
       { text, sender: "bot", timestamp: new Date() },
     ]);
+
     if (soundEnabled) {
-      new Audio("/sounds/notification.mp3")
-        .play()
-        .catch((e) => console.log("Sound error:", e));
+      try {
+        const audio = new Audio("/sounds/notification.mp3");
+        audio.volume = 0.3;
+        audio.play();
+      } catch (e) {
+        console.log("Sound error:", e);
+      }
     }
   };
 
+  // Context-aware response generation
   const getAIResponse = async (query) => {
     if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+
+    // Add typing indicator
     setIsTyping(true);
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: "",
+        sender: "bot",
+        timestamp: new Date(),
+        isTyping: true,
+      },
+    ]);
 
     try {
+      // Add personality to responses
+      if (Math.random() > 0.7) {
+        const personality =
+          personalityResponses[
+            Math.floor(Math.random() * personalityResponses.length)
+          ];
+        addBotMessage(personality);
+      }
+
+      // Track conversation context
+      const contextKeywords = ["price", "portfolio", "news", "buy", "trade"];
+      const detectedKeyword = contextKeywords.find((keyword) =>
+        query.toLowerCase().includes(keyword)
+      );
+
+      if (detectedKeyword) {
+        conversationContext.current.lastTopic = detectedKeyword;
+      }
+
       const quickQuestion = cryptoQuestions.find((q) =>
         query.toLowerCase().includes(q.keyword.toLowerCase())
       );
 
       if (quickQuestion) {
-        typingTimeoutRef.current = setTimeout(() => {
-          addBotMessage(quickQuestion.response);
+        simulateHumanTyping(quickQuestion.response, () => {
           setIsTyping(false);
-        }, 1000);
+        });
         return;
       }
 
@@ -122,30 +247,38 @@ const ChatBot = () => {
         portfolio: async () => await cryptoApi.getPortfolio(),
         news: async () => await cryptoApi.getNews(),
         help: async () =>
-          "I can help with:\n• Prices\n• Portfolio\n• News\nTry: 'BTC price' or 'Show my portfolio'",
+          "I specialize in:\n\n• Real-time prices 📈\n• Portfolio analysis 💼\n" +
+          "• Market news 📰\n• Trading strategies 🤖\n\nTry:\n• 'How's ETH doing?'\n" +
+          "• 'Show my portfolio'\n• 'Latest crypto news'",
       };
 
       for (const [keyword, handler] of Object.entries(commands)) {
         if (query.toLowerCase().includes(keyword)) {
           const response = await handler();
-          addBotMessage(response);
-          setIsTyping(false);
+          simulateHumanTyping(response, () => {
+            setIsTyping(false);
+          });
           return;
         }
       }
 
-      typingTimeoutRef.current = setTimeout(() => {
-        addBotMessage(
-          "I specialize in crypto information. Try asking about:\n• Prices (BTC/ETH/SOL)\n• Your portfolio\n• Market news"
-        );
+      // Fallback with more natural language
+      const fallbacks = [
+        `I'm focused on crypto insights. Try asking about:\n• "Should I buy BTC now?"\n• "How's my portfolio performing?"\n• "What's new in crypto?"`,
+        `As your crypto assistant, I specialize in market analysis. Ask me about prices, news, or your portfolio!`,
+        `Hmm, I'm best with crypto topics. Maybe try:\n• "ETH price prediction"\n• "Crypto market trends"\n• "Portfolio rebalancing"`,
+      ];
+
+      const response = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+      simulateHumanTyping(response, () => {
         setIsTyping(false);
-      }, 1500);
+      });
     } catch (error) {
       console.error("Response error:", error);
-      typingTimeoutRef.current = setTimeout(() => {
-        addBotMessage("Oops! Let me try that again...");
-        setIsTyping(false);
-      }, 500);
+      addBotMessage(
+        "😅 Whoops! Let me try that again... Technical glitch in the matrix!"
+      );
+      setIsTyping(false);
     }
   };
 
@@ -174,7 +307,8 @@ const ChatBot = () => {
   const clearChat = () => {
     setMessages([]);
     setShowOptions(false);
-    addBotMessage("Chat cleared. Ask me anything about crypto!");
+    conversationContext.current = { lastTopic: null };
+    addBotMessage("Chat refreshed! ✨ What crypto topic shall we explore now?");
   };
 
   const formatTime = (date) =>
@@ -262,23 +396,23 @@ const ChatBot = () => {
                     <SiBitcoincash className="text-white text-xl" />
                   </div>
                   <h3 className="font-medium text-white mb-2">
-                    Crypto Assistant
+                    Your Crypto Assistant
                   </h3>
                   <p className="text-sm mb-4">
-                    Ask me about prices, portfolios, trading, or crypto news
+                    Ask me about prices, portfolios, trading, or market trends
                   </p>
                   <div className="grid grid-cols-2 gap-2">
                     <button
-                      onClick={() => setInputValue("Price of BTC")}
+                      onClick={() => setInputValue("What's Bitcoin's price?")}
                       className="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded-lg text-teal-300 border border-slate-700 transition-colors"
                     >
-                      Price of BTC
+                      Bitcoin Price
                     </button>
                     <button
-                      onClick={() => setInputValue("My portfolio")}
+                      onClick={() => setInputValue("How's my portfolio?")}
                       className="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded-lg text-teal-300 border border-slate-700 transition-colors"
                     >
-                      My portfolio
+                      My Portfolio
                     </button>
                   </div>
                 </div>
@@ -299,36 +433,35 @@ const ChatBot = () => {
                           : "bg-slate-800/70 text-slate-100 rounded-bl-none border border-slate-700"
                       }`}
                     >
-                      {msg.sender === "bot" && (
+                      {msg.sender === "bot" && !msg.isTyping && (
                         <div className="absolute -left-2 -top-2 bg-gradient-to-br from-cyan-500 to-blue-500 w-8 h-8 rounded-full flex items-center justify-center border-2 border-slate-900">
                           <SiBitcoincash className="text-white text-xs" />
                         </div>
                       )}
-                      <div className="whitespace-pre-line">{msg.text}</div>
-                      <div
-                        className={`text-xs mt-2 ${
-                          msg.sender === "user"
-                            ? "text-teal-300/70"
-                            : "text-slate-500"
-                        }`}
-                      >
-                        {formatTime(msg.timestamp)}
+                      <div className="whitespace-pre-line">
+                        {msg.text ||
+                          (msg.isTyping && (
+                            <div className="flex space-x-1">
+                              <div className="w-2 h-2 rounded-full bg-slate-400 animate-bounce" />
+                              <div className="w-2 h-2 rounded-full bg-slate-400 animate-bounce delay-150" />
+                              <div className="w-2 h-2 rounded-full bg-slate-400 animate-bounce delay-300" />
+                            </div>
+                          ))}
                       </div>
+                      {!msg.isTyping && (
+                        <div
+                          className={`text-xs mt-2 ${
+                            msg.sender === "user"
+                              ? "text-teal-300/70"
+                              : "text-slate-500"
+                          }`}
+                        >
+                          {formatTime(msg.timestamp)}
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
-
-                {isTyping && (
-                  <div className="flex justify-start">
-                    <div className="bg-slate-800/70 px-4 py-3 rounded-2xl rounded-bl-none border border-slate-700">
-                      <div className="flex space-x-1">
-                        <div className="w-2 h-2 rounded-full bg-slate-400 animate-bounce" />
-                        <div className="w-2 h-2 rounded-full bg-slate-400 animate-bounce delay-150" />
-                        <div className="w-2 h-2 rounded-full bg-slate-400 animate-bounce delay-300" />
-                      </div>
-                    </div>
-                  </div>
-                )}
 
                 <div ref={messagesEndRef} />
               </div>
@@ -348,7 +481,12 @@ const ChatBot = () => {
               />
               <button
                 onClick={handleSendMessage}
-                className="bg-teal-600 hover:bg-teal-700 text-white p-3 rounded-lg transition-colors"
+                disabled={isTyping}
+                className={`p-3 rounded-lg transition-colors ${
+                  isTyping
+                    ? "bg-slate-600 cursor-not-allowed"
+                    : "bg-teal-600 hover:bg-teal-700 text-white"
+                }`}
               >
                 <FaPaperPlane />
               </button>
