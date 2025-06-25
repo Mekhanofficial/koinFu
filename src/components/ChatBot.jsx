@@ -180,7 +180,7 @@ const ChatBot = () => {
 
     if (soundEnabled) {
       try {
-        const audio = new Audio("/sounds/notification.mp3");
+        const audio = new Audio("/public/sound/click.wav");
         audio.volume = 0.3;
         audio.play();
       } catch (e) {
