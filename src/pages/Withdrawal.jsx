@@ -1,30 +1,45 @@
 import { useState } from "react";
 import { useTheme } from "next-themes";
-import HeaderPage from "../components/Header";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faBuilding,
+  faCoins,
+  faDollarSign,
+  faCreditCard,
+  faEnvelope,
+  faCheckCircle,
+  faChevronDown,
+} from "@fortawesome/free-solid-svg-icons";
 
 // Custom Alert Component with theme support
 const CustomAlert = ({ message, onClose }) => {
   const { theme } = useTheme();
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50 animate-fadeIn">
       <div
-        className={`p-6 rounded-lg shadow-lg border max-w-md w-full ${
+        className={`p-8 rounded-2xl w-full max-w-md ${
           theme === "dark"
-            ? "bg-slate-900 border-slate-700 text-gray-200"
-            : "bg-white border-gray-200 text-gray-800"
+            ? "bg-gradient-to-br from-slate-800 to-gray-900 border border-slate-700 text-gray-200"
+            : "bg-white border border-gray-200 text-gray-800"
         }`}
       >
-        <p>{message}</p>
+        <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+          <FontAwesomeIcon
+            icon={faCheckCircle}
+            className="text-green-500 text-3xl"
+          />
+        </div>
+        <p className="text-lg mb-6">{message}</p>
         <button
           onClick={onClose}
-          className={`mt-4 w-full p-2 rounded-md transition ${
+          className={`w-full p-3 rounded-xl font-medium transition-all ${
             theme === "dark"
-              ? "bg-teal-700 hover:bg-teal-600 text-white"
-              : "bg-teal-600 hover:bg-teal-500 text-white"
+              ? "bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white"
+              : "bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white"
           }`}
         >
-          Close
+          Continue
         </button>
       </div>
     </div>
@@ -41,12 +56,46 @@ export default function WithdrawalPage() {
     btcAddress: "",
     bankAccountNumber: "",
     bankName: "",
+    bankAccountName: "",
     cashAppId: "",
     paypalEmail: "",
     skrillEmail: "",
   });
   const [balance] = useState(1000);
   const [alertMessage, setAlertMessage] = useState(null);
+
+  const paymentMethods = [
+    {
+      id: "Bank Transfer",
+      name: "Bank Transfer",
+      icon: faBuilding,
+      color: "bg-blue-500/10",
+    },
+    {
+      id: "Crypto",
+      name: "Crypto",
+      icon: faCoins,
+      color: "bg-orange-500/10",
+    },
+    {
+      id: "Cash App",
+      name: "Cash App",
+      icon: faDollarSign,
+      color: "bg-green-500/10",
+    },
+    {
+      id: "PayPal",
+      name: "PayPal",
+      icon: faCreditCard,
+      color: "bg-blue-400/10",
+    },
+    {
+      id: "Skrill",
+      name: "Skrill",
+      icon: faEnvelope,
+      color: "bg-red-500/10",
+    },
+  ];
 
   const handlePaymentMethodSelect = (method) => {
     setSelectedPaymentMethod(method);
@@ -104,25 +153,25 @@ export default function WithdrawalPage() {
     }
 
     setAlertMessage(
-      `Withdrawal request for $${formData.amount} via ${selectedPaymentMethod} submitted.`
+      `Withdrawal request for $${formData.amount} via ${selectedPaymentMethod} submitted successfully!`
     );
   };
 
   const renderFormFields = () => {
-    const inputClasses = `w-full p-2 rounded-md border ${
+    const inputClasses = `w-full p-3 rounded-xl border focus:ring-2 focus:outline-none ${
       theme === "dark"
-        ? "bg-slate-800 border-slate-700 text-gray-200"
-        : "bg-white border-gray-300 text-gray-900"
+        ? "bg-slate-700/50 border-slate-600 focus:ring-teal-500 focus:border-teal-500 text-gray-200"
+        : "bg-slate-100 border-gray-300 focus:ring-teal-500 focus:border-teal-500 text-gray-900"
     }`;
 
-    const labelClasses = `block ${
-      theme === "dark" ? "text-gray-400" : "text-gray-700"
+    const labelClasses = `block mb-2 text-sm font-medium ${
+      theme === "dark" ? "text-gray-400" : "text-gray-600"
     }`;
 
     switch (selectedPaymentMethod) {
       case "Crypto":
         return (
-          <>
+          <div className="space-y-4">
             <div>
               <label className={labelClasses}>Coin Assets</label>
               <select
@@ -149,11 +198,11 @@ export default function WithdrawalPage() {
                 className={inputClasses}
               />
               <p
-                className={`text-sm mt-1 ${
+                className={`text-sm mt-2 ${
                   theme === "dark" ? "text-gray-500" : "text-gray-600"
                 }`}
               >
-                Balance: ${balance}
+                Available Balance: ${balance}
               </p>
             </div>
             <div>
@@ -169,11 +218,11 @@ export default function WithdrawalPage() {
                 className={inputClasses}
               />
             </div>
-          </>
+          </div>
         );
       case "Bank Transfer":
         return (
-          <>
+          <div className="space-y-4">
             <div>
               <label className={labelClasses}>Bank Name</label>
               <input
@@ -218,18 +267,18 @@ export default function WithdrawalPage() {
                 className={inputClasses}
               />
               <p
-                className={`text-sm mt-1 ${
+                className={`text-sm mt-2 ${
                   theme === "dark" ? "text-gray-500" : "text-gray-600"
                 }`}
               >
-                Balance: ${balance}
+                Available Balance: ${balance}
               </p>
             </div>
-          </>
+          </div>
         );
       case "Cash App":
         return (
-          <>
+          <div className="space-y-4">
             <div>
               <label className={labelClasses}>Cash App ID</label>
               <input
@@ -252,18 +301,18 @@ export default function WithdrawalPage() {
                 className={inputClasses}
               />
               <p
-                className={`text-sm mt-1 ${
+                className={`text-sm mt-2 ${
                   theme === "dark" ? "text-gray-500" : "text-gray-600"
                 }`}
               >
-                Balance: ${balance}
+                Available Balance: ${balance}
               </p>
             </div>
-          </>
+          </div>
         );
       case "PayPal":
         return (
-          <>
+          <div className="space-y-4">
             <div>
               <label className={labelClasses}>PayPal Email</label>
               <input
@@ -286,18 +335,18 @@ export default function WithdrawalPage() {
                 className={inputClasses}
               />
               <p
-                className={`text-sm mt-1 ${
+                className={`text-sm mt-2 ${
                   theme === "dark" ? "text-gray-500" : "text-gray-600"
                 }`}
               >
-                Balance: ${balance}
+                Available Balance: ${balance}
               </p>
             </div>
-          </>
+          </div>
         );
       case "Skrill":
         return (
-          <>
+          <div className="space-y-4">
             <div>
               <label className={labelClasses}>Skrill Email</label>
               <input
@@ -320,199 +369,343 @@ export default function WithdrawalPage() {
                 className={inputClasses}
               />
               <p
-                className={`text-sm mt-1 ${
+                className={`text-sm mt-2 ${
                   theme === "dark" ? "text-gray-500" : "text-gray-600"
                 }`}
               >
-                Balance: ${balance}
+                Available Balance: ${balance}
               </p>
             </div>
-          </>
+          </div>
         );
       default:
-        return null;
+        return (
+          <div
+            className={`p-8 rounded-xl text-center ${
+              theme === "dark" ? "bg-slate-800/50" : "bg-slate-100"
+            }`}
+          >
+            <div
+              className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
+                theme === "dark"
+                  ? "bg-slate-700 text-teal-400"
+                  : "bg-slate-200 text-teal-600"
+              }`}
+            >
+              <FontAwesomeIcon icon={faCoins} className="text-2xl" />
+            </div>
+            <p className={theme === "dark" ? "text-gray-400" : "text-gray-500"}>
+              Select a payment method to start your withdrawal
+            </p>
+          </div>
+        );
     }
   };
 
   return (
-    <>
-      <section
-        className={`flex flex-col lg:flex-row justify-between min-h-screen px-4 py-14 ${
-          theme === "dark" ? "bg-slate-950" : "bg-gray-100"
-        }`}
-      >
-        {/* Payment Method Section */}
-        <div
-          className={`rounded-lg p-6 w-full lg:w-2/3 mb-6 lg:mb-0 lg:mr-4 ${
-            theme === "dark" ? "bg-slate-900" : "bg-white shadow"
-          }`}
-        >
+    <div
+      className={`min-h-screen ${
+        theme === "dark"
+          ? "bg-gradient-to-br from-slate-900 to-gray-900"
+          : "bg-gradient-to-br from-slate-100 to-gray-100"
+      }`}
+    >
+      <div className="max-w-6xl mx-auto px-4 py-14">
+        <div className="mb-10">
           <h1
-            className={`text-2xl font-bold mb-4 ${
-              theme === "dark" ? "text-teal-500" : "text-teal-600"
-            }`}
-          >
-            Withdrawal Page
-          </h1>
-          <p
-            className={`mb-6 ${
-              theme === "dark" ? "text-gray-400" : "text-gray-600"
-            }`}
-          >
-            Choose a withdrawal method.
-          </p>
-
-          <button
-            onClick={() => setShowPaymentOptions(!showPaymentOptions)}
-            className={`w-full p-2 rounded-md transition ${
+            className={`text-3xl font-bold mb-2 ${
               theme === "dark"
-                ? "bg-teal-700 hover:bg-teal-600 text-white"
-                : "bg-teal-600 hover:bg-teal-500 text-white"
+                ? "text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-teal-600"
+                : "text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-teal-700"
             }`}
           >
-            {selectedPaymentMethod || "Select Payment Method"}
-          </button>
+            Withdraw Funds
+          </h1>
+          <p className={theme === "dark" ? "text-gray-400" : "text-gray-600"}>
+            Choose a withdrawal method and enter your details
+          </p>
+        </div>
 
-          {showPaymentOptions && (
-            <div
-              className={`mt-6 p-4 rounded-lg ${
-                theme === "dark" ? "bg-slate-800" : "bg-gray-100"
-              }`}
-            >
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Payment Method Section */}
+          <div
+            className={`w-full lg:w-2/3 rounded-2xl p-6 shadow-xl ${
+              theme === "dark"
+                ? "bg-slate-800/50 backdrop-blur-sm"
+                : "bg-white/90 backdrop-blur-sm"
+            }`}
+          >
+            <div className="mb-6">
               <h2
-                className={`text-xl font-bold mb-3 ${
+                className={`text-xl font-bold mb-4 ${
                   theme === "dark" ? "text-gray-200" : "text-gray-800"
                 }`}
               >
                 Select Payment Method
               </h2>
-              <ul className="space-y-2">
-                {[
-                  "Bank Transfer",
-                  "Crypto",
-                  "Cash App",
-                  "PayPal",
-                  "Skrill",
-                ].map((method) => (
-                  <li
-                    key={method}
-                    onClick={() => handlePaymentMethodSelect(method)}
-                    className={`p-2 rounded cursor-pointer transition ${
-                      theme === "dark"
-                        ? "bg-slate-700 text-gray-200 hover:bg-slate-600"
-                        : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {paymentMethods.map((method) => (
+                  <div
+                    key={method.id}
+                    onClick={() => handlePaymentMethodSelect(method.id)}
+                    className={`p-4 rounded-xl cursor-pointer transition-all duration-200 border ${
+                      selectedPaymentMethod === method.id
+                        ? theme === "dark"
+                          ? "border-teal-500 bg-teal-900/20"
+                          : "border-teal-500 bg-teal-500/10"
+                        : theme === "dark"
+                        ? "border-slate-700 hover:border-teal-500/50 hover:bg-slate-700/50"
+                        : "border-gray-200 hover:border-teal-500/50 hover:bg-gray-100"
                     }`}
                   >
-                    {method}
-                  </li>
+                    <div
+                      className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 ${method.color}`}
+                    >
+                      <FontAwesomeIcon
+                        icon={method.icon}
+                        className={`text-xl ${
+                          theme === "dark"
+                            ? selectedPaymentMethod === method.id
+                              ? "text-teal-400"
+                              : "text-gray-400"
+                            : selectedPaymentMethod === method.id
+                            ? "text-teal-600"
+                            : "text-gray-600"
+                        }`}
+                      />
+                    </div>
+                    <span className="font-medium">{method.name}</span>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
-          )}
 
-          {selectedPaymentMethod && (
-            <div className="mt-6 space-y-4">
+            <div className="mt-8">
               <h2
-                className={`text-xl font-bold ${
+                className={`text-xl font-bold mb-4 ${
                   theme === "dark" ? "text-gray-200" : "text-gray-800"
                 }`}
               >
-                {selectedPaymentMethod} Withdrawal
+                {selectedPaymentMethod
+                  ? `${selectedPaymentMethod} Details`
+                  : "Payment Details"}
               </h2>
+
               {renderFormFields()}
             </div>
-          )}
-        </div>
+          </div>
 
-        {/* Summary Section */}
-        <div
-          className={`rounded-lg p-6 w-full lg:w-1/3 ${
-            theme === "dark" ? "bg-slate-900" : "bg-white shadow"
-          }`}
-        >
-          <h2
-            className={`text-xl font-bold mb-4 ${
-              theme === "dark" ? "text-teal-500" : "text-teal-600"
-            }`}
-          >
-            Withdrawal Summary
-          </h2>
+          {/* Summary Section */}
           <div
-            className={`space-y-3 ${
-              theme === "dark" ? "text-gray-400" : "text-gray-600"
+            className={`w-full lg:w-1/3 rounded-2xl p-6 shadow-xl ${
+              theme === "dark"
+                ? "bg-slate-800/50 backdrop-blur-sm"
+                : "bg-white/90 backdrop-blur-sm"
             }`}
           >
-            <p>
-              <span className="font-semibold">Payment Method:</span>{" "}
-              {selectedPaymentMethod || "Not selected"}
-            </p>
-            {selectedPaymentMethod && (
-              <>
-                <p>
-                  <span className="font-semibold">Amount:</span> $
-                  {formData.amount}
-                </p>
-                {selectedPaymentMethod === "Crypto" && (
-                  <>
-                    <p>
-                      <span className="font-semibold">Coin:</span>{" "}
-                      {formData.cryptoAsset}
-                    </p>
-                    <p>
-                      <span className="font-semibold">Address:</span>{" "}
-                      {formData.btcAddress}
-                    </p>
-                  </>
-                )}
-                {selectedPaymentMethod === "Bank Transfer" && (
-                  <>
-                    <p>
-                      <span className="font-semibold">Bank Name:</span>{" "}
-                      {formData.bankName}
-                    </p>
-                    <p>
-                      <span className="font-semibold">Account Number:</span>{" "}
-                      {formData.bankAccountNumber}
-                    </p>
-                    <p>
-                      <span className="font-semibold">Account Name:</span>{" "}
-                      {formData.bankAccountName}
-                    </p>
-                  </>
-                )}
-                {selectedPaymentMethod === "Cash App" && (
-                  <p>
-                    <span className="font-semibold">Cash App ID:</span>{" "}
-                    {formData.cashAppId}
-                  </p>
-                )}
-                {selectedPaymentMethod === "PayPal" && (
-                  <p>
-                    <span className="font-semibold">PayPal Email:</span>{" "}
-                    {formData.paypalEmail}
-                  </p>
-                )}
-                {selectedPaymentMethod === "Skrill" && (
-                  <p>
-                    <span className="font-semibold">Skrill Email:</span>{" "}
-                    {formData.skrillEmail}
-                  </p>
-                )}
-              </>
-            )}
-            <button
-              onClick={handleWithdrawal}
-              className={`w-full p-2 rounded-md transition ${
+            <h2
+              className={`text-xl font-bold mb-6 ${
                 theme === "dark"
-                  ? "bg-teal-700 hover:bg-teal-600 text-white"
-                  : "bg-teal-600 hover:bg-teal-500 text-white"
+                  ? "text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-teal-600"
+                  : "text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-teal-700"
               }`}
             >
-              Confirm Withdrawal
-            </button>
+              Withdrawal Summary
+            </h2>
+
+            <div
+              className={`p-5 rounded-xl mb-6 ${
+                theme === "dark" ? "bg-slate-700/50" : "bg-slate-100"
+              }`}
+            >
+              <div className="flex justify-between mb-3">
+                <span
+                  className={
+                    theme === "dark" ? "text-gray-400" : "text-gray-600"
+                  }
+                >
+                  Payment Method:
+                </span>
+                <span className="font-medium">
+                  {selectedPaymentMethod || "Not selected"}
+                </span>
+              </div>
+
+              {selectedPaymentMethod && (
+                <>
+                  <div className="flex justify-between mb-3">
+                    <span
+                      className={
+                        theme === "dark" ? "text-gray-400" : "text-gray-600"
+                      }
+                    >
+                      Amount:
+                    </span>
+                    <span className="font-medium">
+                      ${formData.amount || "0.00"}
+                    </span>
+                  </div>
+
+                  {selectedPaymentMethod === "Crypto" && (
+                    <>
+                      <div className="flex justify-between mb-3">
+                        <span
+                          className={
+                            theme === "dark" ? "text-gray-400" : "text-gray-600"
+                          }
+                        >
+                          Coin:
+                        </span>
+                        <span className="font-medium">
+                          {formData.cryptoAsset}
+                        </span>
+                      </div>
+                      <div>
+                        <span
+                          className={
+                            theme === "dark" ? "text-gray-400" : "text-gray-600"
+                          }
+                        >
+                          Address:
+                        </span>
+                        <p className="font-medium truncate">
+                          {formData.btcAddress || "Not provided"}
+                        </p>
+                      </div>
+                    </>
+                  )}
+
+                  {selectedPaymentMethod === "Bank Transfer" && (
+                    <>
+                      <div className="flex justify-between mb-3">
+                        <span
+                          className={
+                            theme === "dark" ? "text-gray-400" : "text-gray-600"
+                          }
+                        >
+                          Bank:
+                        </span>
+                        <span className="font-medium">
+                          {formData.bankName || "Not provided"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between mb-3">
+                        <span
+                          className={
+                            theme === "dark" ? "text-gray-400" : "text-gray-600"
+                          }
+                        >
+                          Account Number:
+                        </span>
+                        <span className="font-medium">
+                          {formData.bankAccountNumber || "Not provided"}
+                        </span>
+                      </div>
+                      <div>
+                        <span
+                          className={
+                            theme === "dark" ? "text-gray-400" : "text-gray-600"
+                          }
+                        >
+                          Account Name:
+                        </span>
+                        <p className="font-medium">
+                          {formData.bankAccountName || "Not provided"}
+                        </p>
+                      </div>
+                    </>
+                  )}
+
+                  {selectedPaymentMethod === "Cash App" && (
+                    <div>
+                      <span
+                        className={
+                          theme === "dark" ? "text-gray-400" : "text-gray-600"
+                        }
+                      >
+                        Cash App ID:
+                      </span>
+                      <p className="font-medium">
+                        {formData.cashAppId || "Not provided"}
+                      </p>
+                    </div>
+                  )}
+
+                  {selectedPaymentMethod === "PayPal" && (
+                    <div>
+                      <span
+                        className={
+                          theme === "dark" ? "text-gray-400" : "text-gray-600"
+                        }
+                      >
+                        PayPal Email:
+                      </span>
+                      <p className="font-medium">
+                        {formData.paypalEmail || "Not provided"}
+                      </p>
+                    </div>
+                  )}
+
+                  {selectedPaymentMethod === "Skrill" && (
+                    <div>
+                      <span
+                        className={
+                          theme === "dark" ? "text-gray-400" : "text-gray-600"
+                        }
+                      >
+                        Skrill Email:
+                      </span>
+                      <p className="font-medium">
+                        {formData.skrillEmail || "Not provided"}
+                      </p>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+
+            <div className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 p-px rounded-xl shadow-lg shadow-teal-500/20">
+              <button
+                onClick={handleWithdrawal}
+                className={`w-full p-4 rounded-xl text-white text-lg font-bold transition-all ${
+                  !selectedPaymentMethod
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-gradient-to-r from-teal-600 to-teal-700"
+                }`}
+                disabled={!selectedPaymentMethod}
+              >
+                Confirm Withdrawal
+              </button>
+            </div>
+
+            <div
+              className={`mt-6 p-4 rounded-xl ${
+                theme === "dark"
+                  ? "bg-slate-700/50 border border-slate-600"
+                  : "bg-slate-100 border border-gray-200"
+              }`}
+            >
+              <h3
+                className={`font-bold mb-2 ${
+                  theme === "dark" ? "text-gray-300" : "text-gray-700"
+                }`}
+              >
+                Withdrawal Notes
+              </h3>
+              <ul
+                className={`text-sm space-y-1 ${
+                  theme === "dark" ? "text-gray-400" : "text-gray-600"
+                }`}
+              >
+                <li>• Minimum withdrawal: $10</li>
+                <li>• Processing time: 1-3 business days</li>
+                <li>• No transaction fees</li>
+              </ul>
+            </div>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Custom Alert Popup */}
       {alertMessage && (
@@ -521,6 +714,6 @@ export default function WithdrawalPage() {
           onClose={() => setAlertMessage(null)}
         />
       )}
-    </>
+    </div>
   );
 }

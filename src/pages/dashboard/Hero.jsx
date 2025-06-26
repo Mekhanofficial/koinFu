@@ -1,16 +1,18 @@
+// src/pages/dashboard/DashPage.jsx
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useTheme } from "next-themes";
 import Layout from "../../components/Layout";
-import WelcomeCard from "../../pages/dashboard/WelcomeCard";
-import BalanceCard from "../../pages/dashboard/BalanceCard";
-import QuickActions from "../../pages/dashboard/QuickAction";
-import StatsGrid from "../../pages/dashboard/StatsGrid";
-import TradeVolumes from "../../pages/dashboard/TradeVolumes";
-import TradeProgress from "../../pages/dashboard/TradeProgress";
-import VerifyAccount from "../../pages/dashboard/VerifyBar";
-import CryptoTiles from "../../pages/dashboard/CryptoTiles";
-import { auth } from "../../../firebase";
+import WelcomeCard from "./WelcomeCard";
+import BalanceCard from "./BalanceCard";
+import QuickActions from "./QuickAction";
+import StatsGrid from "./StatsGrid";
+import TradeVolumes from "./TradeVolumes";
+import TradeProgress from "./TradeProgress";
+import VerifyAccount from "./VerifyBar";
+import CryptoTiles from "./CryptoTiles";
+import { auth, db } from "../../../firebase";
+import { doc, onSnapshot } from "firebase/firestore";
 
 const abbreviateVolume = (volume) => {
   if (volume >= 1_000_000_000) {
@@ -27,17 +29,28 @@ const abbreviateVolume = (volume) => {
 export default function DashPage() {
   const { theme } = useTheme();
   const [cryptoData, setCryptoData] = useState([]);
-  const [user, setUser] = useState({ name: "", isKycVerified: false });
+  const [userName, setUserName] = useState("User");
+  const [kycStatus, setKycStatus] = useState("not_verified");
   const [userBalance, setUserBalance] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const currentUser = auth.currentUser;
-    if (currentUser) {
-      setUser({
-        name: currentUser.displayName || "User",
-        isKycVerified: currentUser.isKycVerified || false,
-      });
-    }
+
+    if (!currentUser) return;
+
+    const userRef = doc(db, "users", currentUser.uid);
+    const unsubscribe = onSnapshot(userRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setUserName(data.name || "User");
+        setKycStatus(data.kycStatus || "not_verified");
+        setUserBalance(data.balance || 0);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -85,15 +98,21 @@ export default function DashPage() {
       ? "bg-teal-900 border-teal-700 text-teal-100"
       : "bg-teal-50 border-teal-300 text-teal-800";
 
+  if (loading) {
+    return (
+      <div className="text-center mt-10 text-lg">Loading dashboard...</div>
+    );
+  }
+
   return (
-    <Layout user={user}>
+    <Layout user={{ name: userName }}>
       <section
         className={`flex flex-col px-5 py-10 lg:flex-row min-h-screen ${bgColor} ${textColor} overflow-x-hidden`}
       >
         {/* Left Column */}
         <div className="w-full lg:w-1/2 lg:pr-4">
           <WelcomeCard
-            user={user}
+            user={{ name: userName }}
             theme={theme}
             borderColor={borderColor}
             secondaryText={secondaryText}
@@ -102,13 +121,13 @@ export default function DashPage() {
           <BalanceCard
             balance={userBalance}
             currency="USD"
-            isKycVerified={user.isKycVerified}
+            isKycVerified={kycStatus === "verified"}
             theme={theme}
             borderColor={borderColor}
           />
 
           {/* KYC Notice */}
-          {!user.isKycVerified && (
+          {kycStatus === "not_verified" && (
             <div className={`p-4 my-4 rounded-lg border ${kycBg} shadow-md`}>
               <p className="font-semibold text-sm">
                 Please complete your{" "}
@@ -118,7 +137,10 @@ export default function DashPage() {
             </div>
           )}
 
-          <QuickActions theme={theme} isKycVerified={user.isKycVerified} />
+          <QuickActions
+            theme={theme}
+            isKycVerified={kycStatus === "verified"}
+          />
 
           <StatsGrid
             theme={theme}
@@ -138,7 +160,10 @@ export default function DashPage() {
         <div className="w-full lg:w-1/2 lg:pl-4">
           <TradeProgress theme={theme} borderColor={borderColor} />
 
-          <VerifyAccount theme={theme} isKycVerified={user.isKycVerified} />
+          <VerifyAccount
+            theme={theme}
+            isKycVerified={kycStatus === "verified"}
+          />
 
           <CryptoTiles
             cryptoData={cryptoData}

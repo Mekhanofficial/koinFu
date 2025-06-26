@@ -1,3 +1,4 @@
+// src/components/BalanceCard.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,7 +14,7 @@ export default function BalanceCard({
   borderColor = "border-gray-200",
   balance = 15809750.0,
   currency = "USD",
-  isKycVerified = false, // NEW: pass KYC status here
+  isKycVerified = false,
 }) {
   const [showBalance, setShowBalance] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
@@ -46,7 +47,6 @@ export default function BalanceCard({
 
   const handleAddFunds = () => {
     if (!isKycVerified) {
-      // If not verified, redirect to KYC page or alert user
       alert(
         "You must complete KYC verification before you can add funds. Redirecting to verification page."
       );
@@ -65,7 +65,9 @@ export default function BalanceCard({
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="flex justify-between items-center mb-5">
-        <h4 className={`text-sm lg:text-base font-medium ${secondaryTextColor}`}>
+        <h4
+          className={`text-sm lg:text-base font-medium ${secondaryTextColor}`}
+        >
           Available Balance
         </h4>
         <button
@@ -83,7 +85,9 @@ export default function BalanceCard({
       </div>
 
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 w-full">
-        <h1 className={`text-3xl lg:text-4xl font-bold ${textColor} tracking-tight`}>
+        <h1
+          className={`text-3xl lg:text-4xl font-bold ${textColor} tracking-tight`}
+        >
           {formatBalance()}
         </h1>
 

@@ -1,3 +1,4 @@
+// src/components/KycVerification.jsx
 import React, { useState, useRef } from "react";
 import { auth, db } from "../../firebase";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
@@ -88,7 +89,6 @@ export default function KycVerification() {
           governmentId: idUrl,
           selfie: selfieUrl,
         },
-        isKycVerified: false,
         kycStatus: "pending",
         kycSubmittedAt: serverTimestamp(),
       });
