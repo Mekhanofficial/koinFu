@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import depositIcon from "../../pictures/depositicon.png";
 import withdrawIcon from "../../pictures/withdrawicon.png";
 import tradeIcon from "../../pictures/tradeicon.png";
@@ -7,16 +8,16 @@ import historyIcon from "../../pictures/historyicon.png";
 export default function QuickActions({ theme, isKycVerified }) {
   const isDark = theme === "dark";
   const [message, setMessage] = useState("");
+  const navigate = useNavigate(); // Add navigation hook
 
-  // Example handlers for each action
+  // Handlers now navigate to specific routes
   const handleDeposit = () => {
     if (!isKycVerified) {
       setMessage("You must complete KYC before making a deposit.");
       return;
     }
-    setMessage(""); // Clear any previous message
-    // Implement your deposit logic or modal open here
-    alert("Deposit action initiated!");
+    setMessage("");
+    navigate("/deposits"); // Navigate to deposits page
   };
 
   const handleWithdraw = () => {
@@ -25,7 +26,7 @@ export default function QuickActions({ theme, isKycVerified }) {
       return;
     }
     setMessage("");
-    alert("Withdraw action initiated!");
+    navigate("/withdrawal"); // Navigate to withdraw page
   };
 
   const handleTrade = () => {
@@ -34,12 +35,12 @@ export default function QuickActions({ theme, isKycVerified }) {
       return;
     }
     setMessage("");
-    alert("Trade action initiated!");
+    navigate("/placetrade"); // Navigate to trade page
   };
 
   const handleHistory = () => {
     setMessage("");
-    alert("Showing transaction history!");
+    navigate("/transactions"); // Navigate to transactions page
   };
 
   const actions = [

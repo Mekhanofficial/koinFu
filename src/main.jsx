@@ -10,11 +10,9 @@ import TradingViewChart from "./components/Tradingview.jsx";
 import CryptocurrencyMarketWidget from "./components/trading-view-widgets/CryptocurrencyMarketWidget.jsx";
 import LoginPage from "./app/(auth)/login/LoginPage.jsx";
 import SignUpPage from "./components/auth/sign-up/Form.jsx";
-import TransactionPage from "./pages/Transactions.jsx";
 import PaymentProofPage from "./pages/PaymentProof.jsx";
 import WithdrawalPage from "./pages/Withdrawal.jsx";
 import MiningPage from "./pages/Mining.jsx";
-import DepositPage from "./pages/Deposits.jsx";
 import MyTraderPage from "./components/MyTraders.jsx";
 import BuyCrypto from "./pages/BuyCrypto.jsx";
 import TradesRoiPage from "./pages/TradesRoi.jsx";
@@ -50,6 +48,9 @@ import PasswordUpdate from "./pages/PasswordUpdate.jsx";
 import { MyCopyTradersPage } from "./pages/MyCopytraders";
 import DashPage from "./pages/dashboard/Hero";
 import KycVerification from "./components/KYCVerification";
+import Transactions from "./pages/Transactions.jsx";
+import Deposit from "./pages/Deposits";
+import { TransactionsProvider } from "./context/TransactionContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -122,7 +123,7 @@ const proRouter = createBrowserRouter([
         path: "/Deposits",
         element: (
           <Layout>
-            <DepositPage />
+            <Deposit />
           </Layout>
         ),
       },
@@ -182,7 +183,7 @@ const proRouter = createBrowserRouter([
         path: "/Transactions",
         element: (
           <Layout>
-            <TransactionPage />
+            <Transactions />
           </Layout>
         ),
       },
@@ -323,8 +324,10 @@ const proRouter = createBrowserRouter([
 ]);
 
 root.render(
-  <React.StrictMode>
-    <RouterProvider router={proRouter} />
-    <ToastContainer /> {/* This enables react-toastify globally */}
-  </React.StrictMode>
+    <React.StrictMode>
+      <TransactionsProvider>
+        <RouterProvider router={proRouter} />
+        <ToastContainer />
+      </TransactionsProvider>
+    </React.StrictMode>
 );

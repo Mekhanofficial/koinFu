@@ -89,12 +89,15 @@ export default function KycVerification() {
           governmentId: idUrl,
           selfie: selfieUrl,
         },
-        kycStatus: "pending",
+        kycStatus: "pending", // Keep as pending in Firestore
         kycSubmittedAt: serverTimestamp(),
       });
 
+      // Temporary solution to unlock features immediately
+      localStorage.setItem("tempKycVerified", "true");
+
       setSuccess(
-        "✅ KYC documents submitted successfully! Verification is pending."
+        "✅ KYC documents submitted successfully! All features are now unlocked!"
       );
       setIdFile(null);
       setSelfieFile(null);

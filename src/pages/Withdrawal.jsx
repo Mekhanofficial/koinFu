@@ -10,6 +10,7 @@ import {
   faCheckCircle,
   faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
+import { useTransactions } from "../context/TransactionContext";
 
 // Custom Alert Component with theme support
 const CustomAlert = ({ message, onClose }) => {
@@ -63,6 +64,7 @@ export default function WithdrawalPage() {
   });
   const [balance] = useState(1000);
   const [alertMessage, setAlertMessage] = useState(null);
+  const { addTransaction } = useTransactions();
 
   const paymentMethods = [
     {
@@ -113,6 +115,8 @@ export default function WithdrawalPage() {
       return;
     }
 
+    // Create transaction details based on payment method
+    let details = "";
     switch (selectedPaymentMethod) {
       case "Crypto":
         if (!formData.cryptoAsset || !formData.amount || !formData.btcAddress) {
@@ -121,6 +125,9 @@ export default function WithdrawalPage() {
           );
           return;
         }
+        details = `To: ${formData.btcAddress.substring(0, 12)}... (${
+          formData.cryptoAsset
+        })`;
         break;
       case "Bank Transfer":
         if (!formData.bankAccountNumber || !formData.bankName) {
@@ -129,32 +136,62 @@ export default function WithdrawalPage() {
           );
           return;
         }
+        details = `To: ${formData.bankAccountNumber.substring(0, 8)}... (${
+          formData.bankName
+        })`;
         break;
       case "Cash App":
         if (!formData.cashAppId) {
           setAlertMessage("Please enter your Cash App ID.");
           return;
         }
+        details = `Cash App: ${formData.cashAppId.substring(0, 8)}...`;
         break;
       case "PayPal":
         if (!formData.paypalEmail) {
           setAlertMessage("Please enter your PayPal email.");
           return;
         }
+        details = `PayPal: ${formData.paypalEmail.substring(0, 8)}...`;
         break;
       case "Skrill":
         if (!formData.skrillEmail) {
           setAlertMessage("Please enter your Skrill email.");
           return;
         }
+        details = `Skrill: ${formData.skrillEmail.substring(0, 8)}...`;
         break;
       default:
         break;
     }
 
+    // Add the withdrawal transaction to history
+    addTransaction({
+      type: "Withdrawal",
+      amount: formData.amount,
+      method: selectedPaymentMethod,
+      details: details,
+      status: "Pending",
+      date: new Date().toLocaleString(),
+    });
+
     setAlertMessage(
       `Withdrawal request for $${formData.amount} via ${selectedPaymentMethod} submitted successfully!`
     );
+
+    // Reset form after submission
+    setFormData({
+      cryptoAsset: "BTC",
+      amount: "",
+      btcAddress: "",
+      bankAccountNumber: "",
+      bankName: "",
+      bankAccountName: "",
+      cashAppId: "",
+      paypalEmail: "",
+      skrillEmail: "",
+    });
+    setSelectedPaymentMethod(null);
   };
 
   const renderFormFields = () => {

@@ -44,7 +44,15 @@ export default function DashPage() {
       if (docSnap.exists()) {
         const data = docSnap.data();
         setUserName(data.name || "User");
-        setKycStatus(data.kycStatus || "not_verified");
+
+        // Check for temporary verification flag
+        const tempVerified = localStorage.getItem("tempKycVerified") === "true";
+
+        // Use temp flag if exists, otherwise use Firestore status
+        setKycStatus(
+          tempVerified ? "verified" : data.kycStatus || "not_verified"
+        );
+
         setUserBalance(data.balance || 0);
       }
       setLoading(false);
