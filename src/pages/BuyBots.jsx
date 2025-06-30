@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTransactions } from "../context/TransactionContext";
 import { useTheme } from "next-themes";
 import bt1 from "../pictures/bt9.avif";
 import bt2 from "../pictures/bt10.avif";
@@ -88,9 +89,12 @@ const bots = [
 
 export default function BuyBotPage() {
   const { theme } = useTheme();
+  const { addTransaction } = useTransactions();
   const [purchasedBots, setPurchasedBots] = useState([]);
   const [showManager, setShowManager] = useState(false);
   const [hoveredBot, setHoveredBot] = useState(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     const stored = localStorage.getItem("purchasedBots");
@@ -102,16 +106,68 @@ export default function BuyBotPage() {
   }, [purchasedBots]);
 
   const handlePurchase = (id) => {
+    const bot = bots.find((b) => b.id === id);
+    if (!bot) return;
+
     if (!purchasedBots.includes(id)) {
       setPurchasedBots((prev) => [...prev, id]);
+
+      // Record transaction with full bot details
+      addTransaction({
+        id: Date.now(),
+        type: "debit",
+        amount: bot.amount,
+        description: `Bot purchase: ${bot.name}`,
+        date: new Date().toISOString(),
+        status: "completed",
+        category: "bots",
+        currency: "USD",
+        botDetails: {
+          name: bot.name,
+          profitRate: bot.profitRate,
+          winRate: bot.winRate,
+          level: bot.botLevel,
+          features: bot.features,
+          description: bot.description,
+        },
+      });
+
+      setSuccessMessage(`Successfully purchased ${bot.name} trading bot`);
+      setShowSuccessModal(true);
     }
   };
 
   const handleUnsubscribe = (id) => {
+    const bot = bots.find((b) => b.id === id);
+    if (!bot) return;
+
     setPurchasedBots((prev) => prev.filter((botId) => botId !== id));
+
+    // Record cancellation transaction
+    addTransaction({
+      id: Date.now(),
+      type: "info",
+      amount: 0,
+      description: `Bot deactivated: ${bot.name}`,
+      date: new Date().toISOString(),
+      status: "completed",
+      category: "bots",
+      currency: "USD",
+    });
+
+    setSuccessMessage(`${bot.name} trading bot deactivated`);
+    setShowSuccessModal(true);
   };
 
   const toggleManager = () => setShowManager((prev) => !prev);
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 0,
+    }).format(amount);
+  };
 
   return (
     <section
@@ -349,6 +405,93 @@ export default function BuyBotPage() {
           })}
         </div>
       </div>
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+          <div
+            className={`rounded-2xl p-6 max-w-md w-full mx-4 transform transition-all duration-300 scale-95 animate-scaleIn ${
+              theme === "dark" ? "bg-slate-900" : "bg-white"
+            } border ${
+              theme === "dark" ? "border-slate-700" : "border-gray-200"
+            }`}
+          >
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg
+                  className="w-8 h-8 text-green-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+
+              <h2
+                className={`text-2xl font-bold mb-2 ${
+                  theme === "dark" ? "text-white" : "text-gray-900"
+                }`}
+              >
+                Success!
+              </h2>
+
+              <p
+                className={`mb-6 px-4 ${
+                  theme === "dark" ? "text-gray-300" : "text-gray-600"
+                }`}
+              >
+                {successMessage}
+              </p>
+
+              <button
+                onClick={() => setShowSuccessModal(false)}
+                className={`w-full py-3 rounded-xl font-medium ${
+                  theme === "dark"
+                    ? "bg-teal-700 hover:bg-teal-600 text-white"
+                    : "bg-teal-600 hover:bg-teal-700 text-white"
+                }`}
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style jsx global>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes scaleIn {
+          from {
+            transform: scale(0.95);
+            opacity: 0;
+          }
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        .animate-scaleIn {
+          animation: scaleIn 0.3s ease-out forwards;
+        }
+      `}</style>
     </section>
   );
 }

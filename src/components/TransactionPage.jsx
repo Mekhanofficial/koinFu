@@ -22,6 +22,24 @@ export default function TransactionPage() {
     return type === "Deposit" ? "text-green-500" : "text-red-500";
   };
 
+  // Function to get payment method from transaction
+  const getPaymentMethod = (tx) => {
+    return (
+      tx.method ||
+      tx.paymentMethod ||
+      (tx.signalDetails ? "Signal Subscription" : "N/A")
+    );
+  };
+
+  // Function to get details from transaction
+  const getTransactionDetails = (tx) => {
+    return (
+      tx.details ||
+      tx.description ||
+      (tx.signalDetails ? `Signal: ${tx.signalDetails.planName}` : "N/A")
+    );
+  };
+
   return (
     <div
       className={`min-h-screen p-4 pt-32 ${
@@ -71,8 +89,10 @@ export default function TransactionPage() {
                   <td className={`p-3 font-medium ${getAmountColor(tx.type)}`}>
                     {tx.type === "Withdrawal" ? "-" : "+"}${tx.amount}
                   </td>
-                  <td className="p-3">{tx.method}</td>
-                  <td className="p-3 hidden lg:table-cell">{tx.details}</td>
+                  <td className="p-3">{getPaymentMethod(tx)}</td>
+                  <td className="p-3 hidden lg:table-cell">
+                    {getTransactionDetails(tx)}
+                  </td>
                   <td className="p-3 hidden md:table-cell">{tx.date}</td>
                   <td className={`p-3 ${getStatusColor(tx.status)}`}>
                     {tx.status}

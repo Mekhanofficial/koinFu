@@ -25,8 +25,8 @@ import {
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useTransactions } from "../context/TransactionContext";
 
-// Simulated trading data with ups and downs
 const performanceData = [
   { day: "Mon", value: 10, profit: 120 },
   { day: "Tue", value: 0, profit: 80 },
@@ -46,7 +46,6 @@ const historicalData = [
   { date: "Jun", signals: 34, winRate: 87, profit: 2950 },
 ];
 
-// Signal data structure
 const SIGNAL_PLANS = [
   {
     id: 1,
@@ -162,8 +161,10 @@ export default function DailySignalPage() {
   const [activeTab, setActiveTab] = useState("performance");
   const [errors, setErrors] = useState({});
   const [touchedInputs, setTouchedInputs] = useState({});
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const { addTransaction } = useTransactions();
 
-  // Handle signal purchase with amount validation
   const handlePurchase = (planId) => {
     const selectedPlan = plans.find((plan) => plan.id === planId);
     if (!selectedPlan) return;
@@ -171,10 +172,8 @@ export default function DailySignalPage() {
     const amount = planAmounts[planId] || "";
     const parsedAmount = parseFloat(amount);
 
-    // Clear any previous errors
     setErrors((prev) => ({ ...prev, [planId]: null }));
 
-    // Validate that the amount has been entered
     if (!amount) {
       setErrors((prev) => ({
         ...prev,
@@ -183,7 +182,6 @@ export default function DailySignalPage() {
       return;
     }
 
-    // Validate that the amount matches the plan price
     if (parsedAmount !== selectedPlan.price) {
       setErrors((prev) => ({
         ...prev,
@@ -194,7 +192,29 @@ export default function DailySignalPage() {
       return;
     }
 
-    // Update active signal
+    // Add transaction record with full signal details
+    addTransaction({
+      id: Date.now(),
+      type: "debit",
+      amount: parsedAmount,
+      description: `Signal subscription: ${selectedPlan.name}`,
+      date: new Date().toISOString(),
+      status: "completed",
+      category: "signals",
+      currency: "USD",
+      signalDetails: {
+        planName: selectedPlan.name,
+        winRate: selectedPlan.winRate,
+        dailySignals: selectedPlan.dailySignals,
+        price: selectedPlan.price,
+        features: selectedPlan.features,
+        description: selectedPlan.description,
+        icon: selectedPlan.icon,
+        color: selectedPlan.color,
+        darkColor: selectedPlan.darkColor,
+      },
+    });
+
     const newActiveSignal = {
       ...selectedPlan,
       active: true,
@@ -203,25 +223,21 @@ export default function DailySignalPage() {
     };
 
     setActiveSignal(newActiveSignal);
-
-    // Update plans to mark others as inactive
     setPlans(
       plans.map((plan) => ({
         ...plan,
         active: plan.id === planId,
       }))
     );
-
-    // Clear the amount for this plan
     setPlanAmounts((prev) => ({ ...prev, [planId]: "" }));
-
-    // Save to localStorage
     localStorage.setItem("activeSignal", JSON.stringify(newActiveSignal));
+
+    setSuccessMessage(
+      `Successfully subscribed to ${selectedPlan.name} signal service`
+    );
+    setShowSuccessModal(true);
   };
 
-
-
-  // Handle signal cancellation
   const cancelSignal = () => {
     setActiveSignal(null);
     setPlans(
@@ -231,9 +247,23 @@ export default function DailySignalPage() {
       }))
     );
     localStorage.removeItem("activeSignal");
+
+    // Add cancellation transaction
+    addTransaction({
+      id: Date.now(),
+      type: "info",
+      amount: 0,
+      description: "Signal subscription cancelled",
+      date: new Date().toISOString(),
+      status: "completed",
+      category: "signals",
+      currency: "USD",
+    });
+
+    setSuccessMessage("Signal subscription cancelled successfully");
+    setShowSuccessModal(true);
   };
 
-  // Format currency
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -242,12 +272,10 @@ export default function DailySignalPage() {
     }).format(amount);
   };
 
-  // Toggle signal manager visibility
   const toggleSignalManager = () => {
     setShowSignalManager(!showSignalManager);
   };
 
-  // Handle amount change for a specific plan
   const handleAmountChange = (planId, value) => {
     setPlanAmounts((prev) => ({
       ...prev,
@@ -256,12 +284,10 @@ export default function DailySignalPage() {
     setErrors((prev) => ({ ...prev, [planId]: null }));
   };
 
-  // Mark input as touched
   const handleInputBlur = (planId) => {
     setTouchedInputs((prev) => ({ ...prev, [planId]: true }));
   };
 
-  // Custom tooltip for performance chart
   const PerformanceTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
@@ -994,64 +1020,165 @@ export default function DailySignalPage() {
                     </ul>
                   </div>
 
-                 <div className="pt-4">
-  <label className={`block text-sm font-semibold mb-2 ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-    Amount to Pay (USD)
-  </label>
-  <div className="relative mb-1">
-    <span className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
-      $
-    </span>
-    <input
-      type="number"
-      value={planAmounts[plan.id] || ""}
-      onChange={(e) => handleAmountChange(plan.id, e.target.value)}
-      onBlur={() => handleInputBlur(plan.id)}
-      placeholder={plan.price.toString()}
-      className={`w-full rounded-xl px-8 py-3 focus:outline-none focus:ring-2 ${
-        theme === "dark"
-          ? "bg-slate-800 text-white focus:ring-teal-500"
-          : "bg-slate-100 text-gray-900 focus:ring-teal-400"
-      }`}
-    />
-  </div>
-  {errors[plan.id] && (
-    <p className="text-red-500 text-sm mb-3">
-      {errors[plan.id]}
-    </p>
-  )}
+                  <div className="pt-4">
+                    <label
+                      className={`block text-sm font-semibold mb-2 ${
+                        theme === "dark" ? "text-gray-300" : "text-gray-700"
+                      }`}
+                    >
+                      Amount to Pay (USD)
+                    </label>
+                    <div className="relative mb-1">
+                      <span
+                        className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
+                          theme === "dark" ? "text-gray-400" : "text-gray-500"
+                        }`}
+                      >
+                        $
+                      </span>
+                      <input
+                        type="number"
+                        value={planAmounts[plan.id] || ""}
+                        onChange={(e) =>
+                          handleAmountChange(plan.id, e.target.value)
+                        }
+                        onBlur={() => handleInputBlur(plan.id)}
+                        placeholder={plan.price.toString()}
+                        className={`w-full rounded-xl px-8 py-3 focus:outline-none focus:ring-2 ${
+                          theme === "dark"
+                            ? "bg-slate-800 text-white focus:ring-teal-500"
+                            : "bg-slate-100 text-gray-900 focus:ring-teal-400"
+                        }`}
+                      />
+                    </div>
+                    {errors[plan.id] && (
+                      <p className="text-red-500 text-sm mb-3">
+                        {errors[plan.id]}
+                      </p>
+                    )}
 
-  <button
-    onClick={() => handlePurchase(plan.id)}
-    disabled={plan.active || !planAmounts[plan.id]}
-    className={`w-full py-3 rounded-xl font-bold text-white transition-all duration-300 shadow-lg ${
-      plan.active
-        ? "bg-gradient-to-r from-gray-500 to-gray-600 cursor-not-allowed"
-        : !planAmounts[plan.id]
-        ? "bg-gradient-to-r from-gray-400 to-gray-500 cursor-not-allowed"
-        : theme === "dark"
-        ? "bg-gradient-to-r from-teal-600 to-blue-700 hover:from-teal-700 hover:to-blue-800"
-        : "bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700"
-    }`}
-  >
-    {plan.active ? "Active Plan" : "Subscribe Now"}
-  </button>
+                    <button
+                      onClick={() => handlePurchase(plan.id)}
+                      disabled={plan.active || !planAmounts[plan.id]}
+                      className={`w-full py-3 rounded-xl font-bold text-white transition-all duration-300 shadow-lg ${
+                        plan.active
+                          ? "bg-gradient-to-r from-gray-500 to-gray-600 cursor-not-allowed"
+                          : !planAmounts[plan.id]
+                          ? "bg-gradient-to-r from-gray-400 to-gray-500 cursor-not-allowed"
+                          : theme === "dark"
+                          ? "bg-gradient-to-r from-teal-600 to-blue-700 hover:from-teal-700 hover:to-blue-800"
+                          : "bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700"
+                      }`}
+                    >
+                      {plan.active ? "Active Plan" : "Subscribe Now"}
+                    </button>
 
-  {plan.active && (
-    <div className="mt-3 text-center">
-      <span className={`text-sm font-medium ${theme === "dark" ? "text-blue-400" : "text-blue-600"}`}>
-        ✓ Your active signal service
-      </span>
-    </div>
-  )}
-</div>
-                  
+                    {plan.active && (
+                      <div className="mt-3 text-center">
+                        <span
+                          className={`text-sm font-medium ${
+                            theme === "dark" ? "text-blue-400" : "text-blue-600"
+                          }`}
+                        >
+                          ✓ Your active signal service
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+          <div
+            className={`rounded-2xl p-6 max-w-md w-full mx-4 transform transition-all duration-300 scale-95 animate-scaleIn ${
+              theme === "dark" ? "bg-slate-900" : "bg-white"
+            } border ${
+              theme === "dark" ? "border-slate-700" : "border-gray-200"
+            }`}
+          >
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg
+                  className="w-8 h-8 text-green-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+
+              <h2
+                className={`text-2xl font-bold mb-2 ${
+                  theme === "dark" ? "text-white" : "text-gray-900"
+                }`}
+              >
+                Success!
+              </h2>
+
+              <p
+                className={`mb-6 px-4 ${
+                  theme === "dark" ? "text-gray-300" : "text-gray-600"
+                }`}
+              >
+                {successMessage}
+              </p>
+
+              <button
+                onClick={() => setShowSuccessModal(false)}
+                className={`w-full py-3 rounded-xl font-medium ${
+                  theme === "dark"
+                    ? "bg-teal-700 hover:bg-teal-600 text-white"
+                    : "bg-teal-600 hover:bg-teal-700 text-white"
+                }`}
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style jsx global>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes scaleIn {
+          from {
+            transform: scale(0.95);
+            opacity: 0;
+          }
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        .animate-scaleIn {
+          animation: scaleIn 0.3s ease-out forwards;
+        }
+      `}</style>
     </>
   );
 }
