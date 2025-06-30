@@ -21,6 +21,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
+import { useTransactions } from "../context/TransactionContext";
 
 export default function SubscriptionPage() {
   const { theme } = useTheme();
@@ -33,6 +34,7 @@ export default function SubscriptionPage() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [activeBar, setActiveBar] = useState(null);
+  const { addTransaction } = useTransactions();
 
   useEffect(() => {
     setIsClient(true);
@@ -227,6 +229,17 @@ export default function SubscriptionPage() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setCurrentPlan(planName);
+
+      // Record subscription transaction
+      const plan = paidPlans.find((p) => p.name === planName) || basicPlan;
+      addTransaction({
+        type: "Subscription",
+        amount: investmentAmounts[planName],
+        method: planName,
+        details: `Investment: $${investmentAmounts[planName]} | ROI: ${plan.roi}`,
+        status: "Active",
+      });
+
       setSuccessMessage(
         `Successfully subscribed to ${planName} plan with $${investmentAmounts[planName]} investment`
       );
@@ -246,6 +259,16 @@ export default function SubscriptionPage() {
     setIsCancelling(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Record cancellation transaction
+      addTransaction({
+        type: "Subscription",
+        amount: "0",
+        method: currentPlan,
+        details: "Subscription cancelled",
+        status: "Cancelled",
+      });
+
       setCurrentPlan("Basic");
       setSuccessMessage("Your subscription has been cancelled successfully");
       setShowSuccessModal(true);
