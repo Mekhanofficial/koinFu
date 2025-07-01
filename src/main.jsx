@@ -51,6 +51,10 @@ import KycVerification from "./components/KYCVerification";
 import Transactions from "./pages/Transactions.jsx";
 import Deposit from "./pages/Deposits";
 import { TransactionsProvider } from "./context/TransactionContext";
+import Notification from "./pages/Notification";
+import { NotificationProvider } from "./context/NotificationContext";
+import { AuthProvider } from "./context/AuthContext";
+import { UserProvider } from "./context/UserContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -196,10 +200,18 @@ const proRouter = createBrowserRouter([
         ),
       },
       {
+        path: "/Notification",
+        element: (
+          <Layout>
+            <Notification />
+          </Layout>
+        ),
+      },
+      {
         path: "/kyc-verification",
         element: (
           <Layout>
-           <KycVerification />
+            <KycVerification />
           </Layout>
         ),
       },
@@ -324,10 +336,16 @@ const proRouter = createBrowserRouter([
 ]);
 
 root.render(
-    <React.StrictMode>
-      <TransactionsProvider>
-        <RouterProvider router={proRouter} />
-        <ToastContainer />
-      </TransactionsProvider>
-    </React.StrictMode>
+  <React.StrictMode>
+    <AuthProvider>
+      <UserProvider>
+        <TransactionsProvider>
+          <NotificationProvider>
+            <RouterProvider router={proRouter} />
+            <ToastContainer />
+          </NotificationProvider>
+        </TransactionsProvider>
+      </UserProvider>
+    </AuthProvider>
+  </React.StrictMode>
 );

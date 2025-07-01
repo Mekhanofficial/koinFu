@@ -1,5 +1,4 @@
-// src/components/BalanceCard.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,17 +7,22 @@ import {
   faPlus,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
+import { useUser } from "../../context/UserContext";
+import { toast } from "react-toastify";
 
 export default function BalanceCard({
   theme = "light",
   borderColor = "border-gray-200",
-  balance = 15809750.0,
   currency = "USD",
   isKycVerified = false,
+  refreshTrigger,
 }) {
+  const { userData } = useUser();
   const [showBalance, setShowBalance] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
+
+  const userBalance = userData?.balance || 0;
 
   const toggleBalanceVisibility = () => setShowBalance(!showBalance);
 
@@ -29,8 +33,12 @@ export default function BalanceCard({
       currency,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    }).format(balance);
+    }).format(userBalance);
   };
+
+  useEffect(() => {
+    // This effect will run whenever refreshTrigger changes
+  }, [refreshTrigger]);
 
   const gradientColors =
     theme === "dark"
@@ -41,15 +49,10 @@ export default function BalanceCard({
   const secondaryTextColor =
     theme === "dark" ? "text-slate-300" : "text-slate-600";
 
-  const handleViewTransactions = () => {
-    navigate("/transactions");
-  };
-
+  const handleViewTransactions = () => navigate("/transactions");
   const handleAddFunds = () => {
     if (!isKycVerified) {
-      alert(
-        "You must complete KYC verification before you can add funds. Redirecting to verification page."
-      );
+      toast.error("Complete KYC verification to add funds");
       navigate("/kyc-verification");
       return;
     }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -11,8 +11,9 @@ import {
   faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
 import { useTransactions } from "../context/TransactionContext";
+import { useUser } from "../context/UserContext";
+import { toast } from "react-toastify";
 
-// Custom Alert Component with theme support
 const CustomAlert = ({ message, onClose }) => {
   const { theme } = useTheme();
 
@@ -47,7 +48,7 @@ const CustomAlert = ({ message, onClose }) => {
   );
 };
 
-export default function WithdrawalPage() {
+export default function WithdrawalPage({ onSuccess }) {
   const { theme } = useTheme();
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
@@ -62,9 +63,9 @@ export default function WithdrawalPage() {
     paypalEmail: "",
     skrillEmail: "",
   });
-  const [balance] = useState(1000);
   const [alertMessage, setAlertMessage] = useState(null);
   const { addTransaction } = useTransactions();
+  const { userData } = useUser();
 
   const paymentMethods = [
     {
@@ -109,9 +110,25 @@ export default function WithdrawalPage() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleWithdrawal = () => {
+  const handleWithdrawal = async () => {
     if (!selectedPaymentMethod) {
       setAlertMessage("Please select a payment method.");
+      return;
+    }
+
+    const amount = parseFloat(formData.amount);
+    if (isNaN(amount) || amount <= 0) {
+      setAlertMessage("Please enter a valid amount.");
+      return;
+    }
+
+    if (amount < 10) {
+      setAlertMessage("Minimum withdrawal amount is $10.");
+      return;
+    }
+
+    if (!userData?.balance || amount > userData.balance) {
+      setAlertMessage("Insufficient balance for this withdrawal.");
       return;
     }
 
@@ -119,10 +136,8 @@ export default function WithdrawalPage() {
     let details = "";
     switch (selectedPaymentMethod) {
       case "Crypto":
-        if (!formData.cryptoAsset || !formData.amount || !formData.btcAddress) {
-          setAlertMessage(
-            "Please fill in all required fields for crypto withdrawal."
-          );
+        if (!formData.btcAddress) {
+          setAlertMessage("Please provide a crypto address.");
           return;
         }
         details = `To: ${formData.btcAddress.substring(0, 12)}... (${
@@ -131,9 +146,7 @@ export default function WithdrawalPage() {
         break;
       case "Bank Transfer":
         if (!formData.bankAccountNumber || !formData.bankName) {
-          setAlertMessage(
-            "Please fill in all required fields for bank transfer."
-          );
+          setAlertMessage("Please fill in all required bank details.");
           return;
         }
         details = `To: ${formData.bankAccountNumber.substring(0, 8)}... (${
@@ -165,33 +178,47 @@ export default function WithdrawalPage() {
         break;
     }
 
-    // Add the withdrawal transaction to history
-    addTransaction({
-      type: "Withdrawal",
-      amount: formData.amount,
-      method: selectedPaymentMethod,
-      details: details,
-      status: "Pending",
-      date: new Date().toLocaleString(),
-    });
+    try {
+      // Add the withdrawal transaction to history
+      await addTransaction({
+        type: "Withdrawal",
+        amount: amount.toFixed(2),
+        method: selectedPaymentMethod,
+        details: details,
+        status: "Pending",
+        date: new Date().toISOString(),
+        userId: userData?.uid,
+        userEmail: userData?.email,
+      });
 
-    setAlertMessage(
-      `Withdrawal request for $${formData.amount} via ${selectedPaymentMethod} submitted successfully!`
-    );
+      setAlertMessage(
+        `Withdrawal request for $${amount.toFixed(
+          2
+        )} via ${selectedPaymentMethod} submitted successfully!`
+      );
 
-    // Reset form after submission
-    setFormData({
-      cryptoAsset: "BTC",
-      amount: "",
-      btcAddress: "",
-      bankAccountNumber: "",
-      bankName: "",
-      bankAccountName: "",
-      cashAppId: "",
-      paypalEmail: "",
-      skrillEmail: "",
-    });
-    setSelectedPaymentMethod(null);
+      // Reset form after submission
+      setFormData({
+        cryptoAsset: "BTC",
+        amount: "",
+        btcAddress: "",
+        bankAccountNumber: "",
+        bankName: "",
+        bankAccountName: "",
+        cashAppId: "",
+        paypalEmail: "",
+        skrillEmail: "",
+      });
+      setSelectedPaymentMethod(null);
+
+      // Trigger balance refresh if provided
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (error) {
+      console.error("Withdrawal failed:", error);
+      setAlertMessage("Failed to submit withdrawal request. Please try again.");
+    }
   };
 
   const renderFormFields = () => {
@@ -233,13 +260,15 @@ export default function WithdrawalPage() {
                 value={formData.amount}
                 onChange={handleInputChange}
                 className={inputClasses}
+                min="10"
+                step="0.01"
               />
               <p
                 className={`text-sm mt-2 ${
                   theme === "dark" ? "text-gray-500" : "text-gray-600"
                 }`}
               >
-                Available Balance: ${balance}
+                Available Balance: ${userData?.balance?.toFixed(2) || "0.00"}
               </p>
             </div>
             <div>
@@ -302,13 +331,15 @@ export default function WithdrawalPage() {
                 value={formData.amount}
                 onChange={handleInputChange}
                 className={inputClasses}
+                min="10"
+                step="0.01"
               />
               <p
                 className={`text-sm mt-2 ${
                   theme === "dark" ? "text-gray-500" : "text-gray-600"
                 }`}
               >
-                Available Balance: ${balance}
+                Available Balance: ${userData?.balance?.toFixed(2) || "0.00"}
               </p>
             </div>
           </div>
@@ -336,13 +367,15 @@ export default function WithdrawalPage() {
                 value={formData.amount}
                 onChange={handleInputChange}
                 className={inputClasses}
+                min="10"
+                step="0.01"
               />
               <p
                 className={`text-sm mt-2 ${
                   theme === "dark" ? "text-gray-500" : "text-gray-600"
                 }`}
               >
-                Available Balance: ${balance}
+                Available Balance: ${userData?.balance?.toFixed(2) || "0.00"}
               </p>
             </div>
           </div>
@@ -370,13 +403,15 @@ export default function WithdrawalPage() {
                 value={formData.amount}
                 onChange={handleInputChange}
                 className={inputClasses}
+                min="10"
+                step="0.01"
               />
               <p
                 className={`text-sm mt-2 ${
                   theme === "dark" ? "text-gray-500" : "text-gray-600"
                 }`}
               >
-                Available Balance: ${balance}
+                Available Balance: ${userData?.balance?.toFixed(2) || "0.00"}
               </p>
             </div>
           </div>
@@ -404,13 +439,15 @@ export default function WithdrawalPage() {
                 value={formData.amount}
                 onChange={handleInputChange}
                 className={inputClasses}
+                min="10"
+                step="0.01"
               />
               <p
                 className={`text-sm mt-2 ${
                   theme === "dark" ? "text-gray-500" : "text-gray-600"
                 }`}
               >
-                Available Balance: ${balance}
+                Available Balance: ${userData?.balance?.toFixed(2) || "0.00"}
               </p>
             </div>
           </div>
@@ -706,11 +743,11 @@ export default function WithdrawalPage() {
               <button
                 onClick={handleWithdrawal}
                 className={`w-full p-4 rounded-xl text-white text-lg font-bold transition-all ${
-                  !selectedPaymentMethod
+                  !selectedPaymentMethod || !formData.amount
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-gradient-to-r from-teal-600 to-teal-700"
                 }`}
-                disabled={!selectedPaymentMethod}
+                disabled={!selectedPaymentMethod || !formData.amount}
               >
                 Confirm Withdrawal
               </button>

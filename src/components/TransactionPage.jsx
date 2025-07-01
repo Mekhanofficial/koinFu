@@ -1,3 +1,4 @@
+// src/components/TransactionPage.jsx
 import { useTheme } from "next-themes";
 import { useTransactions } from "../context/TransactionContext";
 
@@ -22,7 +23,6 @@ export default function TransactionPage() {
     return type === "Deposit" ? "text-green-500" : "text-red-500";
   };
 
-  // Function to get payment method from transaction
   const getPaymentMethod = (tx) => {
     return (
       tx.method ||
@@ -31,7 +31,6 @@ export default function TransactionPage() {
     );
   };
 
-  // Function to get details from transaction
   const getTransactionDetails = (tx) => {
     return (
       tx.details ||
