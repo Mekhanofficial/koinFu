@@ -17,7 +17,7 @@ const NotificationsPage = () => {
   useEffect(() => {
     // Mark all as read when page loads
     markAllAsRead();
-  }, []);
+  }, [markAllAsRead]); // Added dependency
 
   return (
     <div className="container mx-auto px-4 py-8">
