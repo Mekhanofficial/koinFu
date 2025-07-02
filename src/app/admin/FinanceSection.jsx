@@ -43,19 +43,40 @@ export default function FinanceSection() {
         <CardContent className="pt-6">
           <h3 className="text-lg font-semibold mb-4">Financial Overview</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* ... existing overview cards ... */}
+            <Card className="bg-blue-50 dark:bg-blue-900/20">
+              <CardContent className="p-4">
+                <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                  Total Balance
+                </h4>
+                <p className="text-2xl font-bold mt-2">
+                  ${(totalDeposits - totalWithdrawals).toFixed(2)}
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-green-50 dark:bg-green-900/20">
+              <CardContent className="p-4">
+                <h4 className="text-sm font-medium text-green-800 dark:text-green-200">
+                  Total Deposits
+                </h4>
+                <p className="text-2xl font-bold mt-2">
+                  ${totalDeposits.toFixed(2)}
+                </p>
+              </CardContent>
+            </Card>
+
             <Card className="bg-yellow-50 dark:bg-yellow-900/20">
               <CardContent className="p-4">
                 <div className="flex justify-between items-center">
                   <h4 className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
                     Pending Deposits
                   </h4>
-                  {notificationCount > 0 && (
+                  {pendingDeposits.length > 0 && (
                     <Badge
                       variant="secondary"
                       className="bg-yellow-500 text-white"
                     >
-                      {notificationCount} new
+                      {pendingDeposits.length} new
                     </Badge>
                   )}
                 </div>
@@ -74,9 +95,9 @@ export default function FinanceSection() {
           <TabsTrigger value="deposits">
             <div className="flex items-center gap-2">
               Pending Deposits
-              {notificationCount > 0 && (
+              {pendingDeposits.length > 0 && (
                 <span className="w-5 h-5 flex items-center justify-center bg-yellow-500 text-white text-xs rounded-full">
-                  {notificationCount}
+                  {pendingDeposits.length}
                 </span>
               )}
             </div>
@@ -92,6 +113,14 @@ export default function FinanceSection() {
           <AdminTransactions
             defaultFilter="Pending"
             transactionType="Deposit"
+            showAdminActions={true}
+          />
+        </TabsContent>
+
+        <TabsContent value="withdrawals">
+          <AdminTransactions
+            defaultFilter="Pending"
+            transactionType="Withdrawal"
             showAdminActions={true}
           />
         </TabsContent>

@@ -104,6 +104,7 @@ export default function DepositPage() {
       method: selectedCrypto,
       details: `To: ${selectedMethod.address.substring(0, 12)}...`,
       cryptoAmount: (parsedAmount / 10000).toFixed(6),
+      status: "Pending",
     });
 
     setShowSuccess(true);

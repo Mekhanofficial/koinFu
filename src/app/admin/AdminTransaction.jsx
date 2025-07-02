@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { useTransactions } from "../../context/TransactionContext";
 
-export default function AdminTransactions({ defaultFilter = "All" }) {
+export default function AdminTransactions({
+  defaultFilter = "All",
+  transactionType,
+  showAdminActions = false,
+}) {
   const { theme } = useTheme();
   const { transactions, pendingRequests, updateTransactionStatus } =
     useTransactions();
@@ -10,16 +14,22 @@ export default function AdminTransactions({ defaultFilter = "All" }) {
   const [displayedTransactions, setDisplayedTransactions] = useState([]);
 
   useEffect(() => {
+    let filtered = [];
+
     if (filter === "Pending") {
-      setDisplayedTransactions(pendingRequests);
+      filtered = pendingRequests;
     } else if (filter === "All") {
-      setDisplayedTransactions(transactions);
+      filtered = transactions;
     } else {
-      setDisplayedTransactions(
-        transactions.filter((tx) => tx.status === filter)
-      );
+      filtered = transactions.filter((tx) => tx.status === filter);
     }
-  }, [filter, transactions, pendingRequests]);
+
+    if (transactionType) {
+      filtered = filtered.filter((tx) => tx.type === transactionType);
+    }
+
+    setDisplayedTransactions(filtered);
+  }, [filter, transactions, pendingRequests, transactionType]);
 
   const handleStatusUpdate = async (id, status) => {
     try {
@@ -102,7 +112,7 @@ export default function AdminTransactions({ defaultFilter = "All" }) {
             <th className="text-left p-3">Method</th>
             <th className="text-left p-3">Date</th>
             <th className="text-left p-3">Status</th>
-            <th className="text-left p-3">Actions</th>
+            {showAdminActions && <th className="text-left p-3">Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -115,7 +125,7 @@ export default function AdminTransactions({ defaultFilter = "All" }) {
                   : "border-gray-100 hover:bg-gray-50"
               }`}
             >
-              <td className="p-3">{tx.userName || "N/A"}</td>
+              <td className="p-3">{tx.userName || tx.userEmail || "N/A"}</td>
               <td className="p-3">{tx.type}</td>
               <td className={`p-3 font-medium`}>${tx.amount}</td>
               <td className="p-3">{tx.method}</td>
@@ -131,24 +141,26 @@ export default function AdminTransactions({ defaultFilter = "All" }) {
               >
                 {tx.status}
               </td>
-              <td className="p-3">
-                {tx.status === "Pending" && (
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => handleStatusUpdate(tx.id, "Completed")}
-                      className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600"
-                    >
-                      Approve
-                    </button>
-                    <button
-                      onClick={() => handleStatusUpdate(tx.id, "Rejected")}
-                      className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                    >
-                      Reject
-                    </button>
-                  </div>
-                )}
-              </td>
+              {showAdminActions && (
+                <td className="p-3">
+                  {tx.status === "Pending" && (
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => handleStatusUpdate(tx.id, "Completed")}
+                        className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                      >
+                        Approve
+                      </button>
+                      <button
+                        onClick={() => handleStatusUpdate(tx.id, "Rejected")}
+                        className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  )}
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

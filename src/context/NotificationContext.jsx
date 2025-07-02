@@ -1,4 +1,5 @@
 import { useState, useEffect, createContext, useContext } from 'react';
+import { useTransactions } from './TransactionContext';
 
 const NotificationContext = createContext();
 
@@ -6,20 +7,18 @@ export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [showPanel, setShowPanel] = useState(false);
+  const { transactions } = useTransactions();
 
-  // Load notifications from localStorage on initial render
   useEffect(() => {
-    const savedNotifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+    const savedNotifications = JSON.parse(localStorage.getItem('notifications') || []);
     setNotifications(savedNotifications);
     setUnreadCount(savedNotifications.filter(n => !n.read).length);
   }, []);
 
-  // Save notifications to localStorage when they change
   useEffect(() => {
     localStorage.setItem('notifications', JSON.stringify(notifications));
   }, [notifications]);
 
-  // Add a new notification
   const addNotification = (message, type = 'info', data = {}) => {
     const newNotification = {
       id: Date.now(),
@@ -35,7 +34,6 @@ export const NotificationProvider = ({ children }) => {
     setUnreadCount(prev => prev + 1);
   };
 
-  // Mark a single notification as read
   const markAsRead = (id) => {
     setNotifications(prev => 
       prev.map(n => 
@@ -45,7 +43,6 @@ export const NotificationProvider = ({ children }) => {
     setUnreadCount(prev => prev > 0 ? prev - 1 : 0);
   };
 
-  // Mark all notifications as read
   const markAllAsRead = () => {
     setNotifications(prev => 
       prev.map(n => ({ ...n, read: true }))
@@ -53,7 +50,6 @@ export const NotificationProvider = ({ children }) => {
     setUnreadCount(0);
   };
 
-  // Remove a single notification
   const removeNotification = (id) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
     setUnreadCount(prev => {
@@ -62,11 +58,40 @@ export const NotificationProvider = ({ children }) => {
     });
   };
 
-  // Remove all notifications
   const removeAllNotifications = () => {
     setNotifications([]);
     setUnreadCount(0);
   };
+
+  // Watch for new transactions and create notifications
+  useEffect(() => {
+    if (transactions.length > 0) {
+      const latestTx = transactions[0];
+      
+      let message = '';
+      switch(latestTx.type.toLowerCase()) {
+        case 'deposit':
+          message = `Deposit of $${latestTx.amount} completed`;
+          break;
+        case 'withdrawal':
+          message = `Withdrawal of $${latestTx.amount} initiated`;
+          break;
+        case 'subscription':
+          message = `Subscription to ${latestTx.method} plan activated`;
+          break;
+        case 'signal':
+          message = `Signal service ${latestTx.signalDetails?.planName} purchased`;
+          break;
+        case 'bot':
+          message = `${latestTx.botDetails?.name} trading bot activated`;
+          break;
+        default:
+          message = `Transaction completed: ${latestTx.description}`;
+      }
+
+      addNotification(message, 'transaction', latestTx);
+    }
+  }, [transactions]);
 
   return (
     <NotificationContext.Provider value={{
@@ -85,10 +110,4 @@ export const NotificationProvider = ({ children }) => {
   );
 };
 
-export const useNotifications = () => {
-  const context = useContext(NotificationContext);
-  if (!context) {
-    throw new Error('useNotifications must be used within a NotificationProvider');
-  }
-  return context;
-};
+export const useNotifications = () => useContext(NotificationContext);

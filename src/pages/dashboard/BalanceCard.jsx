@@ -17,12 +17,16 @@ export default function BalanceCard({
   isKycVerified = false,
   refreshTrigger,
 }) {
-  const { userData } = useUser();
+  const { userData, refreshUser } = useUser();
   const [showBalance, setShowBalance] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
 
-  const userBalance = userData?.balance || 0;
+  useEffect(() => {
+    if (refreshTrigger) {
+      refreshUser();
+    }
+  }, [refreshTrigger, refreshUser]);
 
   const toggleBalanceVisibility = () => setShowBalance(!showBalance);
 
@@ -33,12 +37,8 @@ export default function BalanceCard({
       currency,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    }).format(userBalance);
+    }).format(userData?.balance || 0);
   };
-
-  useEffect(() => {
-    // This effect will run whenever refreshTrigger changes
-  }, [refreshTrigger]);
 
   const gradientColors =
     theme === "dark"
